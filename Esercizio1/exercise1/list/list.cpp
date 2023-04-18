@@ -56,7 +56,7 @@ List<Data>::List(const MappableContainer<Data>& mappCont){
     size = 0;
     mappCont.Map([&](const auto& val){
         InsertAtFront(val);
-    })
+    });
 }
 
 // Costruttore (MutableMappableContainer)
@@ -65,7 +65,7 @@ List<Data>::List(const MutableMappableContainer<Data>& mutMapCont) :  head(nullp
     size = 0;
     mutMapCont.Map([&](const auto& val){
         InsertAtFront(val);
-    })
+    });
             
 }
 
@@ -435,7 +435,7 @@ void List<Data>::PostOrderFold(FoldFunctor fun, void* initial_value, Node* node)
         return;
     PostOrderFold(fun, initial_value, node->next);
     const Data& value = node->valore_nodo;
-    fun(value, final_value);
+    fun(value, initial_value);
 }
 //-------------
 

@@ -64,19 +64,19 @@ public:
 
   using typename FoldableContainer<Data>::FoldFunctor;
 
-  virtual void Fold(void*, const FoldFunctor&) const override; // Override FoldableContainer member
+  virtual void Fold(const FoldFunctor&, void*) const override; // Override FoldableContainer member
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from PreOrderFoldableContainer)
 
-  virtual void PreOrderFold(FoldFunctor, const void*) override; // Override PreOrderFoldableContainer member
+  virtual void PreOrderFold(FoldFunctor, void*) override; // Override PreOrderFoldableContainer member
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from PostOrderFoldableContainer)
 
-  virtual void PostOrderFold(FoldFunctor, const void*) override;  // Non sono sicuro!!!! // Override PostOrderFoldableContainer member
+  virtual void PostOrderFold(FoldFunctor, void*) override;  // Non sono sicuro!!!! // Override PostOrderFoldableContainer member
 
   /* ************************************************************************ */
 

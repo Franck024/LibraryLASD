@@ -84,7 +84,7 @@ Vector<Data>& Vector<Data>::operator=(const Vector<Data>& other){
 
 //move assignment
 template<typename Data>
-Vector<Data>& Vector<Data>::operator=(Vector<Data>&& other){
+Vector<Data>& Vector<Data>::operator=(Vector<Data>&& other) noexcept{
     if(this != &other){
         delete[] Elements;
         Elements = other.Elements;
