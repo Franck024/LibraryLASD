@@ -18,15 +18,7 @@ class Queue : virtual public ClearableContainer{
 
 private:
 
-    // di mia iniziativa
-      struct ListNode {
-        Data data;
-        ListNode* next;
-        ListNode(const Data& d, ListNode* n = nullptr) : data{d}, next{n} {}
-        ListNode(Data&& d, ListNode* n = nullptr) : data{std::move(d)}, next{n} {}
-    };
-    ListNode* head;
-    ListNode* tail;
+
 
 protected:
 
@@ -40,10 +32,10 @@ public:
   /* ************************************************************************ */
 
   // Copy assignment
-  Vector& operator=(const Queue&);
+  Queue& operator=(const Queue&);
 
   // Move assignment
-  Vector& operator=(Queue&&) noexcept;
+  Queue& operator=(Queue&&) noexcept;
 
   /* ************************************************************************ */
 
@@ -55,7 +47,7 @@ public:
 
   // Specific member functions
 
-  virtual const Data& Head() const; // (non-mutable version; concrete function must throw std::length_error when empty)
+  virtual Data& Head() const; // (non-mutable version; concrete function must throw std::length_error when empty)
   virtual Data& Head() ; // (mutable version; concrete function must throw std::length_error when empty)
   virtual void Dequeue() ; // (concrete function must throw std::length_error when empty)
   virtual Data& HeadNDequeue() ; // (concrete function must throw std::length_error when empty)

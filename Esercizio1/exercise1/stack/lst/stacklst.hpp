@@ -27,7 +27,43 @@ protected:
 
   using List<Data>::size;
 
-  List<Data> m_list;
+  struct Node {
+
+    Data valore_nodo;
+    Node* next;
+
+
+    /* ********************************************************************** */
+
+    // Specific constructors
+    Node(const Data&);
+
+    /* ********************************************************************** */
+
+    // Copy constructor
+    Node& operator=(const Node&);
+
+    // Move constructor
+    Node& operator=(Node&&);
+
+    /* ********************************************************************** */
+
+    // Destructor
+    ~Node(){delete next;};
+
+    /* ********************************************************************** */
+
+    // Comparison operators
+    bool operator==(const Node&) const noexcept;
+		bool operator!=(const Node&) const noexcept;
+
+    /* ********************************************************************** */
+
+    // Specific member functions
+    // ...
+
+  };
+  Node* top;
 
 public:
 

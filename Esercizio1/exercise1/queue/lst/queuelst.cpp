@@ -2,28 +2,83 @@
 namespace lasd {
 
 /* ************************************************************************** */
-
+//                                NODE
+//COSTRUTTORE
 template <typename Data>
-QueueLst<Data>::QueueLst(const MappableContainer<Data>& mp){  // fare
-    size = mp.Size();
+QueueLst<Data>::Node::Node(const Data& val){
+    valore_nodo = val;
+    next = nullptr;
 }
 
+//Copy costructor
 template <typename Data>
-QueueLst<Data>::QueueLst(const MutableMappableContainer<Data>& mp){  //fare
-    size = mp.Size();
+typename QueueLst<Data>::Node& QueueLst<Data>::Node::operator=(const Node& copy){
+    if(this != &copy){
+        valore_nodo = copy.valore_nodo;
+        next = copy.next; 
+    }
+    return *this;
+}
+
+//Move costructor
+template <typename Data>
+typename QueueLst<Data>::Node& QueueLst<Data>::Node::operator=(Node&& nodo){
+    if(this != &nodo){
+        std::swap(valore_nodo, nodo.valore_nodo);
+        std::swap(next, nodo.next);
+    }
+    return *this;
+}
+
+//Uguaglianza
+template <typename Data>
+bool QueueLst<Data>::Node::operator==(const Node &node2) const noexcept{
+    return (valore_nodo == node2.valore_nodo);
+}
+
+//Disuguaglianza
+template <typename Data>
+bool QueueLst<Data>::Node::operator!=(const Node &node2) const noexcept{
+    return !(valore_nodo == node2.valore_nodo);
+}
+
+
+/* ************************************************************************** */
+/* ************************************************************************** */
+/* ************************************************************************** */
+
+// Costruttore (MappableContainer)
+template <typename Data>
+QueueLst<Data>::QueueLst(const MappableContainer<Data>& mappCont){                  
+    size = 0;
+    mappCont.Map([&](const auto& val){
+        InsertAtFront(val);
+    });
+}
+
+// Costruttore (MutableMappableContainer)
+template <typename Data>
+QueueLst<Data>::QueueLst(const MutableMappableContainer<Data>& mutMapCont) :  head(nullptr), rear(nullptr){
+    size = 0;
+    mutMapCont.Map([&](const auto& val){
+        InsertAtFront(val);
+    });
+            
 }
 
 // Costruttore di copia
-QueueLst<Data>::QueueList(const QueueList& other) : head{nullptr}, tail{nullptr} {
+template <typename Data>
+QueueLst<Data>::QueueLst(const QueueList& other) : head{nullptr}, rear{nullptr} {
     for (Node* p = other.head; p != nullptr; p = p->next) {
-        enqueue(p->data);
+        enqueue(p->valore_nodo);
     }
 }
 
 // Costruttore di spostamento
-QueueLst<Data>::QueueList(QueueList&& other) : head{other.head}, tail{other.tail} {
+template <typename Data>
+QueueLst<Data>::QueueList(QueueList&& other) : head{other.head}, rear{other.rear} {
     other.head = nullptr;
-    other.tail = nullptr;
+    other.rear = nullptr;
 }
 
 // Distruttore
@@ -33,13 +88,34 @@ QueueLst<Data>::~QueueList() {
     }
 }
 
+//Copy assignment
 template <typename Data>
-bool QueueLst<Data>::operator==(const QueueList<Data>& other) const noexcept {
+QueueLst<Data> &QueueLst<Data>::operator=(const QueueLst<Data> &assList)
+{
+    QueueLst<Data> *tmplist = new QueueLst<Data>(assList);
+    std::swap(*tmplist, *this);
+    delete (tmplist);
+    return *this;
+}
+
+//Move assignment
+template <typename Data>
+QueueLst<Data> &QueueLst<Data>::operator=(QueueLst<Data> &&assList) noexcept
+{
+    std::swap(head, assList.head);
+    std::swap(rear, assList.tail);
+    std::swap(size, assList.size);
+    return *this;
+}   
+
+//Confronto
+template <typename Data>
+bool QueueLst<Data>::operator==(const QueueLst<Data>& other) const noexcept {
     if (size != other.size) {
         return false;
     }
-    ListNode this_node = Head();
-    ListNode other_node = other.Head();
+    Node this_node = Head();
+    Node other_node = other.Head();
     while (this_node && other_node) {
         if (this_node->data != other_node->data) {
             return false;
@@ -51,76 +127,91 @@ bool QueueLst<Data>::operator==(const QueueList<Data>& other) const noexcept {
 }
 
 template <typename Data>
-bool QueueLst<Data>::operator!=(const QueueList<Data>& other) const noexcept {
+bool QueueLst<Data>::operator!=(const QueueLst<Data>& other) const noexcept {
     return !(*this == other);
 }
 
-void QueueLst<Data>::Dequeue() override {
+
+
+////////// Fine funzioni classiche ////////////
+
+template <typename Data>
+Data& QueueLst<Data>::Head()  {
     if (head == nullptr) {
-        throw std::runtime_error("La coda è vuota");
+        throw std::length_error("Coda vuota");
     }
-    ListNode* oldHead = head;
+    return head->valore_nodo;
+}
+
+template <typename Data>
+Data& QueueLst<Data>::Head() const  {
+    if (head == nullptr) {
+        throw std::length_error("Coda vuota");
+    }
+    return head->valore_nodo;
+}
+
+template <typename Data>
+void QueueLst<Data>::Dequeue()   {
+    if (head == nullptr) {
+        throw std::length_error("La coda è vuota");
+    }
+    Node* oldHead = head;
     head = head->next;
     delete oldHead;
     if (head == nullptr) {
-        tail = nullptr;
+        rear = nullptr;
     }
 }
+
+template <typename Data>
+Data& QueueLst<Data>::HeadNDequeue() const  {
+    if (head == nullptr) {
+        throw std::length_error("La coda è vuota");
+    }
+    Node* oldHead = head;
+    head = head->next;
+    Data val = oldHead->valore_nodo;
+    delete oldHead;
+    if (head == nullptr) {
+        rear = nullptr;
+    }
+    return val;
+}
+
 
 //copy
-const void QueueLst<Data>::Enqueue(const Data& item) const override{
-    ListNode* newNode = new ListNode{item};
+template <typename Data>
+void QueueLst<Data>::Enqueue(const Data& item) {
+    Node* newNode = new Node{item};
     if (head == nullptr) {
-        head = tail = newNode;
+        head = rear = newNode;
     } else {
-        tail->next = newNode;
+        rear->next = newNode;
     }
-    tail = newNode;
+    rear = newNode;
     size++;
 }
+
+
 
 //move
-const void QueueLst<Data>::Enqueue( Data&& item) const override{
-    ListNode* newNode = new ListNode{item};
+template <typename Data>
+void QueueLst<Data>::Enqueue( Data&& item)  {
+    Node* newNode = new Node{item};
     if (head == nullptr) {
-        head = tail = newNode;
+        head = rear = newNode;
     } else {
-        tail->next = newNode;
+        rear->next = newNode;
     }
-    tail = newNode;
+    rear = newNode;
     size++;
 }
 
-template <typename Data>
-Data& QueueLst<Data>::Head() override{
-    if (head == nullptr) {
-        throw std::runtime_error("Coda vuota");
-    }
-    return head->data;
-}
-
-template <typename Data>
-const Data& QueueLst<Data>::Head() const override{
-    if (head == nullptr) {
-        throw std::runtime_error("Coda vuota");
-    }
-    return head->data;
-}
 
 
-template <typename Data>
-Data& QueueLst<Data>::HeadNDequeue(ulong n) const override{
-    // Crea una nuova coda vuota per contenere gli elementi estratti
-    QueueList<Data> extracted_items;
-    
-    // Esegue l'estrazione degli elementi dalla coda corrente               //la funz crea una nuova coda e inserisce i primi n elementi 
-    for (ulong i = 0; i < n && !empty(); ++i) {                             // della vecchia coda
-        extracted_items.Enqueue(Dequeue());
-    }
-    
-    // Restituisce la coda contenente gli elementi estratti
-    return extracted_items;
-}
+
+
 /* ************************************************************************** */
 
 }

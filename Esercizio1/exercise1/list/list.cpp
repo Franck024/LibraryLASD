@@ -180,7 +180,7 @@ void List<Data>::RemoveFromFront(){
 
 //REMOVE FRONT (return Data)
 template <typename Data>
-Data& List<Data>::FrontNRemove(){
+Data List<Data>::FrontNRemove(){
     if(head != nullptr){
         Node* tmp = head;
         Data removedData = tmp->valore_nodo;

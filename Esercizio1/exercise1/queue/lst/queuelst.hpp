@@ -27,12 +27,49 @@ protected:
 
   using List<Data>::size;
 
-  // ...
+  struct Node {
+
+    Data valore_nodo;
+    Node* next;
+
+
+    /* ********************************************************************** */
+
+    // Specific constructors
+    Node(const Data&);
+
+    /* ********************************************************************** */
+
+    // Copy constructor
+    Node& operator=(const Node&);
+
+    // Move constructor
+    Node& operator=(Node&&);
+
+    /* ********************************************************************** */
+
+    // Destructor
+    ~Node(){delete next;};
+
+    /* ********************************************************************** */
+
+    // Comparison operators
+    bool operator==(const Node&) const noexcept;
+		bool operator!=(const Node&) const noexcept;
+
+    /* ********************************************************************** */
+
+    // Specific member functions
+    // ...
+
+  };
+    Node* head;
+    Node* rear;
 
 public:
 
   // Default constructor
-  QueueLst() : head{nullptr}, tail{nullptr};
+  QueueLst() : head{nullptr}, rear{nullptr};
 
   /* ************************************************************************ */
 
@@ -52,7 +89,7 @@ public:
   /* ************************************************************************ */
 
   // Destructor
-  virtual ~QueueLst();
+  ~QueueLst();
 
   /* ************************************************************************ */
 
@@ -72,11 +109,11 @@ public:
 
   // Specific member functions (inherited from Queue)
 
-  const Data& Head() const override; // Override Queue member (non-mutable version; must throw std::length_error when empty)
+  Data& Head() const override; // Override Queue member (non-mutable version; must throw std::length_error when empty)
   Data& Head() override; // Override Queue member (mutable version; must throw std::length_error when empty)
   void Dequeue() override; // Override Queue member (must throw std::length_error when empty)
-  Data& HeadNDequeue(ulong) override; // Override Queue member (must throw std::length_error when empty)
-  const void Enqueue(const Data&) override; // Override Queue member (copy of the value)
+  Data& HeadNDequeue() override; // Override Queue member (must throw std::length_error when empty)
+  void Enqueue(const Data&) override; // Override Queue member (copy of the value)
   void Enqueue(Data&&) override; // Override Queue member (move of the value)
 
   /* ************************************************************************ */
