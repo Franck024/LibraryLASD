@@ -58,7 +58,7 @@ public:
   virtual const Data& Head() const; // (non-mutable version; concrete function must throw std::length_error when empty)
   virtual Data& Head() ; // (mutable version; concrete function must throw std::length_error when empty)
   virtual void Dequeue() ; // (concrete function must throw std::length_error when empty)
-  virtual Data& HeadNDequeue(ulong) ; // (concrete function must throw std::length_error when empty)
+  virtual Data& HeadNDequeue() ; // (concrete function must throw std::length_error when empty)
   virtual void Enqueue(const Data&) ; // Copy of the value
   virtual void Enqueue(Data&&); // Move of the value
 
