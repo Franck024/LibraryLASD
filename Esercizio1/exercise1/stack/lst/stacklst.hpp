@@ -27,48 +27,10 @@ protected:
 
   using List<Data>::size;
 
-  struct Node {
-
-    Data valore_nodo;
-    Node* next;
-
-
-    /* ********************************************************************** */
-
-    // Specific constructors
-    Node(const Data&);
-
-    /* ********************************************************************** */
-
-    // Copy constructor
-    Node& operator=(const Node&);
-
-    // Move constructor
-    Node& operator=(Node&&);
-
-    /* ********************************************************************** */
-
-    // Destructor
-    ~Node(){delete next;};
-
-    /* ********************************************************************** */
-
-    // Comparison operators
-    bool operator==(const Node&) const noexcept;
-		bool operator!=(const Node&) const noexcept;
-
-    /* ********************************************************************** */
-
-    // Specific member functions
-    // ...
-
-  };
-  Node* top;
-
 public:
 
   // Default constructor
-  StackLst(){}
+  StackLst() = default;
 
   /* ************************************************************************ */
 
@@ -79,25 +41,25 @@ public:
   /* ************************************************************************ */
 
   // Copy constructor
-  StackLst(const StackLst&);
+  StackLst(const StackLst<Data>&);
 
   // Move constructor
-  StackLst(StackLst&&) noexcept;
+  StackLst(StackLst<Data>&&) noexcept;
 
   /* ************************************************************************ */
 
   // Destructor
-  ~StackLst() ;
+  ~StackLst() = default;
 
   /* ************************************************************************ */
 
   /* ************************************************************************ */
 
   // Copy assignment
-  StackLst& operator=(const StackLst&);
+  StackLst<Data>& operator=(const StackLst<Data>&);
 
   // Move assignment
-  StackLst& operator=(StackLst&&) noexcept;
+  StackLst<Data>& operator=(StackLst<Data>&&) noexcept;
 
   /* ************************************************************************ */
 
@@ -110,7 +72,7 @@ public:
   // Specific member functions (inherited from Stack)
 
   Data& Top() const override; // Override Stack member (non-mutable version; must throw std::length_error when empty)
-  Data& Top() override; // Override Stack member (non-mutable version; must throw std::length_error when empty)
+  Data& Top() override; // Override Stack member (mutable version; must throw std::length_error when empty)
   void Pop() override; // Override Stack member (must throw std::length_error when empty)
   Data& TopNPop() override; // Override Stack member (must throw std::length_error when empty)
   void Push(const Data&) const override; // Override Stack member (copy of the value)
