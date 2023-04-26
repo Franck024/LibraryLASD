@@ -26,8 +26,6 @@ private:
 protected:
 
   using Vector<Data>::size;
-  using Vector<Data>::capacity;
-  using Vector<Data>::Elements;
 
 public:
 
