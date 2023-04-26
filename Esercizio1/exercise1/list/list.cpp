@@ -246,74 +246,55 @@ void List<Data>::Clear(){
 
 //INSERT (copy)
 template <typename Data>
-void List<Data>::Insert(ulong index, const Data& val) {          
-    if(index < 0 || index > size)
-        throw std::out_of_range("Indice fuori range");
-    Node* newNode = new Node(val);
-    if(index == 0){
-        newNode->next = head;
-        head = newNode;
-        if(tail == nullptr){
-           tail = newNode; 
-        } else if(index == size){
-            tail->next = newNode;
-            tail = newNode;
-        }else{
-            Node* prev = head;
-            for (ulong i = 0; i < index - 1; i++) {
-                prev = prev->next;
-            }
-            newNode->next = prev->next;
-            prev->next = newNode;
-        }
-        size++;
+bool List<Data>::Insert(const Data& val) {       
+    Node* tmp = head;
+    while(tmp != nullptr){
+        if(tmp->valore_nodo == val){
+            throw "L'elemento esiste già nella lista!";
+            return false;
+        }    
+        tmp = tmp->next;
     }
-
+    InsertAtFront(val);
+    return true;
 }
 
 //INSERT (move)
 template <typename Data>
-void List<Data>::Insert(ulong index, Data&& val) {
-    if (index < 0 || index > size) {
-        throw std::out_of_range("Indice fuori range");
-    }
-
-    Node* newNode = new Node(std::move(val));
-    if (index == 0) {
-        newNode->next = head;
-        head = newNode;
-    } else {
-        Node* prev = head;
-        for (ulong i = 0; i < index - 1; i++) {
-            prev = prev->next;
+bool List<Data>::Insert(Data&& val) {
+    Node* tmp = head;
+    while (tmp != nullptr) {
+        if (tmp->valore_nodo == val) {
+            throw "L'elemento esiste già nella lista!";
+            return false; // l'elemento esiste già nella lista, non fare nulla
         }
-        newNode->next = prev->next;
-        prev->next = newNode;
+        tmp = tmp->next;
     }
-    size++; 
+    InsertAtFront(std::move(val)); // sposta il valore nella nuova posizione nella lista
+    return true;
 }
 
 // Funzione per la rimozione di un nodo dalla lista
 template <typename Data>
-void List<Data>::Remove(ulong index) {
-    if (index < 0 || index >= size) {
-        throw std::out_of_range("Indice fuori range");
+bool List<Data>::Remove(Data& val) {
+    if(head == nullptr){
+        throw "La lista è vuota!";
+        return false;
     }
-
-    Node* nodeToRemove = nullptr;
-    if (index == 0) {
-        nodeToRemove = head;
-        head = head->next;
-    } else {
-        Node* prev = head;
-        for (ulong i = 0; i < index - 1; i++) {
-            prev = prev->next;
-        }
-        nodeToRemove = prev->next;
-        prev->next = nodeToRemove->next;
+    Node* tmp = head;
+    Node* prec = nullptr;
+    while(tmp != nullptr && tmp->valore_nodo != val){
+        prec = tmp;
+        tmp = tmp->next;
     }
-    delete nodeToRemove;
+    if(tmp == nullptr){
+        throw "L'elemento non esiste nella lista!";
+        return false;
+    }
+    prec->next = tmp->next;
+    delete tmp;
     size--;
+    return true;
 }
 //-------------- <<<< DictionaryContainer
 
