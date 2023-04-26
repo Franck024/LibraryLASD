@@ -27,49 +27,10 @@ protected:
 
   using List<Data>::size;
 
-  struct Node {
-
-    Data valore_nodo;
-    Node* next;
-
-
-    /* ********************************************************************** */
-
-    // Specific constructors
-    Node(const Data&);
-
-    /* ********************************************************************** */
-
-    // Copy constructor
-    Node& operator=(const Node&);
-
-    // Move constructor
-    Node& operator=(Node&&);
-
-    /* ********************************************************************** */
-
-    // Destructor
-    ~Node(){delete next;};
-
-    /* ********************************************************************** */
-
-    // Comparison operators
-    bool operator==(const Node&) const noexcept;
-		bool operator!=(const Node&) const noexcept;
-
-    /* ********************************************************************** */
-
-    // Specific member functions
-    // ...
-
-  };
-    Node* head;
-    Node* rear;
-
 public:
 
   // Default constructor
-  QueueLst() : head{nullptr}, rear{nullptr};
+  QueueLst() = default;
 
   /* ************************************************************************ */
 
@@ -80,30 +41,30 @@ public:
   /* ************************************************************************ */
 
   // Copy constructor
-  QueueLst(const QueueLst&);
+  QueueLst(const QueueLst<Data>&);
 
 
   // Move constructor
-  QueueLst(QueueLst&&) noexcept;
+  QueueLst(QueueLst<Data>&&) noexcept;
 
   /* ************************************************************************ */
 
   // Destructor
-  ~QueueLst();
+  ~QueueLst() = default;
 
   /* ************************************************************************ */
 
   // Copy assignment
-  QueueLst& operator=(const QueueLst&);
+  QueueLst& operator=(const QueueLst<Data>&);
 
   // Move assignment
-  QueueLst& operator=(QueueLst&&) noexcept;
+  QueueLst& operator=(QueueLst<Data>&&) noexcept;
 
   /* ************************************************************************ */
 
   // Comparison operators
-  bool operator==(const QueueLst&) const noexcept;
-  bool operator!=(const QueueLst&) const noexcept;
+  bool operator==(const QueueLst<Data>&) const noexcept;
+  bool operator!=(const QueueLst<Data>&) const noexcept;
 
   /* ************************************************************************ */
 

@@ -44,7 +44,7 @@ public:
 
   // Specific member functions
 
-  virtual const Data& Top() const = 0; // (non-mutable version; concrete function must throw std::length_error when empty)
+  virtual Data& Top() const = 0; // (non-mutable version; concrete function must throw std::length_error when empty)
   virtual Data& Top() = 0 ; // (mutable version; concrete function must throw std::length_error when empty)
   virtual void Pop() = 0 ; // (concrete function must throw std::length_error when empty)
   virtual Data& TopNPop()  = 0; // (concrete function must throw std::length_error when empty)

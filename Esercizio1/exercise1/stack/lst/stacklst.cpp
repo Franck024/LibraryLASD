@@ -5,22 +5,11 @@ namespace lasd {
 
 // Costruttore (MappableContainer)              FARE
 template <typename Data>
-StackLst<Data>::StackLst(const MappableContainer<Data>& mappCont){                  
-    size = 0;
-    mappCont.Map([&](const auto& val){
-        Push(val);
-    });
-}
+StackLst<Data>::StackLst(const MappableContainer<Data>& mappCont) : List<Data>(mappCont){}
 
 // Costruttore (MutableMappableContainer)           FARE
 template <typename Data>
-StackLst<Data>::StackLst(const MutableMappableContainer<Data>& mutMapCont) :  top(nullptr){
-    size = 0;
-    mutMapCont.Map([&](const auto& val){
-        Push(val);
-    });
-            
-}
+StackLst<Data>::StackLst(const MutableMappableContainer<Data>& mutMapCont) : List<Data>(mutMapCont){}
 
 
 // Copy Constructor
@@ -51,7 +40,7 @@ StackLst<Data> &QueueLst<Data>::operator=(StackLst<Data> &&assList) noexcept
 // Comparison
 template <typename Data>
 bool StackLst<Data>::operator==(const StackLst<Data>& other) const noexcept{
-    return List<Data>::operation==(other);
+    return List<Data>::operator==(other);
 }
 
 template <typename Data>
@@ -64,14 +53,14 @@ bool StackLst<Data>::operator!=(const StackLst<Data>& other) const noexcept{
 template <typename Data>
 Data& StackLst<Data>::Top() const {
     if(List<Data>::Empty())
-        return throw std::length_error("Lista vuota");
+        throw std::length_error("Lista vuota");
     return this->Front();
 }
 
 template <typename Data>
 Data& StackLst<Data>::Top(){
     if(List<Data>::Empty())
-        return throw std::length_error("Lista vuota");
+        throw std::length_error("Lista vuota");
     return this->Front();
 }
 
@@ -89,7 +78,7 @@ void StackLst<Data>::Pop()  {
 template <typename Data>
 Data& StackLst<Data>::TopNPop()  {
     if(List<Data>::Empty())
-        return throw std::length_error("Lista vuota");
+        throw std::length_error("Lista vuota");
     return this->FrontNRemove();
 }
 

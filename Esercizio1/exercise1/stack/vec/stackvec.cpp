@@ -1,74 +1,80 @@
 
+#define CAPACITY 3
+
 namespace lasd {
 
 /* ************************************************************************** */
 
+
+/////////////// costruttori ////////////////
 template <typename Data>
-StackVec<Data>::StackVec(const MappableContainer<Data>& mp){  // fare
-    size = mp.Size();
+StackVec<Data>::StackVec(){  
+    capacity = CAPACITY;
+    Elements = new Data[capacity]{};
+    size = 0;
 }
 
 template <typename Data>
-StackVec<Data>::StackVec(const MutableMappableContainer<Data>& mp){  //fare
+StackVec<Data>::StackVec(const MappableContainer<Data>& mp) : Vector<Data>(mp){  
+    size = mp.Size();
+    Vector<Data>::Resize(size*2);
+}
+
+template <typename Data>
+StackVec<Data>::StackVec(const MutableMappableContainer<Data>& mp) : Vector<Data>(mp){  
     size = mp.Size();
 }
+
+///////////////  ---------- //////////////
+////////////// classici metodi ////////////
 
 // Copy Constructor
 template <typename Data>
-StackVec<Data>::StackVec(const StackVec& other){
-    m_vector = other.m_vector;
-}
+StackVec<Data>::StackVec(const StackVec& other) : Vector<Data>(other){}
 
 // Move Constructor
 template <typename Data>
-StackVec<Data>::StackVec(StackVec&& other) noexcept{
-    m_vector = std::move(other.m_vector);
-}
-
-template <typename Data>
-StackVec<Data>::~StackVec() {
-    m_vector.~Vector();
-}
+StackVec<Data>::StackVec(StackVec&& other) noexcept : Vector<Data>(other){}
 
 // Copy Assignment Operator
 template <typename Data>
-StackVec<Data>& StackVec<Data>::operator=(const StackVec<Data>& other) {
-    if (this != &other) {
-        m_vector = other.m_vector;
-    }
+StackVec<Data>& StackVec<Data>::operator=(const StackVec<Data>& other){
+    Vector<Data>::operator=(other);
     return *this;
 }
 
 // Move Assignment Operator
 template <typename Data>
-StackVec<Data>& StackVec<Data>::operator=(StackVec<Data>&& other) noexcept {
-    m_vector = std::move(other.m_vector);
+StackVec<Data>& StackVec<Data>::operator=(StackVec<Data>&& other) noexcept{
+    Vector<Data>::operator=(std::move(other));
     return *this;
 }
 
 template <typename Data>
 bool StackVec<Data>::operator==(const StackVec<Data>& other) const noexcept{
-    return m_vector == other.m_vector;
+    return Vector<Data>::operator==(other);
 }
 
 template <typename Data>
 bool StackVec<Data>::operator!=(const StackVec<Data>& other) const noexcept{
     return !(*this == other);
 }
-
-template <typename Data>
-void StackVec<Data>::Pop()  {
-    m_vector.Remove(size - 1 );
-}
+//////////////// -------------- ///////////
+///////////// metodi stack //////////
 
 template <typename Data>
 Data& StackVec<Data>::Top() const {
-    return   m_vector.Front();
+   return Vector<Data>::Back();
 }
 
 template <typename Data>
 Data& StackVec<Data>::Top(){
-    return   m_vector.Front();
+    return Vector<Data>::Back();
+}
+
+template <typename Data>
+void StackVec<Data>::Pop()  {
+    m_vector.Remove(size - 1 );
 }
 
 template <typename Data>

@@ -156,7 +156,7 @@ void List<Data>::InsertAtFront(const Data& val)noexcept{                        
 //INSERIMENTO IN TESTA (move)
 template <typename Data>
 void List<Data>::InsertAtFront(Data&& val) noexcept{
-    Node* newNode = std::move(val);
+    Node* newNode = new Node(std::move(val));
     if (head) {
         newNode->next = std::move(head);
         head = std::move(newNode);
