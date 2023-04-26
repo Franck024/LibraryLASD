@@ -22,12 +22,6 @@ private:
 
 protected:
 
-    struct Node {
-        Data valore_nodo;
-        Node* next;
-        Node(Data x): valore_nodo(x), next(nullptr) {}
-    };
-    Node* top;
 
 public:
 
