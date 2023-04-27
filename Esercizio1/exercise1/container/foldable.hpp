@@ -102,7 +102,7 @@ public:
 
   using typename FoldableContainer<Data>::FoldFunctor;
 
-  virtual void PreOrderFold(FoldFunctor, void*);
+  virtual void PreOrderFold(const FoldFunctor, void*) const = 0;
 
   /* ************************************************************************ */
 
@@ -153,7 +153,7 @@ public:
 
   using typename FoldableContainer<Data>::FoldFunctor;
 
-  virtual void PostOrderFold(FoldFunctor, void*)  ;  
+  virtual void PostOrderFold(const FoldFunctor, void*) const = 0 ;  
 
   /* ************************************************************************ */
 

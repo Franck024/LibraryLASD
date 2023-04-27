@@ -180,10 +180,10 @@ void List<Data>::RemoveFromFront(){
 
 //REMOVE FRONT (return Data)
 template <typename Data>
-Data List<Data>::FrontNRemove(){
+Data& List<Data>::FrontNRemove(){
     if(head != nullptr){
         Node* tmp = head;
-        Data removedData = tmp->valore_nodo;
+        Data& removedData = tmp->valore_nodo;
         head = head->next;
         size--;
         delete tmp;
@@ -276,7 +276,7 @@ bool List<Data>::Insert(Data&& val) {
 
 // Funzione per la rimozione di un nodo dalla lista
 template <typename Data>
-bool List<Data>::Remove(Data& val) {
+bool List<Data>::Remove(const Data& val) {
     if(head == nullptr){
         throw "La lista è vuota!";
         return false;
@@ -387,13 +387,13 @@ void List<Data>::Fold(const FoldFunctor& functor, void* accumulator)  const    {
 
 //Preorderfoldable
 template <typename Data>
-void List<Data>::PreOrderFold(FoldFunctor func, void* initial_value)  {
+void List<Data>::PreOrderFold(const FoldFunctor func, void* initial_value) const {
     PreOrderFold(func,initial_value, head);
 
 }
 
 template <typename Data>
-void List<Data>::PreOrderFold(FoldFunctor func, void* initial_value, Node* node) const {
+void List<Data>::PreOrderFold(const FoldFunctor func, void* initial_value, Node* node) const {
     if (node == nullptr) {
         return;
     }
@@ -406,12 +406,12 @@ void List<Data>::PreOrderFold(FoldFunctor func, void* initial_value, Node* node)
 
 //Postorderfoldabel             
 template <typename Data>
-void List<Data>::PostOrderFold(FoldFunctor fun, void* initial_value) {
+void List<Data>::PostOrderFold(const FoldFunctor fun, void* initial_value) const{
     PostOrderFold(fun, initial_value, head);
 }
 
 template <typename Data>
-void List<Data>::PostOrderFold(FoldFunctor fun, void* initial_value, Node* node) const{
+void List<Data>::PostOrderFold(const FoldFunctor fun, void* initial_value, Node* node) const{
     if(node == nullptr)
         return;
     PostOrderFold(fun, initial_value, node->next);
@@ -513,6 +513,7 @@ void List<Data>::PostOrderMap(MutableMapFunctor fun, Node* node ) {
     // Applica la funzione MapFunctor al valore del nodo
     Data& node_value = node->valore_nodo;
     fun(node_value);
+}
 }
 //----------------
 

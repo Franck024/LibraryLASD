@@ -131,7 +131,7 @@ public:
   // Specific member functions (inherited from DictionaryContainer)
   bool Insert(const Data&) override; // Copy of the value
   bool Insert(Data&&) override; // Move of the value
-  bool Remove(Data&) override;
+  bool Remove(const Data&) override;
 
   /* ************************************************************************ */
 
@@ -158,13 +158,13 @@ public:
 
   // Specific member function (inherited from PreOrderFoldableContainer)
 
-  void  PreOrderFold(FoldFunctor, void*) override; // Override PreOrderFoldableContainer member
+  void  PreOrderFold(const FoldFunctor, void*) const override; // Override PreOrderFoldableContainer member
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from PostOrderFoldableContainer)
 
-  void  PostOrderFold(FoldFunctor, void*) override; // Override PostOrderFoldableContainer member
+  void  PostOrderFold(const FoldFunctor, void*) const override; // Override PostOrderFoldableContainer member
 
   /* ************************************************************************ */
 
@@ -210,8 +210,8 @@ protected:
 
   // Auxiliary member functions (for PreOrderFoldableContainer & PostOrderFoldableContainer)
 
-  void PreOrderFold(FoldFunctor, void*, Node*) const; // Accessory function executing from one point of the list onwards
-  void PostOrderFold(FoldFunctor, void*, Node*) const; // Accessory function executing from one point of the list onwards
+  void PreOrderFold(const FoldFunctor, void*, Node*) const; // Accessory function executing from one point of the list onwards
+  void PostOrderFold(const FoldFunctor, void*, Node*) const; // Accessory function executing from one point of the list onwards
 
   /* ************************************************************************ */
 

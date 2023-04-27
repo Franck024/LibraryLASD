@@ -10,7 +10,7 @@ Vector<Data>::Vector(const ulong new_size){
 }
 
 template<typename Data>
-Vector<Data>::Vector(MappableContainer<Data>& mp){
+Vector<Data>::Vector(const MappableContainer<Data>& mp){
     size = 0;
     capacity = Size();
     Elements = new Data[size];
@@ -20,7 +20,7 @@ Vector<Data>::Vector(MappableContainer<Data>& mp){
 }
 
 template<typename Data>
-Vector<Data>::Vector(MutableMappableContainer<Data>& mp){
+Vector<Data>::Vector(const MutableMappableContainer<Data>& mp){
     size = 0;
     capacity = Size();
     Elements = new Data[size];

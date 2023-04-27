@@ -50,7 +50,7 @@ public:
 
   virtual bool Insert(const Data&); // Copy of the value
   virtual bool Insert(Data&&); // Move of the value
-  virtual bool Remove(Data&);
+  virtual bool Remove(const Data&);
 
   virtual bool InsertAll(const MappableContainer<Data>&) noexcept; // Copy of the value; From MappableContainer; True if all are inserted
   virtual bool InsertAll(MutableMappableContainer<Data>&&) noexcept; // Move of the value; From MutableMappableContainer; True if all are inserted

@@ -26,13 +26,11 @@ private:
 protected:
 
   using Vector<Data>::size;
-  using Vector<Data>::Elements; // credo
-  ulong capacity; //credo. per implementare extends e reduce
 
 public:
 
   // Default constructor
-  QueueVec() : size(0), capacity(0){}
+  QueueVec();
 
   /* ************************************************************************ */
 
@@ -52,7 +50,7 @@ public:
   /* ************************************************************************ */
 
   // Destructor
-  virtual ~QueueVec();
+  ~QueueVec() = default;
 
   /* ************************************************************************ */
 
@@ -72,10 +70,10 @@ public:
 
   // Specific member functions (inherited from Queue)
 
-  const Data& Head() const override; // Override Queue member (non-mutable version; must throw std::length_error when empty)
+  Data& Head() const override; // Override Queue member (non-mutable version; must throw std::length_error when empty)
   Data& Head() override; // Override Queue member (mutable version; must throw std::length_error when empty)
   void Dequeue(); // Override Queue member (must throw std::length_error when empty)
-  Data& HeadNDequeue(ulong) override; // Override Queue member (must throw std::length_error when empty)
+  Data& HeadNDequeue() override; // Override Queue member (must throw std::length_error when empty)
   void Enqueue(const Data&) const override; // Override Queue member (copy of the value)
   void Enqueue(Data&&) override; // Override Queue member (move of the value)
 
@@ -98,7 +96,7 @@ protected:
   // Auxiliary member functions
 
   void Expand(ulong) ;
-  void Reduce() ;
+  void Reduce(ulong) ;
   void SwapVectors(QueueVec<Data>&) ;
 
 };

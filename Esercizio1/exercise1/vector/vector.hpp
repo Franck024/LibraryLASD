@@ -39,8 +39,8 @@ public:
 
   // Specific constructors
   Vector(const ulong) ; // A vector with a given initial dimension
-  Vector(MappableContainer<Data>&) ; // A vector obtained from a MappableContainer
-  Vector(MutableMappableContainer<Data>&) ; // A vector obtained from a MutableMappableContainer
+  Vector(const MappableContainer<Data>&) ; // A vector obtained from a MappableContainer
+  Vector(const MutableMappableContainer<Data>&) ; // A vector obtained from a MutableMappableContainer
 
   /* ************************************************************************ */
 
