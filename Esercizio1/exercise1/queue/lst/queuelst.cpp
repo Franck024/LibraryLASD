@@ -18,7 +18,7 @@ QueueLst<Data>::QueueLst(const QueueLst<Data>& other) : List<Data>(other){}
 
 // Costruttore di spostamento
 template <typename Data>
-QueueLst<Data>::QueueLst(QueueLst<Data>&& other) : List<Data>(std::move(other)) {}
+QueueLst<Data>::QueueLst(QueueLst<Data>&& other) noexcept : List<Data>(std::move(other)) {}
 
 //Copy assignment
 template <typename Data>

@@ -3,11 +3,11 @@ namespace lasd {
 
 /* ************************************************************************** */
 
-// Costruttore (MappableContainer)              FARE
+// Costruttore (MappableContainer)              
 template <typename Data>
 StackLst<Data>::StackLst(const MappableContainer<Data>& mappCont) : List<Data>(mappCont){}
 
-// Costruttore (MutableMappableContainer)           FARE
+// Costruttore (MutableMappableContainer)           
 template <typename Data>
 StackLst<Data>::StackLst(const MutableMappableContainer<Data>& mutMapCont) : List<Data>(mutMapCont){}
 
@@ -23,17 +23,15 @@ StackLst<Data>::StackLst(StackLst<Data>&& other) noexcept : List<Data>(std::move
 
 //Copy assignment
 template <typename Data>
-StackLst<Data> &StackLst<Data>::operator=(const StackLst<Data> &assList)
-{
-    List<Data>::operation=(assList);
+StackLst<Data>& StackLst<Data>::operator=(const StackLst<Data> &assList){
+    List<Data>::operator=(assList);
     return *this;
 }
 
 //Move assignment
 template <typename Data>
-StackLst<Data> &QueueLst<Data>::operator=(StackLst<Data> &&assList) noexcept
-{
-    List<Data>::operation=(std::move(assList));
+StackLst<Data>& StackLst<Data>::operator=(StackLst<Data> &&assList) noexcept{
+    List<Data>::operator=(std::move(assList));
     return *this;
 }  
 
@@ -83,7 +81,7 @@ Data& StackLst<Data>::TopNPop()  {
 }
 
 template <typename Data>
-void StackLst<Data>::Push(const Data& val) const  {
+void StackLst<Data>::Push(const Data& val) {
     List<Data>::InsertAtFront(val);
 }
 
