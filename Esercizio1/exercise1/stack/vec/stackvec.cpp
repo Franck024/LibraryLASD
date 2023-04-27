@@ -141,9 +141,12 @@ void StackVec<Data>::Push( Data&& val)  {
 
 template <typename Data>
 Data& StackVec<Data>::TopNPop()  {
-    Data& val = Top();
-    Pop();
-    return val;
+    if(size != 0){
+        Data& val = Top();
+        Pop();
+        return val; 
+    }
+    throw std::length_error("Stack vuoto!");
 }
 
 /* ************************************************************************** */

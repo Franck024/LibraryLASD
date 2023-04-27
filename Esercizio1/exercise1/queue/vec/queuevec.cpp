@@ -5,52 +5,86 @@ namespace lasd {
 
 
 /////////////// costruttori ////////////////
+
 template <typename Data>
-QueueVec<Data>::QueueVec(){  
-    // capacity = CAPACITY;
-    // Elements = new Data[capacity]{};
-    size = 0;
+QueueVec<Data>::QueueVec(const MappableContainer<Data>& mp){  
+    size = mp.Size();
+    capacity = mp.Size();
+    Elements = new Data[mp.Size()];
+    mp.PreOrderMap([this](const Data& value) {
+        Push(value);
+    });
 }
 
 template <typename Data>
-QueueVec<Data>::QueueVec(const MappableContainer<Data>& mp) : Vector<Data>(mp){  
-    size = mp.Size();
-    Vector<Data>::Resize(size*2);
-}
-
-template <typename Data>
-QueueVec<Data>::QueueVec(const MutableMappableContainer<Data>& mp) : Vector<Data>(mp){  
-    size = mp.Size();
-}
+QueueVec<Data>::QueueVec(const MutableMappableContainer<Data>& mp) : Vector<Data>(mp){}
 
 ///////////////  ---------- //////////////
 ////////////// classici metodi ////////////
 
 // Copy Constructor
 template <typename Data>
-QueueVec<Data>::QueueVec(const QueueVec& other) : Vector<Data>(other){}
+QueueVec<Data>::QueueVec(const QueueVec& other){
+    capacity = other.capacity;
+    size = other.size;
+    Elements = new Data[capacity];
+    for (ulong i = 0; i < size; ++i) {
+        Elements[i] = other.Elements[i];
+    }
+}
 
 // Move Constructor
 template <typename Data>
-QueueVec<Data>::QueueVec(QueueVec&& other) noexcept : Vector<Data>(other){}
+QueueVec<Data>::QueueVec(QueueVec&& other) noexcept{
+    capacity = other.capacity;
+    size = other.size;
+    Elements = other.Elements;
+    other.capacity = 0;
+    other.size = 0;
+    other.Elements = nullptr;
+}
 
 // Copy Assignment Operator
 template <typename Data>
 QueueVec<Data>& QueueVec<Data>::operator=(const QueueVec<Data>& other){
-    Vector<Data>::operator=(other);
+    if (this != &other) {
+        capacity = other.capacity;
+        size = other.size;
+        delete[] Elements;
+        Elements = new Data[capacity];
+        for (ulong i = 0; i < size; ++i) {
+            Elements[i] = other.Elements[i];
+        }
+    }
     return *this;
 }
 
 // Move Assignment Operator
 template <typename Data>
 QueueVec<Data>& QueueVec<Data>::operator=(QueueVec<Data>&& other) noexcept{
-    Vector<Data>::operator=(std::move(other));
+    if (this != &other) {
+        capacity = other.capacity;
+        size = other.size;
+        delete[] Elements;
+        Elements = other.Elements;
+        other.capacity = 0;
+        other.size = 0;
+        other.Elements = nullptr;
+    }
     return *this;
 }
 
 template <typename Data>
 bool QueueVec<Data>::operator==(const QueueVec<Data>& other) const noexcept{
-    return Vector<Data>::operator==(other);
+    if (size != other.size) {
+        return false;
+    }
+    for (ulong i = 0; i < size; ++i) {
+        if (Elements[i] != other.Elements[i]) {
+            return false;
+        }
+    }
+    return true;
 }
 
 template <typename Data>
@@ -63,120 +97,99 @@ bool QueueVec<Data>::operator!=(const QueueVec<Data>& other) const noexcept{
 
 template <typename Data>
 Data& QueueVec<Data>::Head() const  {
-    if (Empty()) {
-        throw std::length_error("Coda vuota");
+    if(size == 0) {
+        throw std:: length_error(" Lista vuota"); // se la coda è vuota, solleva un'eccezione
     }
-    return Vector<Data>::Front();
+    return Elements[size - 1];
 }
 
 template <typename Data>
 Data& QueueVec<Data>::Head()  {
-    if (Empty()) {
-        throw std::length_error("Coda vuota");
+    if(size == 0) {
+        throw std:: length_error(" Lista vuota"); // se la lista è vuota, solleva un'eccezione
     }
-    return Vector<Data>::Front();
+    return Elements[size - 1];
 }
 
 template <typename Data>
 void QueueVec<Data>::Dequeue() {
-    if (Empty()) {
-        throw std::length_error("Coda vuota");
+    if(size == 0) {
+        throw std:: length_error(" Lista vuota"); // se la lista è vuota, solleva un'eccezione
     }
-    // Salva il primo elemento della coda e sposta gli altri elementi di una posizione a sinistra
-    Data first = Elements[0];
-    for (ulong i = 0; i < size - 1; i++) {
-        Elements[i] = Elements[i+1];
-    }
-    
-    // Decrementa la dimensione della coda e dealloca l'ultimo elemento
     size--;
-    Elements = realloc(Elements, sizeof(Data) * size);
+    if(size <= capacity / 4) {
+        Resize(capacity / 2); // dimezza la capacità se la lista è vuota al 25%
+    }
 }
 
 template <typename Data>
 Data& QueueVec<Data>::HeadNDequeue()  {
-    if (n > size) {
-        throw std::length_error("La coda non ha abbastanza elementi.");
+    if(size != 0){
+        Data& val = Head();
+        Dequeue();
+        return val; 
     }
-    
-    // Ottieni il dato dal primo elemento della coda
-    Data& dequeuedData = Head();
-    
-    Dequeue();
-    
-    // Restituisci il dato dequeuedData
-    return dequeuedData;
+    throw std::length_error("Lista vuota!");
 }
 
 // ENQUEUE  (move)
 template <typename Data>
-void QueueVec<Data>::Enqueue(const Data& element) const  {
-    // Se la dimensione della coda è uguale alla capacità, raddoppia la capacità
-    if (size == capacity) {
-        capacity *= 2;
-        Elements = realloc(Elements, sizeof(Data) * capacity);
+void QueueVec<Data>::Enqueue(const Data& element){
+    if(size == capacity) {
+        Resize(2 * capacity); // raddoppia la capacità se il vettore è pieno
     }
-    // Aggiunge l'elemento in fondo alla coda
-    Elements[mSize] = element;
-    size++;
+    Elements[size++] = element; // inserisce l'elemento in cima alla coda
 }
 
 // ENQUEUE (move)
 template <typename Data>
 void QueueVec<Data>::Enqueue(Data&& element) {
-    // Se la dimensione della coda è uguale alla capacità, raddoppia la capacità
-    if (size == capacity) {
-        capacity *= 2;
-        Data* newElements = new Data[size - n];
-        for (int i = 0; i < size - n; i++) {
-            newElements[i] = Elements[i + n];
-        }
-        delete[] Elements;
-        Elements = newElements;
+    if(size == capacity) {
+        Resize(2 * capacity); // raddoppia la capacità se il vettore è pieno
     }
-    // Aggiunge l'elemento in fondo alla coda
-    Elements[size] = std::move(element);
-    size++;
+    Elements[size++] = std::move(element); // inserisce l'elemento in cima alla coda
 }
 
-inline ulong QueueVec<Data>::Size() const noexcept {
+template <typename Data>
+ulong QueueVec<Data>::Size() const noexcept {
     return size;
 }
 
 // Metodo Clear con deallocazione di memoria
+template <typename Data>
 void Clear() {
-    delete[] Elements;
-    Elements = nullptr;
-    size = 0
-    capacity = 0;
+    Vector<Data>::Clear;
 }
 
 //METODI SPECIALI
 
 // Metodo Expand
 template <typename Data>
-void QueueVec<Data>::Expand(ulong tmpcapacity) {
-    if (tmpcapacity > capacity) {
-        Data* newElements = (Data*)realloc(Elements, tmpcapacity * sizeof(Data));
-        if (newElements == nullptr) {
-            throw std::bad_alloc();
-        }
-        Elements = newElements;
-        capacity = tmpcapacity;
+void QueueVec<Data>::Expand(ulong new_capacity) {
+    if (new_capacity < capacity) { // verifica se la nuova capacità è maggiore di quella attuale
+        throw std::length_error("Nuova capacità inferiore alla capacità attuale");
     }
+    Elements = (Data*) realloc(Elements, new_capacity * sizeof(Data)); // espande la memoria
+    if (Elements == nullptr) { // verifica se l'espansione ha avuto successo
+        throw std::bad_alloc();
+    }
+    capacity = new_capacity; // aggiorna la capacità
 }
 
 // Metodo Reduce
 template <typename Data>
-void QueueVec<Data>::Reduce() {
-    if (capacity > size) {
-        Data* newElements = (Data*)realloc(Elements, size * sizeof(Data));
-        if (newElements == nullptr && size > 0) {
-            throw std::bad_alloc();
-        }
-        Elements = newElements;
-        capacity = size;
+void QueueVec<Data>::Reduce(const ulong new_capacity) {
+    if (new_capacity >= capacity) { // verifica se la nuova capacità è inferiore a quella attuale
+        throw std::length_error("Nuova capacità maggiore o uguale alla capacità attuale");
     }
+    if (new_capacity < size) { // verifica se la nuova capacità è sufficiente per contenere gli elementi attuali
+        throw std::length_error("Nuova capacità inferiore alla dimensione attuale dello stack");
+    }
+    Elements = (Data*) realloc(Elements, new_capacity * sizeof(Data)); // riduce la memoria
+    if (Elements == nullptr) { // verifica se la riduzione ha avuto successo
+        throw std::bad_alloc();
+    }
+    capacity = new_capacity; // aggiorna la capacità
 }
 
 // Metodo SwapVectors
@@ -187,7 +200,8 @@ void QueueVec<Data>::SwapVectors(QueueVec<Data>& other) {
     std::swap(Elements, other.Elements);
 }
 
-inline bool Empty() const noexcept{
+template <typename Data>
+bool QueueVec<Data>::Empty() const noexcept{
     return (size == 0);
 }
 

@@ -26,11 +26,15 @@ private:
 protected:
 
   using Vector<Data>::size;
+  using Vector<Data>::capacity;
+  using Vector<Data>::Elements;
+
+  using Vector<Data>::Resize;
 
 public:
 
   // Default constructor
-  QueueVec();
+  QueueVec() : Vector<Data>() {};
 
   /* ************************************************************************ */
 
@@ -74,16 +78,16 @@ public:
   Data& Head() override; // Override Queue member (mutable version; must throw std::length_error when empty)
   void Dequeue(); // Override Queue member (must throw std::length_error when empty)
   Data& HeadNDequeue() override; // Override Queue member (must throw std::length_error when empty)
-  void Enqueue(const Data&) const override; // Override Queue member (copy of the value)
+  void Enqueue(const Data&) override; // Override Queue member (copy of the value)
   void Enqueue(Data&&) override; // Override Queue member (move of the value)
 
   /* ************************************************************************ */
 
   // Specific member functions (inherited from Container)
 
-  inline bool Empty() const noexcept override; // Override Container member
+  bool Empty() const noexcept override; // Override Container member
 
-  inline ulong Size() const noexcept override; // Override Container member
+  ulong Size() const noexcept override; // Override Container member
 
   /* ************************************************************************ */
 
