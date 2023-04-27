@@ -126,7 +126,7 @@ public:
 
   // Specific member function
 
-  void Resize(const ulong ) ;
+  virtual void Resize(const ulong ) ;
 
   /* ************************************************************************ */
 

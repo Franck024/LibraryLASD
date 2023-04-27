@@ -26,11 +26,15 @@ private:
 protected:
 
   using Vector<Data>::size;
+  using Vector<Data>::capacity;
+  using Vector<Data>::Elements;
+
+  using Vector<Data>::Resize;
 
 public:
 
   // Default constructor
-   StackVec();
+   StackVec() : Vector<Data>() {};
 
   /* ************************************************************************ */
 
@@ -73,16 +77,16 @@ public:
   Data& Top()  override; // Override Stack member (non-mutable version; must throw std::length_error when empty)
   void Pop()  override; // Override Stack member (must throw std::length_error when empty)
   Data& TopNPop()  override; // Override Stack member (must throw std::length_error when empty)
-  void Push(const Data&) const override; // Override Stack member (copy of the value)
+  void Push(const Data&) override; // Override Stack member (copy of the value)
   void Push(Data&&) override; // Override Stack member (move of the value)
 
   /* ************************************************************************ */
 
   // Specific member functions (inherited from Container)
 
-   bool Empty() override; // Override Container member
+   bool Empty() const noexcept override; // Override Container member
 
-   ulong Size() const override; // Override Container member
+   ulong Size() const noexcept override; // Override Container member
 
   /* ************************************************************************ */
 
@@ -94,8 +98,8 @@ protected:
 
   // Auxiliary member functions
 
-   void Expand(ulong) ;
-   void Reduce(ulong) ;
+   void Expand(const ulong) ;
+   void Reduce(const ulong) ;
 
 };
 

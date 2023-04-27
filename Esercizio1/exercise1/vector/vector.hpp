@@ -79,7 +79,7 @@ public:
 
   // Specific member function (inherited from ResizableContainer)
 
-  void Resize(const ulong); // Override ResizableContainer member
+  void Resize(const ulong ) override; // Override ResizableContainer member
 
   /* ************************************************************************ */
 
