@@ -157,7 +157,7 @@ public:
 
   // Specific member function
 
-  virtual void Sort();
+  virtual void Sort() = 0;
 
 };
 

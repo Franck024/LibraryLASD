@@ -3,6 +3,8 @@
 #define CONTAINER_HPP
 
 /* ************************************************************************** */
+#include <functional>
+#include <stdexcept>
 
 namespace lasd {
 
@@ -126,7 +128,7 @@ public:
 
   // Specific member function
 
-  virtual void Resize(const ulong ) ;
+  virtual void Resize(const ulong ) = 0 ;
 
   /* ************************************************************************ */
 

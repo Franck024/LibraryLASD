@@ -48,17 +48,17 @@ public:
 
   // Specific member functions
 
-  virtual bool Insert(const Data&); // Copy of the value
-  virtual bool Insert(Data&&); // Move of the value
-  virtual bool Remove(const Data&);
+  virtual bool Insert(const Data&) = 0; // Copy of the value
+  virtual bool Insert(Data&&) = 0; // Move of the value
+  virtual bool Remove(const Data&) = 0;
 
-  virtual bool InsertAll(const MappableContainer<Data>&) noexcept; // Copy of the value; From MappableContainer; True if all are inserted
-  virtual bool InsertAll(MutableMappableContainer<Data>&&) noexcept; // Move of the value; From MutableMappableContainer; True if all are inserted
-  virtual bool RemoveAll(const MappableContainer<Data>&); // From MappableContainer; True if all are removed
+  virtual bool InsertAll(const MappableContainer<Data>&) noexcept = 0; // Copy of the value; From MappableContainer; True if all are inserted
+  virtual bool InsertAll(MutableMappableContainer<Data>&&) noexcept = 0; // Move of the value; From MutableMappableContainer; True if all are inserted
+  virtual bool RemoveAll(const MappableContainer<Data>&) = 0; // From MappableContainer; True if all are removed
 
-  virtual bool InsertSome(const MappableContainer<Data>&, const Data&) noexcept; // Copy of the value; From MappableContainer; True if some are inserted
-  virtual bool InsertSome(MutableMappableContainer<Data>&&, const Data&) noexcept; // Move of the value; From MutableMappableContainer; True if some are inserted
-  virtual bool RemoveSome(const MappableContainer<Data>&, const Data&); // From MappableContainer; True if some is removed
+  virtual bool InsertSome(const MappableContainer<Data>&, const Data&) noexcept = 0; // Copy of the value; From MappableContainer; True if some are inserted
+  virtual bool InsertSome(MutableMappableContainer<Data>&&, const Data&) noexcept = 0; // Move of the value; From MutableMappableContainer; True if some are inserted
+  virtual bool RemoveSome(const MappableContainer<Data>&, const Data&) = 0; // From MappableContainer; True if some is removed
 
 };
 

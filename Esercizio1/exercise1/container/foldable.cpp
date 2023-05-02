@@ -10,7 +10,7 @@ namespace lasd {
 // accumulatore
 
 // template<typename Data>
-// void AuxFoldExist(const Data& data, const void* v, void* exist){
+// void AuxFoldExist(const Data& data, const void* v){
 //     if(data == *((Data*) v))
 //         *((bool*) exist) = true;
 // }
@@ -19,7 +19,7 @@ namespace lasd {
 // template<typename Data>
 // bool FoldableContainer<Data>::Exists(const Data& data)const noexcept{
 //     bool exist = false;
-//     FoldPreOrder(&AuxFoldExist<Data>, &data, &exist);
+//     PreOrderFold(&AuxFoldExist<Data>, &data, &exist);
 //     return exist;
 // }
 

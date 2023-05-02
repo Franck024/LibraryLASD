@@ -53,7 +53,7 @@ public:
 
   using MapFunctor = std::function<void(const Data&)>;       
 
-  virtual void Map(const MapFunctor&) const;
+  virtual void Map(const MapFunctor&) const = 0;
 
   /* ************************************************************************ */
 
@@ -126,7 +126,7 @@ public:
 
   // Specific member function (inherited from PreOrderFoldableContainer)
 
-  void PreOrderFold(const FoldFunctor, void*) const override; // Override PreOrderFoldableContainer member
+  virtual void PreOrderFold(const FoldFunctor, void*) const override; // Override PreOrderFoldableContainer member
 
 };
 
@@ -185,13 +185,13 @@ public:
 
   using typename FoldableContainer<Data>::FoldFunctor;
 
-  void Fold(const FoldFunctor&, void*) const override; // Override FoldableContainer member
+  virtual void Fold(const FoldFunctor&, void*) const override; // Override FoldableContainer member
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from PostOrderFoldableContainer)
 
-  void PostOrderFold(const FoldFunctor, void*) const override;  // Non sono sicuro!!!! // Override PostOrderFoldableContainer member
+  virtual void PostOrderFold(const FoldFunctor, void*) const override;  // Non sono sicuro!!!! // Override PostOrderFoldableContainer member
 
 };
 
@@ -364,7 +364,7 @@ public:
 
   using MutableMapFunctor = std::function<void(Data &)>;
 
-  virtual void Map(const MutableMapFunctor&) const;
+  virtual void Map(const MutableMapFunctor&) const = 0;
 
 };
 
@@ -466,7 +466,7 @@ public:
 
   // Specific member function (inherited from MutableMappableContainer)
 
-  void Map(const MutableMapFunctor&) const override; // Override MutableMappableContainer member
+  virtual void Map(const MutableMapFunctor&) const override; // Override MutableMappableContainer member
 
 };
 
@@ -517,7 +517,7 @@ public:
 
   // Specific member function (inherited from MutableMappableContainer)
 
-  void Map(const MutableMapFunctor&) const override; // Override MutableMappableContainer member
+  virtual void Map(const MutableMapFunctor&) const override; // Override MutableMappableContainer member
 
 };
 
@@ -568,7 +568,7 @@ public:
 
   // Specific member function (inherited from MutableMappableContainer)
 
-  void Map(const MutableMapFunctor&) const override; // Override MutableMappableContainer member
+  virtual void Map(const MutableMapFunctor&) const override; // Override MutableMappableContainer member
 
 };
 
