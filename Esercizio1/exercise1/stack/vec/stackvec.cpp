@@ -1,5 +1,4 @@
 
-#define CAPACITY 3
 
 namespace lasd {
 
@@ -7,6 +6,13 @@ namespace lasd {
 
 
 /////////////// costruttori ////////////////
+
+template <typename Data>
+StackVec<Data>::StackVec() : Vector<Data>() {
+    size = 0;
+    capacity = 5;
+    Elements = new Data[capacity]{};
+}
 
 template <typename Data>
 StackVec<Data>::StackVec(const MappableContainer<Data>& mp){  
@@ -126,17 +132,19 @@ void StackVec<Data>::Pop()  {
 template <typename Data>
 void StackVec<Data>::Push(const Data& val) {
     if(size == capacity) {
-        Resize(2 * capacity); // raddoppia la capacità se il vettore è pieno
+        Expand(2 * capacity); // raddoppia la capacità se il vettore è pieno
     }
-    Elements[size++] = val; // inserisce l'elemento in cima allo stack
+    Elements[size] = val; // inserisce l'elemento in cima allo stack
+    size++;
 }
 
 template <typename Data>
 void StackVec<Data>::Push( Data&& val)  {
     if(size == capacity) {
-        Resize(2 * capacity); // raddoppia la capacità se il vettore è pieno
+        Expand(2 * capacity); // raddoppia la capacità se il vettore è pieno
     }
-    Elements[size++] = val; // inserisce l'elemento in cima allo stack
+    Elements[size] = val; // inserisce l'elemento in cima allo stack
+    size++;
 }
 
 template <typename Data>
@@ -173,14 +181,19 @@ void StackVec<Data>::Clear(){
 // Espande la capacità del vector sottostante a una nuova capacità
 template <typename Data>
 void StackVec<Data>::Expand(const ulong new_capacity){
+    // if (new_capacity < capacity) { // verifica se la nuova capacità è maggiore di quella attuale
+    //     throw std::length_error("Nuova capacità inferiore alla capacità attuale");
+    // }
+    // Elements = (Data*) realloc(Elements, new_capacity * sizeof(Data)); // espande la memoria
+    // if (Elements == nullptr) { // verifica se l'espansione ha avuto successo
+    //     throw std::bad_alloc();
+    // }
+    // capacity = new_capacity; // aggiorna la capacità
+
     if (new_capacity < capacity) { // verifica se la nuova capacità è maggiore di quella attuale
         throw std::length_error("Nuova capacità inferiore alla capacità attuale");
-    }
-    Elements = (Data*) realloc(Elements, new_capacity * sizeof(Data)); // espande la memoria
-    if (Elements == nullptr) { // verifica se l'espansione ha avuto successo
-        throw std::bad_alloc();
-    }
-    capacity = new_capacity; // aggiorna la capacità
+    }    
+    Resize(new_capacity);
 }
 
 // Riduce la capacità del vector sottostante al numero di elementi presenti

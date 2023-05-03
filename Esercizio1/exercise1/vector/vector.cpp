@@ -11,22 +11,38 @@ Vector<Data>::Vector(const ulong new_size){
 
 template<typename Data>
 Vector<Data>::Vector(const MappableContainer<Data>& mp){
-    size = 0;
+    // size = 0;
+    // capacity = Size();
+    // Elements = new Data[size]{};
+    // mp.Map([&](const Data& element){
+    //     Elements[size++] = element;
+    // });
+
+    size = Size();
     capacity = Size();
-    Elements = new Data[size]{};
-    mp.Map([&](const Data& element){
-        Elements[size++] = element;
-    });
+    Elements = new Data[size];
+    for(ulong i = 0 ; i < capacity; i++){
+        Elements[i] = mp[i];
+        size++;
+    }
 }
 
 template<typename Data>
 Vector<Data>::Vector(const MutableMappableContainer<Data>& mp){
-    size = 0;
+    // size = 0;
+    // capacity = Size();
+    // Elements = new Data[size]{};
+    // mp.Map([&](const auto& element){
+    //     Elements[size++] = element;
+    // });
+
+    size = Size();
     capacity = Size();
-    Elements = new Data[size]{};
-    mp.Map([&](const Data& element){
-        Elements[size++] = element;
-    });
+    Elements = new Data[size];
+    for(ulong i = 0 ; i < capacity; i++){
+    //    Elements[i] = mp[i];
+        size++;
+    }
 }
 
 //copy
@@ -199,6 +215,7 @@ void Vector<Data>::Sort()   {                       // Bubble Sort
     //     if(!swapped) break; // vettore ordinato
     // }
 }
+
 /* ************************************************************************** */
 
 }

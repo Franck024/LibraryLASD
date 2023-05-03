@@ -34,7 +34,7 @@ protected:
 public:
 
   // Default constructor
-   StackVec() : Vector<Data>() {};
+   StackVec();
 
   /* ************************************************************************ */
 
