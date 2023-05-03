@@ -157,8 +157,8 @@ ulong QueueVec<Data>::Size() const noexcept {
 
 // Metodo Clear con deallocazione di memoria
 template <typename Data>
-void Clear() {
-    Vector<Data>::Clear;
+void QueueVec<Data>::Clear() {
+    Vector<Data>::Clear();
 }
 
 //METODI SPECIALI

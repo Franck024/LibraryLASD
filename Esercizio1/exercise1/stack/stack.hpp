@@ -26,7 +26,7 @@ protected:
 public:
 
   // Destructor
-  virtual ~Stack() = 0;
+  virtual ~Stack() = default;
 
   // Copy assignment
   Stack& operator=(const Stack&) = delete;

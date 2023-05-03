@@ -59,7 +59,7 @@ public:
 
   // Specific member function (inherited from TestableContainer)
 
-  virtual bool Exists(const Data&) const noexcept override; // Override TestableContainer member
+  virtual bool Exists(const Data&) const noexcept override = 0; // Override TestableContainer member
 
 };
 
@@ -108,7 +108,7 @@ public:
 
   // Specific member function (inherited from FoldableContainer)
 
-  virtual void Fold(const FoldFunctor&, void*) const override; // Override FoldableContainer member
+  virtual void Fold(const FoldFunctor&, void*) const override = 0; // Override FoldableContainer member
 
 };
 
@@ -159,7 +159,7 @@ public:
 
   // Specific member function (inherited from FoldableContainer)
 
-  virtual void Fold(const FoldFunctor&, void*) const override; // Override FoldableContainer member
+  virtual void Fold(const FoldFunctor&, void*) const override = 0; // Override FoldableContainer member
 
 };
 
@@ -208,7 +208,7 @@ public:
 
   // Specific member function (inherited from FoldableContainer)
 
-  virtual void Fold(const FoldFunctor&, void*) const override; // Override FoldableContainer member
+  virtual void Fold(const FoldFunctor&, void*) const override = 0; // Override FoldableContainer member
 
 };
 
@@ -257,7 +257,7 @@ public:
 
   // Specific member function (inherited from FoldableContainer)
 
-  virtual void Fold(const FoldFunctor&, void*) const override; // Override FoldableContainer member
+  virtual void Fold(const FoldFunctor&, void*) const override = 0; // Override FoldableContainer member
 
 };
 

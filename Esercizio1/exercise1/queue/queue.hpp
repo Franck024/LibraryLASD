@@ -32,16 +32,16 @@ public:
   /* ************************************************************************ */
 
   // Copy assignment
-  Queue& operator=(const Queue&);
+  Queue& operator=(const Queue&) = delete;
 
   // Move assignment
-  Queue& operator=(Queue&&) noexcept;
+  Queue& operator=(Queue&&) noexcept = delete;
 
   /* ************************************************************************ */
 
   // Comparison operators
-  bool operator==(const Queue&) const noexcept;
-  bool operator!=(const Queue&) const noexcept;
+  bool operator==(const Queue&) const noexcept = delete;
+  bool operator!=(const Queue&) const noexcept = delete;
 
   /* ************************************************************************ */
 
@@ -53,6 +53,7 @@ public:
   virtual Data& HeadNDequeue()  = 0; // (concrete function must throw std::length_error when empty)
   virtual void Enqueue(const Data&)  = 0; // Copy of the value
   virtual void Enqueue(Data&&) = 0; // Move of the value
+
 
 };
 

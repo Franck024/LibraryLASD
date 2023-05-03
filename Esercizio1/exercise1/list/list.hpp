@@ -133,6 +133,20 @@ public:
   bool Insert(Data&&) override; // Move of the value
   bool Remove(const Data&) override;
 
+  /////// credo///
+  // non viene chiesto di implementare i seguenti metodi ma
+  // dato che si cerca di ereditare da una classe astratta,
+  // tutti i metodi devono essere implementati. 
+  // Li dichiaro = delete perchè non mi servono
+  // bool InsertAll(const MappableContainer<Data>&) noexcept override = delete;
+  // bool InsertAll(MutableMappableContainer<Data>&&) noexcept override = delete;
+  // bool RemoveAll(const MappableContainer<Data>&) override = delete;
+  // bool InsertSome(const MappableContainer<Data>&, const Data&) noexcept override = delete;
+  // bool InsertSome(MutableMapFunctor<Data>&&, const Data&) noexcept override = delete;
+  // bool RemoveSome(const MappableContainer<Data>&, const Data&) override = delete;
+
+  ////////////////
+
   /* ************************************************************************ */
 
   // Specific member functions (inherited from LinearContainer)
@@ -229,6 +243,9 @@ protected:
 
   /* ************************************************************************ */
 
+  //per non rendere la classe astratta vado ad implementare tutti i metodi virtual
+  // EXIST
+  bool Exists(const Data&) const noexcept override {return false;};
 };
 
 /* ************************************************************************** */

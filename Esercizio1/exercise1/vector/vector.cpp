@@ -187,13 +187,16 @@ Data& Vector<Data>::Back()    {
 }
 
 template <typename Data>
-void Vector<Data>::Sort()   {
+void Vector<Data>::Sort()   {                       // Bubble Sort
     for (ulong i = 0; i < size - 1; i++) {
+        bool swapped = false;
         for (ulong j = 0; j < size - i - 1; j++) {
             if (Elements[j] > Elements[j + 1]) {
                 std::swap(Elements[j], Elements[j + 1]);
+                swapped = true;
             }
         }
+        if(!swapped) break; // vettore ordinato
     }
 }
 /* ************************************************************************** */
