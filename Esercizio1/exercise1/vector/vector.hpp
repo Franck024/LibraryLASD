@@ -28,7 +28,7 @@ protected:
   using SortableLinearContainer<Data>::size;
 
   Data* Elements = nullptr;
-  ulong capacity;
+  ulong capacity = 0;
 
 public:
 

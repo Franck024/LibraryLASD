@@ -33,13 +33,14 @@ protected:
   struct Node {
 
     Data valore_nodo;
-    Node* next;
+    Node* next = nullptr;
 
 
     /* ********************************************************************** */
 
     // Specific constructors
     Node(const Data&);
+    Node(Data&&);   // aggiunto io
 
     /* ********************************************************************** */
 
@@ -52,7 +53,7 @@ protected:
     /* ********************************************************************** */
 
     // Destructor
-    ~Node(){delete next;};
+    virtual ~Node() = default;
 
     /* ********************************************************************** */
 
@@ -67,8 +68,8 @@ protected:
 
   };
 
-  Node* head;
-  Node* tail;
+  Node* head = nullptr;
+  Node* tail = nullptr;
 
 public:
 

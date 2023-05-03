@@ -13,7 +13,7 @@ template<typename Data>
 Vector<Data>::Vector(const MappableContainer<Data>& mp){
     size = 0;
     capacity = Size();
-    Elements = new Data[size];
+    Elements = new Data[size]{};
     mp.Map([&](const Data& element){
         Elements[size++] = element;
     });
@@ -23,7 +23,7 @@ template<typename Data>
 Vector<Data>::Vector(const MutableMappableContainer<Data>& mp){
     size = 0;
     capacity = Size();
-    Elements = new Data[size];
+    Elements = new Data[size]{};
     mp.Map([&](const Data& element){
         Elements[size++] = element;
     });
@@ -35,7 +35,7 @@ Vector<Data>::Vector(const Vector<Data>& other){
     size = other.size; 
     capacity = other.capacity;
     Elements = new Data[other.size];
-    for (std::size_t i = 0; i < size; ++i) {
+    for (ulong i = 0; i < size; ++i) {
     Elements[i] = other.Elements[i];
     }
 }
@@ -188,16 +188,16 @@ Data& Vector<Data>::Back()    {
 
 template <typename Data>
 void Vector<Data>::Sort()   {                       // Bubble Sort
-    for (ulong i = 0; i < size - 1; i++) {
-        bool swapped = false;
-        for (ulong j = 0; j < size - i - 1; j++) {
-            if (Elements[j] > Elements[j + 1]) {
-                std::swap(Elements[j], Elements[j + 1]);
-                swapped = true;
-            }
-        }
-        if(!swapped) break; // vettore ordinato
-    }
+    // for (ulong i = 0; i < size - 1; i++) {
+    //     bool swapped = false;
+    //     for (ulong j = 0; j < size - i - 1; j++) {
+    //         if (Elements[j] > Elements[j + 1]) {
+    //             std::swap(Elements[j], Elements[j + 1]);
+    //             swapped = true;
+    //         }
+    //     }
+    //     if(!swapped) break; // vettore ordinato
+    // }
 }
 /* ************************************************************************** */
 

@@ -10,6 +10,13 @@ List<Data>::Node::Node(const Data& val){
     next = nullptr;
 }
 
+//Costruttore aggiunto da me 
+template <typename Data>
+List<Data>::Node::Node(Data &&val){
+    std::swap(valore_nodo, val);
+    next = nullptr;
+}
+
 //Copy costructor
 template <typename Data>
 typename List<Data>::Node& List<Data>::Node::operator=(const Node& copy){
@@ -92,12 +99,13 @@ List<Data>::List(List<Data> &&moveList) noexcept :  head(moveList.head), tail(mo
 // Distruttore
 template <typename Data>
 List<Data>::~List() {
-    Node* curr = head;
-    while (curr != nullptr) {
-        Node* temp = curr;
-        curr = curr->next;
-        delete temp;
-    }
+    // Node* curr = head;
+    // while (curr != nullptr) {
+    //     Node* temp = curr;
+    //     curr = curr->next;
+    //     delete temp;
+    // }
+    Clear();
 }
 
 //Copy assignment
@@ -147,17 +155,25 @@ bool List<Data>::operator!=(const List<Data>& list2) const noexcept{
 // INSERIMENTO IN TESTA
 template <typename Data>
 void List<Data>::InsertAtFront(const Data& val)noexcept{                            // prende la testa del nodo e il valore da aggiungere
-    Node* newNode = new Node(val);                                            // crea il nuovo nodo
-    newNode->next = head;                                                     // punta il nuovo nodo al nodo esistente
-    head = newNode;                                                           // definisce la nuova testa
-    size++;
+    // Node* newNode = new Node(val);                                            // crea il nuovo nodo
+    // newNode->next = head;                                                     // punta il nuovo nodo al nodo esistente
+    // head = newNode;                                                           // definisce la nuova testa
+    // size++;
+    Node* newNode = new Node(val);
+    if(head == nullptr){
+        head = newNode;
+        tail = newNode;
+    }else{
+        newNode->next = head;
+        head = newNode;
+    } size++;
 }
 
 //INSERIMENTO IN TESTA (move)
 template <typename Data>
 void List<Data>::InsertAtFront(Data&& val) noexcept{
     Node* newNode = new Node(std::move(val));
-    if (head) {
+    if (head != nullptr) {
         newNode->next = std::move(head);
         head = std::move(newNode);
     } else {
@@ -176,6 +192,7 @@ void List<Data>::RemoveFromFront(){
         size--;
         delete tmp;
     }else   throw std::length_error("Lista vuota");
+    throw "ok";
 }
 
 //REMOVE FRONT (return Data)
