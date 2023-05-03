@@ -75,9 +75,11 @@ void StackLst<Data>::Pop()  {
 
 template <typename Data>
 Data& StackLst<Data>::TopNPop()  {
-    if(List<Data>::Empty())
+    if(size == 0)
         throw std::length_error("Lista vuota");
-    return this->FrontNRemove();
+    Data& testa = Top();
+    Pop();
+    return testa;
 }
 
 template <typename Data>

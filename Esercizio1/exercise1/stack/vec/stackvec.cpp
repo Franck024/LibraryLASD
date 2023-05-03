@@ -125,7 +125,7 @@ void StackVec<Data>::Pop()  {
     }
     size--;
     if(size <= capacity / 4) {
-        Resize(capacity / 2); // dimezza la capacità se lo stack è vuoto al 25%
+        Reduce(capacity / 2); // dimezza la capacità se lo stack è vuoto al 25%
     }
 }
 
@@ -193,23 +193,28 @@ void StackVec<Data>::Expand(const ulong new_capacity){
     if (new_capacity < capacity) { // verifica se la nuova capacità è maggiore di quella attuale
         throw std::length_error("Nuova capacità inferiore alla capacità attuale");
     }    
-    Resize(new_capacity);
+    Resize(new_capacity + capacity);
 }
 
 // Riduce la capacità del vector sottostante al numero di elementi presenti
 template <typename Data>
 void StackVec<Data>::Reduce(const ulong new_capacity){
-    if (new_capacity >= capacity) { // verifica se la nuova capacità è inferiore a quella attuale
-        throw std::length_error("Nuova capacità maggiore o uguale alla capacità attuale");
-    }
-    if (new_capacity < size) { // verifica se la nuova capacità è sufficiente per contenere gli elementi attuali
-        throw std::length_error("Nuova capacità inferiore alla dimensione attuale dello stack");
-    }
-    Elements = (Data*) realloc(Elements, new_capacity * sizeof(Data)); // riduce la memoria
-    if (Elements == nullptr) { // verifica se la riduzione ha avuto successo
-        throw std::bad_alloc();
-    }
-    capacity = new_capacity; // aggiorna la capacità
+    // if (new_capacity >= capacity) { // verifica se la nuova capacità è inferiore a quella attuale
+    //     throw std::length_error("Nuova capacità maggiore o uguale alla capacità attuale");
+    // }
+    // if (new_capacity < size) { // verifica se la nuova capacità è sufficiente per contenere gli elementi attuali
+    //     throw std::length_error("Nuova capacità inferiore alla dimensione attuale dello stack");
+    // }
+    // Elements = (Data*) realloc(Elements, new_capacity * sizeof(Data)); // riduce la memoria
+    // if (Elements == nullptr) { // verifica se la riduzione ha avuto successo
+    //     throw std::bad_alloc();
+    // }
+    // capacity = new_capacity; // aggiorna la capacità
+
+    if (new_capacity > capacity) { // verifica se la nuova capacità è maggiore di quella attuale
+        throw std::length_error("Nuova capacità maggiore alla capacità attuale");
+    }    
+    Resize(new_capacity - capacity);
 }
 /* ************************************************************************** */
 
