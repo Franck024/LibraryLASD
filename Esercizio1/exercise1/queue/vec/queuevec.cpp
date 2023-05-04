@@ -123,9 +123,9 @@ void QueueVec<Data>::Dequeue() {
 }
 
 template <typename Data>
-Data& QueueVec<Data>::HeadNDequeue()  {
+Data QueueVec<Data>::HeadNDequeue()  {
     if(size != 0){
-        Data& val = Head();
+        Data val = Head();
         Dequeue();
         return val; 
     }

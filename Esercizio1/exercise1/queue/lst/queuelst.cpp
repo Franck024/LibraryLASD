@@ -76,7 +76,7 @@ void QueueLst<Data>::Dequeue()   {
 }
 
 template <typename Data>
-Data& QueueLst<Data>::HeadNDequeue(){
+Data QueueLst<Data>::HeadNDequeue(){
     if (List<Data>::Empty()) {
         throw std::length_error("La coda è vuota");
     }
