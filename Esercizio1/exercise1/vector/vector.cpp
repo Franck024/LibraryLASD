@@ -18,8 +18,8 @@ Vector<Data>::Vector(const MappableContainer<Data>& mp){
     //     Elements[size++] = element;
     // });
 
-    size = Size();
-    capacity = Size();
+    size = mp.Size();
+    capacity = mp.Size();
     Elements = new Data[size];
     for(ulong i = 0 ; i < capacity; i++){
         Elements[i] = mp[i];
@@ -66,7 +66,8 @@ Vector<Data>::Vector(Vector<Data>&& vec) noexcept {
 
 template<typename Data>
 Vector<Data>::~Vector(){
-    delete[] Elements;
+//    delete[] Elements;
+    Clear();
 }
 
 //Operator ==
@@ -121,6 +122,13 @@ bool Vector<Data>::operator!=(const Vector<Data>& vec) const noexcept {
 
 template<typename Data>
 void Vector<Data>::Clear(){
+    // delete[] Elements;
+    // Elements = nullptr;
+    // size = 0;
+    // capacity = 0;
+    for(ulong i = 0; i < size; i++){
+        Elements[i].~Data();
+    }
     delete[] Elements;
     Elements = nullptr;
     size = 0;
@@ -132,10 +140,10 @@ void Vector<Data>::Resize(const ulong new_size){
     if(new_size < 1)
         Clear();
     if(new_size > 0 && new_size != capacity){
-        Data* tmpEl = new Data[new_size]{};
-        ulong min = (capacity < new_size) ? capacity : new_size;
+        Data* tmpEl = new Data[new_size];
+    //    ulong min = (capacity < new_size) ? capacity : new_size;
         
-        for(ulong i = 0; i < min; i++){
+        for(ulong i = 0; i < size; i++){
             tmpEl[i] = Elements[i];
         }
         delete[] Elements;

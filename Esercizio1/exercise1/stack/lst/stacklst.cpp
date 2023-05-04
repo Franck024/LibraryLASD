@@ -74,10 +74,10 @@ void StackLst<Data>::Pop()  {
 }
 
 template <typename Data>
-Data& StackLst<Data>::TopNPop()  {
+Data StackLst<Data>::TopNPop()  {
     if(size == 0)
         throw std::length_error("Lista vuota");
-    Data& testa = Top();
+    Data testa = Top();
     Pop();
     return testa;
 }

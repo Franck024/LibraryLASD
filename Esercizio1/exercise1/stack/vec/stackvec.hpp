@@ -76,7 +76,7 @@ public:
   Data& Top() const override; // Override Stack member (non-mutable version; must throw std::length_error when empty)
   Data& Top()  override; // Override Stack member (non-mutable version; must throw std::length_error when empty)
   void Pop()  override; // Override Stack member (must throw std::length_error when empty)
-  Data& TopNPop()  override; // Override Stack member (must throw std::length_error when empty)
+  Data TopNPop()  override; // Override Stack member (must throw std::length_error when empty)
   void Push(const Data&) override; // Override Stack member (copy of the value)
   void Push(Data&&) override; // Override Stack member (move of the value)
 

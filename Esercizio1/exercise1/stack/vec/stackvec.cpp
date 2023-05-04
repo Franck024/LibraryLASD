@@ -1,5 +1,5 @@
-
-
+#include <climits>
+#include <iostream>
 namespace lasd {
 
 /* ************************************************************************** */
@@ -32,7 +32,7 @@ StackVec<Data>::StackVec(const MutableMappableContainer<Data>& mp) : Vector<Data
 
 // Copy Constructor
 template <typename Data>
-StackVec<Data>::StackVec(const StackVec& other){
+StackVec<Data>::StackVec(const StackVec<Data>& other){
     capacity = other.capacity;
     size = other.size;
     Elements = new Data[capacity];
@@ -43,7 +43,7 @@ StackVec<Data>::StackVec(const StackVec& other){
 
 // Move Constructor
 template <typename Data>
-StackVec<Data>::StackVec(StackVec&& other) noexcept{
+StackVec<Data>::StackVec(StackVec<Data>&& other) noexcept{
     capacity = other.capacity;
     size = other.size;
     Elements = other.Elements;
@@ -123,6 +123,7 @@ void StackVec<Data>::Pop()  {
     if(size == 0) {
         throw std:: length_error(" Stack vuoto"); // se lo stack è vuoto, solleva un'eccezione
     }
+    Elements[size - 1].~Data();
     size--;
     if(size <= capacity / 4) {
         Reduce(capacity / 2); // dimezza la capacità se lo stack è vuoto al 25%
@@ -148,13 +149,12 @@ void StackVec<Data>::Push( Data&& val)  {
 }
 
 template <typename Data>
-Data& StackVec<Data>::TopNPop()  {
-    if(size != 0){
-        Data& val = Top();
-        Pop();
-        return val; 
-    }
-    throw std::length_error("Stack vuoto!");
+Data StackVec<Data>::TopNPop()  {
+    if(size == 0)
+        throw std::length_error("Stack vuoto!");
+    Data val = Elements[size-1];
+    Pop();
+    return val;      
 }
 
 /* ************************************************************************** */
@@ -181,40 +181,25 @@ void StackVec<Data>::Clear(){
 // Espande la capacità del vector sottostante a una nuova capacità
 template <typename Data>
 void StackVec<Data>::Expand(const ulong new_capacity){
-    // if (new_capacity < capacity) { // verifica se la nuova capacità è maggiore di quella attuale
-    //     throw std::length_error("Nuova capacità inferiore alla capacità attuale");
-    // }
-    // Elements = (Data*) realloc(Elements, new_capacity * sizeof(Data)); // espande la memoria
-    // if (Elements == nullptr) { // verifica se l'espansione ha avuto successo
-    //     throw std::bad_alloc();
-    // }
-    // capacity = new_capacity; // aggiorna la capacità
-
     if (new_capacity < capacity) { // verifica se la nuova capacità è maggiore di quella attuale
-        throw std::length_error("Nuova capacità inferiore alla capacità attuale");
-    }    
-    Resize(new_capacity + capacity);
+        return;
+    }
+    if(new_capacity > ULONG_MAX - sizeof(Data)) {
+        Resize(ULONG_MAX - sizeof(Data));
+    }
+    else
+        Resize(new_capacity);
 }
 
 // Riduce la capacità del vector sottostante al numero di elementi presenti
 template <typename Data>
 void StackVec<Data>::Reduce(const ulong new_capacity){
-    // if (new_capacity >= capacity) { // verifica se la nuova capacità è inferiore a quella attuale
-    //     throw std::length_error("Nuova capacità maggiore o uguale alla capacità attuale");
-    // }
-    // if (new_capacity < size) { // verifica se la nuova capacità è sufficiente per contenere gli elementi attuali
-    //     throw std::length_error("Nuova capacità inferiore alla dimensione attuale dello stack");
-    // }
-    // Elements = (Data*) realloc(Elements, new_capacity * sizeof(Data)); // riduce la memoria
-    // if (Elements == nullptr) { // verifica se la riduzione ha avuto successo
-    //     throw std::bad_alloc();
-    // }
-    // capacity = new_capacity; // aggiorna la capacità
-
+    if( new_capacity < size)
+        Resize(size);
     if (new_capacity > capacity) { // verifica se la nuova capacità è maggiore di quella attuale
         throw std::length_error("Nuova capacità maggiore alla capacità attuale");
     }    
-    Resize(new_capacity - capacity);
+    Resize(capacity - new_capacity);
 }
 /* ************************************************************************** */
 
