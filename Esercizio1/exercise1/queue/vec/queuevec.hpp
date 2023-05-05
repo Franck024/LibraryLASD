@@ -34,7 +34,7 @@ protected:
 public:
 
   // Default constructor
-  QueueVec() : Vector<Data>() {};
+  QueueVec();
 
   /* ************************************************************************ */
 

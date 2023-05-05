@@ -1,10 +1,18 @@
-
+#include <climits>
+#include <iostream>
 namespace lasd {
 
 /* ************************************************************************** */
 
 
 /////////////// costruttori ////////////////
+
+template <typename Data>
+QueueVec<Data>::QueueVec() : Vector<Data>() {
+    size = 0;
+    capacity = 5;
+    Elements = new Data[capacity]{};
+}
 
 template <typename Data>
 QueueVec<Data>::QueueVec(const MappableContainer<Data>& mp){  
@@ -100,7 +108,7 @@ Data& QueueVec<Data>::Head() const  {
     if(size == 0) {
         throw std:: length_error(" Lista vuota"); // se la coda è vuota, solleva un'eccezione
     }
-    return Elements[size - 1];
+    return Elements[0];
 }
 
 template <typename Data>
@@ -108,7 +116,7 @@ Data& QueueVec<Data>::Head()  {
     if(size == 0) {
         throw std:: length_error(" Lista vuota"); // se la lista è vuota, solleva un'eccezione
     }
-    return Elements[size - 1];
+    return Elements[0];
 }
 
 template <typename Data>
@@ -116,38 +124,44 @@ void QueueVec<Data>::Dequeue() {
     if(size == 0) {
         throw std:: length_error(" Lista vuota"); // se la lista è vuota, solleva un'eccezione
     }
+    for(int i = 0; i < size - 1; i++){
+        Elements[i] = Elements[i+1];
+    }
+    Elements[size - 1].~Data();
     size--;
     if(size <= capacity / 4) {
-        Resize(capacity / 2); // dimezza la capacità se la lista è vuota al 25%
+        Reduce(capacity / 2); // dimezza la capacità se la lista è vuota al 25%
     }
 }
 
 template <typename Data>
 Data QueueVec<Data>::HeadNDequeue()  {
     if(size != 0){
-        Data val = Head();
+        Data val = Elements[0];
         Dequeue();
         return val; 
     }
     throw std::length_error("Lista vuota!");
 }
 
-// ENQUEUE  (move)
+// ENQUEUE  
 template <typename Data>
 void QueueVec<Data>::Enqueue(const Data& element){
     if(size == capacity) {
-        Resize(2 * capacity); // raddoppia la capacità se il vettore è pieno
+        Expand(2 * capacity); // raddoppia la capacità se il vettore è pieno
     }
-    Elements[size++] = element; // inserisce l'elemento in cima alla coda
+    Elements[size] = element; // inserisce l'elemento in cima alla coda
+    size++;
 }
 
 // ENQUEUE (move)
 template <typename Data>
 void QueueVec<Data>::Enqueue(Data&& element) {
     if(size == capacity) {
-        Resize(2 * capacity); // raddoppia la capacità se il vettore è pieno
+        Expand(2 * capacity); // raddoppia la capacità se il vettore è pieno
     }
-    Elements[size++] = std::move(element); // inserisce l'elemento in cima alla coda
+    Elements[size] = std::move(element); // inserisce l'elemento in cima alla coda
+    size++;
 }
 
 template <typename Data>
@@ -163,33 +177,28 @@ void QueueVec<Data>::Clear() {
 
 //METODI SPECIALI
 
-// Metodo Expand
+// Espande la capacità del vector sottostante a una nuova capacità
 template <typename Data>
-void QueueVec<Data>::Expand(ulong new_capacity) {
+void QueueVec<Data>::Expand(const ulong new_capacity){
     if (new_capacity < capacity) { // verifica se la nuova capacità è maggiore di quella attuale
-        throw std::length_error("Nuova capacità inferiore alla capacità attuale");
+        return;
     }
-    Elements = (Data*) realloc(Elements, new_capacity * sizeof(Data)); // espande la memoria
-    if (Elements == nullptr) { // verifica se l'espansione ha avuto successo
-        throw std::bad_alloc();
+    if(new_capacity > ULONG_MAX - sizeof(Data)) {
+        Resize(ULONG_MAX - sizeof(Data));
     }
-    capacity = new_capacity; // aggiorna la capacità
+    else
+        Resize(new_capacity);
 }
 
-// Metodo Reduce
+// Riduce la capacità del vector sottostante al numero di elementi presenti
 template <typename Data>
-void QueueVec<Data>::Reduce(const ulong new_capacity) {
-    if (new_capacity >= capacity) { // verifica se la nuova capacità è inferiore a quella attuale
-        throw std::length_error("Nuova capacità maggiore o uguale alla capacità attuale");
-    }
-    if (new_capacity < size) { // verifica se la nuova capacità è sufficiente per contenere gli elementi attuali
-        throw std::length_error("Nuova capacità inferiore alla dimensione attuale dello stack");
-    }
-    Elements = (Data*) realloc(Elements, new_capacity * sizeof(Data)); // riduce la memoria
-    if (Elements == nullptr) { // verifica se la riduzione ha avuto successo
-        throw std::bad_alloc();
-    }
-    capacity = new_capacity; // aggiorna la capacità
+void QueueVec<Data>::Reduce(const ulong new_capacity){
+    if( new_capacity < size)
+        Resize(size);
+    if (new_capacity > capacity) { // verifica se la nuova capacità è maggiore di quella attuale
+        throw std::length_error("Nuova capacità maggiore alla capacità attuale");
+    }    
+    Resize(capacity - new_capacity);
 }
 
 // Metodo SwapVectors

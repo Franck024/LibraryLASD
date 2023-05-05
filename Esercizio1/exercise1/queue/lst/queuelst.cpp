@@ -80,7 +80,9 @@ Data QueueLst<Data>::HeadNDequeue(){
     if (List<Data>::Empty()) {
         throw std::length_error("La coda è vuota");
     }
-    return List<Data>::FrontNRemove();
+    Data val = this->Head();
+    Dequeue();
+    return val;
 }
 
 
