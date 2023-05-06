@@ -129,9 +129,11 @@ void QueueVec<Data>::Dequeue() {
     }
     Elements[size - 1].~Data();
     size--;
+    ulong temp = size;
     if(size <= capacity / 4) {
         Reduce(capacity / 2); // dimezza la capacità se la lista è vuota al 25%
     }
+    size = temp;
 }
 
 template <typename Data>
@@ -147,21 +149,23 @@ Data QueueVec<Data>::HeadNDequeue()  {
 // ENQUEUE  
 template <typename Data>
 void QueueVec<Data>::Enqueue(const Data& element){
+    ulong temp = size;
     if(size == capacity) {
         Expand(2 * capacity); // raddoppia la capacità se il vettore è pieno
     }
-    Elements[size] = element; // inserisce l'elemento in cima alla coda
-    size++;
+    Elements[temp] = element; // inserisce l'elemento in cima alla coda
+    size = ++temp;
 }
 
 // ENQUEUE (move)
 template <typename Data>
 void QueueVec<Data>::Enqueue(Data&& element) {
+    ulong temp = size;
     if(size == capacity) {
         Expand(2 * capacity); // raddoppia la capacità se il vettore è pieno
     }
-    Elements[size] = std::move(element); // inserisce l'elemento in cima alla coda
-    size++;
+    Elements[temp] = std::move(element); // inserisce l'elemento in cima alla coda
+    size = ++temp;
 }
 
 template <typename Data>
