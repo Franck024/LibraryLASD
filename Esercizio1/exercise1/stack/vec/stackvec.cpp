@@ -125,27 +125,31 @@ void StackVec<Data>::Pop()  {
     }
     Elements[size - 1].~Data();
     size--;
+    ulong temp = size;
     if(size <= capacity / 4) {
         Reduce(capacity / 2); // dimezza la capacità se lo stack è vuoto al 25%
     }
+    size = temp;
 }
 
 template <typename Data>
 void StackVec<Data>::Push(const Data& val) {
+    ulong temp = size;
     if(size == capacity) {
         Expand(2 * capacity); // raddoppia la capacità se il vettore è pieno
     }
-    Elements[size] = val; // inserisce l'elemento in cima allo stack
-    size++;
+    Elements[temp] = val; // inserisce l'elemento in cima allo stack
+    size = ++temp;
 }
 
 template <typename Data>
 void StackVec<Data>::Push( Data&& val)  {
+    ulong temp = size;
     if(size == capacity) {
         Expand(2 * capacity); // raddoppia la capacità se il vettore è pieno
     }
-    Elements[size] = val; // inserisce l'elemento in cima allo stack
-    size++;
+    Elements[temp] = val; // inserisce l'elemento in cima allo stack
+    size = ++temp;
 }
 
 template <typename Data>
