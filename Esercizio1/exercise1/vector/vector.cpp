@@ -2,10 +2,11 @@ namespace lasd {
 
 /* ************************************************************************** */
 
+
 template<typename Data>
 Vector<Data>::Vector(const ulong new_size){
     Elements = new Data[new_size]{};
-    size = 0;
+    size = new_size;
     capacity = new_size;
 }
 
@@ -21,35 +22,26 @@ Vector<Data>::Vector(const MappableContainer<Data>& mp){
     size = mp.Size();
     capacity = mp.Size();
     Elements = new Data[size];
-    for(ulong i = 0 ; i < capacity; i++){
+    for(ulong i = 0 ; i < size; i++){
         Elements[i] = mp[i];
-        size++;
     }
 }
 
 template<typename Data>
 Vector<Data>::Vector(const MutableMappableContainer<Data>& mp){
-    // size = 0;
-    // capacity = Size();
-    // Elements = new Data[size]{};
-    // mp.Map([&](const auto& element){
-    //     Elements[size++] = element;
-    // });
-
-    size = Size();
-    capacity = Size();
+    size = mp.Size();
+    capacity = mp.Size();
     Elements = new Data[size];
-    for(ulong i = 0 ; i < capacity; i++){
-    //    Elements[i] = mp[i];
-        size++;
-    }
+    ulong index = 0;
+    mp.Map([&index, this](Data& item) {
+        Elements[index++] = item;
+    });
 }
 
 //copy
 template<typename Data>
 Vector<Data>::Vector(const Vector<Data>& other){
     size = other.size; 
-    capacity = other.capacity;
     Elements = new Data[other.size];
     for (ulong i = 0; i < size; ++i) {
     Elements[i] = other.Elements[i];
@@ -61,7 +53,6 @@ template<typename Data>
 Vector<Data>::Vector(Vector<Data>&& vec) noexcept {
 	std::swap(Elements, vec.Elements);
 	std::swap(size, vec.size);
-    std::swap(capacity, vec.capacity);
 }
 
 template<typename Data>
@@ -70,11 +61,28 @@ Vector<Data>::~Vector(){
     Clear();
 }
 
+// copy assignemnt
+template<typename Data>
+Vector<Data>& Vector<Data>::operator=(const Vector<Data>& other){
+	Vector<Data>* tmpvec = new Vector<Data>(other);
+	std::swap(*tmpvec, *this);
+	delete tmpvec;
+	return *this;
+}
+
+//move assignment
+template<typename Data>
+Vector<Data>& Vector<Data>::operator=(Vector<Data>&& other) noexcept{
+	std::swap(Elements, other.Elements);
+	std::swap(size, other.size);
+	return *this;
+}
+
 //Operator ==
 template<typename Data>
 bool Vector<Data>::operator==(const Vector<Data>& vec) const noexcept {
 	if (size == vec.size) {
-		for (ulong i = 0; i < size; ++i) {
+		for (ulong i = 0; i < size; i++) {
 			if (Elements[i] != vec.Elements[i]) {
 				return false;
 			}
@@ -83,35 +91,6 @@ bool Vector<Data>::operator==(const Vector<Data>& vec) const noexcept {
 	}
 	return false;
 	
-}
-
-// copy assignemnt
-template<typename Data>
-Vector<Data>& Vector<Data>::operator=(const Vector<Data>& other){
-    if(this != &other){
-        delete[] Elements;
-        const ulong new_size = other.size;
-        Elements = new Data[new_size];
-        size = other.size;
-        capacity = new_size;
-        std::copy(other.Elements, other.Elements + other.size, Elements);
-    }
-    return *this;
-}
-
-//move assignment
-template<typename Data>
-Vector<Data>& Vector<Data>::operator=(Vector<Data>&& other) noexcept{
-    if(this != &other){
-        delete[] Elements;
-        Elements = other.Elements;
-        size = other.size;
-        capacity = other.capacity;
-        other.Elements = nullptr;
-        other.size = 0;
-        other.capacity = 0;
-    }
-    return *this;
 }
 
 //Operator !=
@@ -132,22 +111,25 @@ void Vector<Data>::Clear(){
     delete[] Elements;
     Elements = nullptr;
     size = 0;
-    capacity = 0;
 }
 
 template<typename Data>
 void Vector<Data>::Resize(const ulong new_size){
-    if(new_size < 1)
-        Clear();
-    if(new_size > 0 && new_size != capacity){
-        Data* tmpEl = new Data[new_size];
-    //    ulong min = (capacity < new_size) ? capacity : new_size;
+    if(new_size < 1){
+       Clear();
+       return; 
+    }
         
-        for(ulong i = 0; i < size; i++){
+    if(new_size > 0 && new_size != size){
+        Data* tmpEl = new Data[new_size];
+        ulong min = (size < new_size) ? size : new_size;
+        
+        for(ulong i = 0; i < min; i++){
             tmpEl[i] = Elements[i];
         }
         delete[] Elements;
         Elements = tmpEl;
+        size = new_size;
         capacity = new_size;
     }
 }
@@ -156,8 +138,12 @@ void Vector<Data>::Resize(const ulong new_size){
 template <typename Data>
 Data& Vector<Data>::operator[](const ulong index) const    {
     // Controlla se l'indice è valido
-    if (index >= capacity) {
+    if (index >= size) {
         throw std::out_of_range("Index out of range");
+    }
+        // Controlla se l'array è stato allocato
+    if (Elements == nullptr) {
+        throw std::runtime_error("Array not allocated");
     }
     // Restituisci la referenza all'elemento di indice specificato
     return Elements[index];
@@ -167,10 +153,14 @@ Data& Vector<Data>::operator[](const ulong index) const    {
 template <typename Data>
 Data& Vector<Data>::operator[](ulong index) {
     // Controlla se l'indice è valido
-    if (index >= capacity) {
+    if (index >= size) {
         throw std::out_of_range("Index out of range");
     }
-    // Restituisci la referenza mutabile all'elemento di indice specificato
+        // Controlla se l'array è stato allocato
+    if (Elements == nullptr) {
+        throw std::runtime_error("Array not allocated");
+    }
+      // Restituisci la referenza mutabile all'elemento di indice specificato
     return Elements[index];
 }
 
@@ -211,19 +201,101 @@ Data& Vector<Data>::Back()    {
 }
 
 template <typename Data>
-void Vector<Data>::Sort()   {                       // Bubble Sort
-    // for (ulong i = 0; i < size - 1; i++) {
-    //     bool swapped = false;
-    //     for (ulong j = 0; j < size - i - 1; j++) {
-    //         if (Elements[j] > Elements[j + 1]) {
-    //             std::swap(Elements[j], Elements[j + 1]);
-    //             swapped = true;
-    //         }
-    //     }
-    //     if(!swapped) break; // vettore ordinato
-    // }
+void Vector<Data>::Sort()   {
+    Data temp;
+    for (ulong i = 0; i < size; i++){
+        ulong jmin = i;
+        for(ulong j = i+1; j < size; j++){
+            if(Elements[j] < Elements[jmin])
+            jmin = j;
+        }
+        if( i != jmin){
+            temp = Elements[jmin];
+            Elements[jmin] = Elements[i];
+            Elements[i] = temp;
+        }
+    }
+}
+
+
+/* ************************************************************************** */
+/* ************************************************************************** */
+/************Funzioni aggiuntive*********************/
+template <typename Data>
+bool Vector<Data>::Exists(const Data& val) const noexcept{
+    for(ulong i = 0; i < size; i++){
+        if( Elements[i] == val )
+            return true;
+    } return false;
+}
+
+//Vector MapPreOrder
+template<typename Data>
+void Vector<Data>::PreOrderMap(MapFunctor function) {
+	for (ulong i = 0; i < size; i++) {
+		function(Elements[i]);
+	}
+}
+
+//Vector MapPostOrder
+template<typename Data>
+void Vector<Data>::PostOrderMap(MapFunctor function) {
+	ulong index = size;
+	while (index > 0) {
+		function(Elements[--index]);
+	}
 }
 
 /* ************************************************************************** */
+
+//Vector FoldPreOrder
+template<typename Data>
+void Vector<Data>::PreOrderFold(FoldFunctor function, void* parametro) const {
+	for (ulong i = 0; i < size; i++) {
+		function(Elements[i], parametro);
+	}
+}
+
+//Vector FoldPostOrder
+template<typename Data>
+void Vector<Data>::PostOrderFold(FoldFunctor function, void* parametro) const {
+	ulong index = size;
+	while (index > 0) {
+		function(Elements[--index], parametro);
+	}
+}
+
+/* ************************************************************************** */
+template <typename Data>
+void Vector<Data>::Map(const MapFunctor& fun) const{
+    for(ulong i = 0; i < size; i++){
+        fun(Elements[i]);
+    }
+}
+
+template <typename Data>
+void Vector<Data>::Map(const MutableMapFunctor& fun) const{
+    for(ulong i = 0; i < size; i++){
+        fun(Elements[i]);
+    }
+}
+
+
+//Vector MapPreOrder
+template<typename Data>
+void Vector<Data>::PreOrderMap(MutableMapFunctor function) {
+	for (ulong i = 0; i < size; i++) {
+		function(Elements[i]);
+	}
+}
+
+//Vector MapPostOrder
+template<typename Data>
+void Vector<Data>::PostOrderMap(MutableMapFunctor function) {
+	ulong index = size;
+	while (index > 0) {
+		function(Elements[--index]);
+	}
+}
 
 }

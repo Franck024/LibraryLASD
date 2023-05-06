@@ -192,15 +192,14 @@ void List<Data>::RemoveFromFront(){
         size--;
         delete tmp;
     }else   throw std::length_error("Lista vuota");
-    throw "ok";
 }
 
 //REMOVE FRONT (return Data)
 template <typename Data>
-Data& List<Data>::FrontNRemove(){
-    if(head != nullptr){
+Data List<Data>::FrontNRemove(){
+    if(size != 0){
         Node* tmp = head;
-        Data& removedData = tmp->valore_nodo;
+        Data removedData = tmp->valore_nodo;
         head = head->next;
         size--;
         delete tmp;
@@ -294,8 +293,7 @@ bool List<Data>::Insert(Data&& val) {
 // Funzione per la rimozione di un nodo dalla lista
 template <typename Data>
 bool List<Data>::Remove(const Data& val) {
-    if(head == nullptr){
-        throw "La lista è vuota!";
+    if(size == 0){
         return false;
     }
     Node* tmp = head;
@@ -305,7 +303,6 @@ bool List<Data>::Remove(const Data& val) {
         tmp = tmp->next;
     }
     if(tmp == nullptr){
-        throw "L'elemento non esiste nella lista!";
         return false;
     }
     prec->next = tmp->next;
@@ -531,17 +528,21 @@ void List<Data>::PostOrderMap(MutableMapFunctor fun, Node* node ) {
     Data& node_value = node->valore_nodo;
     fun(node_value);
 }
-}
+
 //----------------
 
-
-// // Funzione per la stampa dei valori della lista
-// void List::print() const {
-//     Node* curr = head;
-//     while (curr != nullptr) {
-//         std::cout << curr->data << " ";
-//         curr = curr->next;
-//     }
-//     std::cout << std::endl;
-// }
-// }
+template <typename Data>
+bool List<Data>::Exists(const Data& val) const noexcept{
+    if(size == 0){
+        return false;
+    }
+    Node* tmp = head;
+    while(tmp != nullptr && tmp->valore_nodo != val){
+        tmp = tmp->next;
+    }
+    if(tmp == nullptr){
+        return false;
+    }
+    return true;
+}
+}

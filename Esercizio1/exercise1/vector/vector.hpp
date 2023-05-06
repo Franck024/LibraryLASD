@@ -33,7 +33,7 @@ protected:
 public:
 
   // Default constructor
-  Vector() = default;
+  Vector() = default ;
 
   /* ************************************************************************ */
 
@@ -108,32 +108,32 @@ protected:
   void Fold(const FoldFunctor&, void*)const override {}; // Override FoldableContainer member
   /* ************************************************************************ */
   // Specific member function (inherited from PreOrderFoldableContainer)
-  void  PreOrderFold(const FoldFunctor, void*) const override {}; // Override PreOrderFoldableContainer member
+  void  PreOrderFold(const FoldFunctor, void*) const override ; // Override PreOrderFoldableContainer member
   /* ************************************************************************ */
   // Specific member function (inherited from PostOrderFoldableContainer)
-  void  PostOrderFold(const FoldFunctor, void*) const override {}; // Override PostOrderFoldableContainer member
+  void  PostOrderFold(const FoldFunctor, void*) const override ; // Override PostOrderFoldableContainer member
   /* ************************************************************************ */
   // Specific member function (inherited from MappableContainer)
   using typename MappableContainer<Data>::MapFunctor;
-  void Map(const MapFunctor&) const override {}; // Override MappableContainer member
+  void Map(const MapFunctor&) const override ; // Override MappableContainer member
   /* ************************************************************************ */
   // Specific member function (inherited from PreOrderMappableContainer)
-  void PreOrderMap(MapFunctor) override {}; // Override PreOrderMappableContainer member
+  void PreOrderMap(MapFunctor) override ; // Override PreOrderMappableContainer member
   /* ************************************************************************ */
   // Specific member function (inherited from PostOrderMappableContainer)
-  void PostOrderMap(MapFunctor) override {}; // Override PostOrderMappableContainer member
+  void PostOrderMap(MapFunctor) override ; // Override PostOrderMappableContainer member
   /* ************************************************************************ */
   // Specific member function (inherited from MutableMappableContainer)
   using typename MutableMappableContainer<Data>::MutableMapFunctor;
-  void Map(const MutableMapFunctor&) const override {}; // Override MutableMappableContainer member
+  void Map(const MutableMapFunctor&) const override ; // Override MutableMappableContainer member
   /* ************************************************************************ */
   // Specific member function (inherited from MutablePreOrderMappableContainer)
-  void PreOrderMap( MutableMapFunctor) override {}; // Override MutablePreOrderMappableContainer member
+  void PreOrderMap( MutableMapFunctor) override ; // Override MutablePreOrderMappableContainer member
   /* ************************************************************************ */
   // Specific member function (inherited from MutablePostOrderMappableContainer)
-  void PostOrderMap(MutableMapFunctor) override {}; // Override MutablePostOrderMappableContainer member
+  void PostOrderMap(MutableMapFunctor) override ; // Override MutablePostOrderMappableContainer member
   // EXIST
-  bool Exists(const Data&) const noexcept override {return false;};
+  bool Exists(const Data&) const noexcept override ;
 
 
 };
