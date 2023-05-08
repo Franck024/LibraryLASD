@@ -12,29 +12,30 @@ Vector<Data>::Vector(const ulong new_size){
 
 template<typename Data>
 Vector<Data>::Vector(const MappableContainer<Data>& mp){
-    // size = 0;
-    // capacity = Size();
-    // Elements = new Data[size]{};
-    // mp.Map([&](const Data& element){
-    //     Elements[size++] = element;
-    // });
-
     size = mp.Size();
     capacity = mp.Size();
-    Elements = new Data[size];
-    for(ulong i = 0 ; i < size; i++){
-        Elements[i] = mp[i];
-    }
+    Elements = new Data[capacity]{};
+    ulong index = 0;
+    mp.Map([&index, this](const auto& element){
+        Elements[index++] = element;
+    });
+
+    // size = mp.Size();
+    // capacity = mp.Size();
+    // Elements = new Data[size];
+    // for(ulong i = 0 ; i < size; i++){
+    //     Elements[i] = mp[i];
+    // }
 }
 
 template<typename Data>
-Vector<Data>::Vector(const MutableMappableContainer<Data>& mp){
+Vector<Data>::Vector(MutableMappableContainer<Data>&& mp){
     size = mp.Size();
     capacity = mp.Size();
     Elements = new Data[size];
     ulong index = 0;
     mp.Map([&index, this](Data& item) {
-        Elements[index++] = item;
+        Elements[index++] = std::move(item);
     });
 }
 

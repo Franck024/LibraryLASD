@@ -61,21 +61,22 @@ List<Data>::List() : head(nullptr), tail(nullptr) {size = 0;}
 template <typename Data>
 List<Data>::List(const MappableContainer<Data>& mappCont){                  
     size = 0;
-    for(ulong i = 0; i < size; i++){
-        InsertAtBack(mappCont[i]);
-    }
-
-    // mappCont.Map([&](const auto& val){
-    //     InsertAtFront(val);
-    // });
+    // for(ulong i = 0; i < size; i++){
+    //     InsertAtBack(mappCont[i]);
+    // }
+    head = nullptr;
+    tail = nullptr;
+    mappCont.Map([&](const auto& val){
+        InsertAtBack(val);
+    });
 }
 
 // Costruttore (MutableMappableContainer)
 template <typename Data>
-List<Data>::List(const MutableMappableContainer<Data>& mutMapCont) :  head(nullptr), tail(nullptr){
+List<Data>::List( MutableMappableContainer<Data>&& mutMapCont) :  head(nullptr), tail(nullptr){
     size = 0;
     mutMapCont.Map([&](const auto& val){
-        InsertAtBack(val);
+        InsertAtBack(std::move(val));
     });
                 
 }

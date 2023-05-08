@@ -80,7 +80,7 @@ public:
 
   // Specific constructor
   List(const MappableContainer<Data>&) ; // A list obtained from a MappableContainer
-  List(const MutableMappableContainer<Data>&) ; // A list obtained from a MutableMappableContainer
+  List(MutableMappableContainer<Data>&&) ; // A list obtained from a MutableMappableContainer
 
   /* ************************************************************************ */
 
