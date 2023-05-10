@@ -27,16 +27,16 @@ public:
   /* ************************************************************************ */
 
   // Copy assignment
-  virtual operator=(const Iterator&) = delete; // Copy assignment of abstract types should not be possible.
+  Iterator& operator=(const Iterator&) = delete; // Copy assignment of abstract types should not be possible.
 
   // Move assignment
-  virtual operator=(Iterator&&) noexcept = delete; // Move assignment of abstract types should not be possible.
+  Iterator& operator=(Iterator&&) noexcept = delete; // Move assignment of abstract types should not be possible.
 
   /* ************************************************************************ */
 
   // Comparison operators
-  virtual operator==(const Iterator&) const noexcept = delete; // Comparison of abstract types might not be possible.
-  virtual operator!=(const Iterator&) const noexcept = delete; // Comparison of abstract types might not be possible.
+  bool operator==(const Iterator&) const noexcept = delete; // Comparison of abstract types might not be possible.
+  bool operator!=(const Iterator&) const noexcept = delete; // Comparison of abstract types might not be possible.
 
   /* ************************************************************************ */
 
@@ -70,16 +70,16 @@ public:
   /* ************************************************************************ */
 
   // Copy assignment
-  virtual operator=(const MutableIterator<Data>&) = delete; // Copy assignment of abstract types should not be possible.
+  MutableIterator& operator=(const MutableIterator<Data>&) = delete; // Copy assignment of abstract types should not be possible.
 
   // Move assignment
-  virtual operator=(const MutableIterator<Data>&) noexcept = delete; // Move assignment of abstract types should not be possible.
+  MutableIterator& operator=(const MutableIterator<Data>&) noexcept = delete; // Move assignment of abstract types should not be possible.
 
   /* ************************************************************************ */
 
   // Comparison operators
-  virtual operator==(const MutableIterator<Data>&) const noexcept = delete; // Comparison of abstract types might not be possible.
-  virtual operator!=(const MutableIterator<Data>&) const noexcept = delete; // Comparison of abstract types might not be possible.
+  bool operator==(const MutableIterator<Data>&) const noexcept = delete; // Comparison of abstract types might not be possible.
+  bool operator!=(const MutableIterator<Data>&) const noexcept = delete; // Comparison of abstract types might not be possible.
 
   /* ************************************************************************ */
 
@@ -111,16 +111,16 @@ public:
   /* ************************************************************************ */
 
   // Copy assignment
-  virtual operator=(const ForwardIterator<Data>&) = delete; // Copy assignment of abstract types should not be possible.
+  ForwardIterator& operator=(const ForwardIterator<Data>&) = delete; // Copy assignment of abstract types should not be possible.
 
   // Move assignment
-  virtual operator=(ForwardIterator<Data>&&) noexcept = delete; // Move assignment of abstract types should not be possible.
+  ForwardIterator& operator=(ForwardIterator<Data>&&) noexcept = delete; // Move assignment of abstract types should not be possible.
 
   /* ************************************************************************ */
 
   // Comparison operators
-  virtual operator==(const ForwardIterator<Data>&) const noexcept = delete; // Comparison of abstract types might not be possible.
-  virtual operator!=(const ForwardIterator<Data>&) const noexcept = delete; // Comparison of abstract types might not be possible.
+  bool operator==(const ForwardIterator<Data>&) const noexcept = delete; // Comparison of abstract types might not be possible.
+  bool operator!=(const ForwardIterator<Data>&) const noexcept = delete; // Comparison of abstract types might not be possible.
 
   /* ************************************************************************ */
 
@@ -152,16 +152,16 @@ public:
   /* ************************************************************************ */
 
   // Copy assignment
-  virtual operator=(const BackwardIterator<Data>&) = delete; // Copy assignment of abstract types should not be possible.
+  BackwardIterator& operator=(const BackwardIterator<Data>&) = delete; // Copy assignment of abstract types should not be possible.
 
   // Move assignment
-  virtual operator=(const BackwardIterator<Data>&) noexcept = delete; // Move assignment of abstract types should not be possible.
+  BackwardIterator& operator=(const BackwardIterator<Data>&) noexcept = delete; // Move assignment of abstract types should not be possible.
 
   /* ************************************************************************ */
 
   // Comparison operators
-  virtual operator==(const BackwardIterator<Data>&) const noexcept = delete; // Comparison of abstract types might not be possible.
-  virtual operator!=(const BackwardIterator<Data>&) const noexcept = delete; // Comparison of abstract types might not be possible.
+  bool operator==(const BackwardIterator<Data>&) const noexcept = delete; // Comparison of abstract types might not be possible.
+  bool operator!=(const BackwardIterator<Data>&) const noexcept = delete; // Comparison of abstract types might not be possible.
 
   /* ************************************************************************ */
 
@@ -195,16 +195,16 @@ public:
   /* ************************************************************************ */
 
   // Copy assignment
-  virtual operator=(const BidirectionalIterator<Data>&) = delete; // Copy assignment of abstract types should not be possible.
+  BidirectionalIterator& operator=(const BidirectionalIterator<Data>&) = delete; // Copy assignment of abstract types should not be possible.
 
   // Move assignment
-  virtual operator=(const BidirectionalIterator<Data>&) noexcept = delete; // Move assignment of abstract types should not be possible.
+  BidirectionalIterator& operator=(const BidirectionalIterator<Data>&) noexcept = delete; // Move assignment of abstract types should not be possible.
 
   /* ************************************************************************ */
 
   // Comparison operators
-  virtual operator==(const BidirectionalIterator<Data>&) const noexcept = delete; // Comparison of abstract types might not be possible.
-  virtual operator!=(const BidirectionalIterator<Data>&) const noexcept = delete; // Comparison of abstract types might not be possible.
+  bool operator==(const BidirectionalIterator<Data>&) const noexcept = delete; // Comparison of abstract types might not be possible.
+  bool operator!=(const BidirectionalIterator<Data>&) const noexcept = delete; // Comparison of abstract types might not be possible.
 
   /* ************************************************************************ */
 
@@ -240,16 +240,16 @@ public:
   /* ************************************************************************ */
 
   // Copy assignment
-  virtual operator=(const ResettableIterator<Data>&) = delete; // Copy assignment of abstract types should not be possible.
+  ResettableIterator& operator=(const ResettableIterator<Data>&) = delete; // Copy assignment of abstract types should not be possible.
 
   // Move assignment
-  virtual operator=(const ResettableIterator<Data>&) noexcept = delete; // Move assignment of abstract types should not be possible.
+  ResettableIterator& operator=(const ResettableIterator<Data>&) noexcept = delete; // Move assignment of abstract types should not be possible.
 
   /* ************************************************************************ */
 
   // Comparison operators
-  virtual operator==(const ResettableIterator<Data>&) const noexcept = delete; // Comparison of abstract types might not be possible.
-  virtual operator!=(const ResettableIterator<Data>&) const noexcept = delete; // Comparison of abstract types might not be possible.
+  bool operator==(const ResettableIterator<Data>&) const noexcept = delete; // Comparison of abstract types might not be possible.
+  bool operator!=(const ResettableIterator<Data>&) const noexcept = delete; // Comparison of abstract types might not be possible.
 
   /* ************************************************************************ */
 
