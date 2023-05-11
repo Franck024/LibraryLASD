@@ -236,7 +236,7 @@ public:
 
   using typename MappableContainer<Data>::MapFunctor;
 
-  virtual void InOrderMap(const MapFunctor&) const = 0;
+  virtual void InOrderMap(const MapFunctor) const = 0;
 
   /* ************************************************************************ */
 
