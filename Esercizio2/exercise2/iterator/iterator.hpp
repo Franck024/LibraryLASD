@@ -210,11 +210,11 @@ public:
 
   // Specific member functions
 
-  virtual Terminated() const noexcept override; // Override Iterator member
+  virtual bool Terminated() const noexcept override; // Override Iterator member
 
-  virtual ForwardTerminated() const noexcept = 0; // (concrete function should not throw exceptions)
+  virtual bool ForwardTerminated() const noexcept = 0; // (concrete function should not throw exceptions)
 
-  virtual BackwardTerminated() const noexcept = 0; // (concrete function should not throw exceptions)
+  virtual bool BackwardTerminated() const noexcept = 0; // (concrete function should not throw exceptions)
 
 };
 
@@ -255,7 +255,7 @@ public:
 
   // Specific member functions
 
-  virtual Reset() const noexcept = 0; // (concrete function should not throw exceptions)
+  virtual void Reset() const noexcept = 0; // (concrete function should not throw exceptions)
 
 };
 
