@@ -67,9 +67,9 @@ public:
 
     // Specific member functions
 
-    virtual Data& Element() noexcept = 0; // Immutable access to the element (concrete function should not throw exceptions)
+    virtual Data& Element() const noexcept = 0; // Immutable access to the element (concrete function should not throw exceptions)
 
-    virtual bool IsLeaf() const noexcept = 0; // (concrete function should not throw exceptions)
+    virtual bool IsLeaf() const noexcept; // (concrete function should not throw exceptions)
     virtual bool HasLeftChild() const noexcept = 0; // (concrete function should not throw exceptions)
     virtual bool HasRightChild() const noexcept = 0; // (concrete function should not throw exceptions)
 
@@ -219,7 +219,7 @@ public:
 
     virtual Data& Element() noexcept = 0; // Mutable access to the element (concrete function should not throw exceptions)
 
-    virtual Node& LeftChild() const = 0; // (concrete function must throw std::out_of_range when not existent)
+    virtual Node& LeftChild() const = 0 ; // (concrete function must throw std::out_of_range when not existent)
     virtual Node& RightChild() const = 0; // (concrete function must throw std::out_of_range when not existent)
 
   };
@@ -241,7 +241,7 @@ public:
 
   // Specific member functions
 
-  Node& Root() const = 0; // (concrete function must throw std::length_error when empty)
+  MutableNode& Root() const = 0; // (concrete function must throw std::length_error when empty)
 
   /* ************************************************************************ */
 
@@ -279,25 +279,25 @@ protected:
 
   // Auxiliary member function (for MutablePreOrderMappableContainer)
 
-  void PreOrderMap(MutableMapFunctor, Node*) ; // Accessory function executing from one node of the tree
+  void PreOrderMap(MutableMapFunctor, MutableNode*) ; // Accessory function executing from one node of the tree
 
   /* ************************************************************************ */
 
   // Auxiliary member function (for MutablePostOrderMappableContainer)
 
-  void PostOrderMap(MutableMapFunctor, Node*) ; // Accessory function executing from one node of the tree
+  void PostOrderMap(MutableMapFunctor, MutableNode*) ; // Accessory function executing from one node of the tree
 
   /* ************************************************************************ */
 
   // Auxiliary member function (for MutableInOrderMappableContainer)
 
-  void InOrderMap(const MutableMapFunctor, Node*) const ; // Accessory function executing from one node of the tree
+  void InOrderMap(const MutableMapFunctor, MutableNode*) const ; // Accessory function executing from one node of the tree
 
   /* ************************************************************************ */
 
   // Auxiliary member function (for MutableBreadthMappableContainer)
 
-  void BreadthMap(const MutableMapFunctor, Node*) ; // Accessory function executing from one node of the tree
+  void BreadthMap(const MutableMapFunctor, MutableNode*) ; // Accessory function executing from one node of the tree
 
 };
 

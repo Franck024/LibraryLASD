@@ -210,7 +210,7 @@ public:
 
   // Specific member functions
 
-  virtual bool Terminated() const noexcept override; // Override Iterator member
+  virtual bool Terminated() const noexcept override = 0; // Override Iterator member
 
   virtual bool ForwardTerminated() const noexcept = 0; // (concrete function should not throw exceptions)
 

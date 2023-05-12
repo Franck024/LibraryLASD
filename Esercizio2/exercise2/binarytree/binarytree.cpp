@@ -216,7 +216,6 @@ void MutableBinaryTree<Data>::BreadthMap(const MutableMapFunctor f) {
 }
 
 
-
 //*********************** BTPreOrderIterator ************************
 //*******************************************************************
 template <typename Data>
@@ -241,8 +240,9 @@ BTPreOrderIterator<Data>::BTPreOrderIterator(BTPreOrderIterator<Data>&& ab){
 //distruttore
 template <typename Data>
 BTPreOrderIterator<Data>::~BTPreOrderIterator(){
-        stk.Clear();
-    current = nullptr;;
+    stk.Clear();
+    delete current;
+    current = nullptr;
 }
 
 //copy ass
@@ -290,7 +290,7 @@ Data& BTPreOrderIterator<Data>::operator*() const {
 
 template <typename Data>
 bool BTPreOrderIterator<Data>::Terminated() const noexcept {
-    return (current==nullptr);
+    return (current == nullptr);
 }
 
 template <typename Data>
@@ -395,7 +395,7 @@ Data& BTPreOrderMutableIterator<Data>::operator*() const {
     if (this->current == nullptr) {
         throw std::out_of_range("Iterator out of range");
     }
-    return this->current->data;
+    return this->current->element;
 }
 
 //************************** BTPostOrderIterator ****************************
@@ -405,7 +405,7 @@ Data& BTPreOrderMutableIterator<Data>::operator*() const {
 template<typename Data>
 BTPostOrderIterator<Data>::BTPostOrderIterator(const BinaryTree<Data>& bt) : current(nullptr), last(nullptr) {
     // Push the root of the tree onto the stack
-    if (!bt.IsEmpty()) {
+    if (bt.current != nullptr) {
         stk.Push(&bt.Root());
     }
 }
@@ -434,7 +434,8 @@ BTPostOrderIterator<Data>::BTPostOrderIterator(BTPostOrderIterator<Data> &&ab) n
 // Destructor
 template <typename Data>
 BTPostOrderIterator<Data>::~BTPostOrderIterator() {
-        stk.Clear();
+    stk.Clear();
+    current delete;
     current = nullptr;;
 }
 
@@ -504,7 +505,16 @@ BTPostOrderIterator<Data>& BTPostOrderIterator<Data>::operator++() {
         if(current->HasRightChild() && !(&(current->RightChild())==last)){
             stk.Push(current);
             current = &(current->RightChild());
-            getMostLeftLeaf();
+            while (current->HasLeftChild()) {
+                stk.Push(current);
+                current = &(current->LeftChild());
+            }
+
+            if(current->HasRightChild()) {
+                stk.Push(current);
+                current = &(current->RightChild());
+                getMostLeftLeaf();
+            }
         }
     }
     last = current;
@@ -604,7 +614,7 @@ template <typename Data>
     if (this->Terminated()) {
       throw std::out_of_range("Iterator out of range");
     }
-    return current->data;
+    return current->element;
   }
 
 //************************** BTInOrderIterator ********************************
@@ -983,11 +993,11 @@ template <typename Data>
   }
 
 template <typename Data>
-  Data& BTBreadthMutableIterator<Data>::operator*() const override {
+  Data& BTBreadthMutableIterator<Data>::operator*() const  {
     if (this->Terminated()) {
       throw std::out_of_range("Iterator has terminated");
     }
-    return current->data;
+    return current->Element();
   }
 
 
