@@ -217,10 +217,10 @@ public:
 
     // Specific member functions
 
-    virtual Data& Element() noexcept ; // Mutable access to the element (concrete function should not throw exceptions)
+    virtual Data& Element() noexcept = 0; // Mutable access to the element (concrete function should not throw exceptions)
 
-    virtual Node& LeftChild() const ; // (concrete function must throw std::out_of_range when not existent)
-    virtual Node& RightChild() const ; // (concrete function must throw std::out_of_range when not existent)
+    virtual Node& LeftChild() const = 0; // (concrete function must throw std::out_of_range when not existent)
+    virtual Node& RightChild() const = 0; // (concrete function must throw std::out_of_range when not existent)
 
   };
 
@@ -241,7 +241,7 @@ public:
 
   // Specific member functions
 
-  Node& Root() const ; // (concrete function must throw std::length_error when empty)
+  Node& Root() const = 0; // (concrete function must throw std::length_error when empty)
 
   /* ************************************************************************ */
 
@@ -386,8 +386,6 @@ private:
 
 protected:
 
-  BTPreOrderMutableIterator<Data>::current;
-  BTPreOrderMutableIterator<Data>::stk;
 
 public:
 
@@ -515,9 +513,6 @@ private:
 
 protected:
 
-  BTPostOrderIterator<Data>::current;
-  BTPostOrderIterator<Data>::last;
-  BTPostOrderIterator<Data>::stk;
 
 public:
 
@@ -772,8 +767,6 @@ private:
 
 protected:
 
-  struct BinaryTree<Data>::Node* current = nullptr;
-  QueueLst<struct BinaryTree<Data>::Node*> que;
 
 public:
 
