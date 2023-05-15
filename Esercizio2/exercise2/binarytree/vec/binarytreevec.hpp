@@ -5,7 +5,7 @@
 /* ************************************************************************** */
 
 #include "../binarytree.hpp"
-
+#include "../../vector/vector.hpp"
 /* ************************************************************************** */
 
 namespace lasd {
@@ -22,7 +22,7 @@ private:
 
 protected:
 
-  MutableBinaryTree<Data>::size;
+  using MutableBinaryTree<Data>::size;
 
   struct NodeVec : virtual public MutableBinaryTree<Data>::MutableNode{ // Must extend MutableNode
 
@@ -35,7 +35,7 @@ protected:
 
   public:
 
-    Vector<NodeVec*> *vectoreNode = nullptr;
+    Vector<NodeVec*> *vectorNode = nullptr;
     Data element;
     ulong iNode;
 
@@ -46,8 +46,8 @@ protected:
     Data& Element() noexcept override;
     bool HasLeftChild() const noexcept override; 
     bool HasRightChild() const noexcept override; 
-    Node& LeftChild() const override; 
-    Node& RightChild() const override;
+    NodeVec& LeftChild() const ; 
+    NodeVec& RightChild() const override;
 ///***** fine
   };
   
@@ -95,13 +95,13 @@ public:
 
  // Specific member functions (inherited from BinaryTree)
 
-  Node& Root() const override; // Override BinaryTree member (throw std::length_error when empty)
+  NodeVec& Root() const override; // Override BinaryTree member (throw std::length_error when empty)
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from MutableBinaryTree)
 
-  MutableNode& Root() const override; // Override MutableBinaryTree member (throw std::length_error when empty)
+  NodeVec& Root() override; // Override MutableBinaryTree member (throw std::length_error when empty)
 
   /* ************************************************************************ */
 
@@ -112,19 +112,19 @@ public:
   /* ************************************************************************ */
 
   // Specific member functions (inherited from BreadthFoldableContainer)
-
+  using typename FoldableContainer<Data>::FoldFunctor;
   void BreadthFold(const FoldFunctor, void*) const override;// Override BreadthFoldableContainer member
 
   /* ************************************************************************ */
 
   // Specific member functions (inherited from BreadthMappableContainer)
-
+  using typename MappableContainer<Data>::MapFunctor;
   void BreadthMap(const MapFunctor) override; // Override BreadthMappableContainer member
 
   /* ************************************************************************ */
 
   // Specific member functions (inherited from MutableBreadthMappableContainer)
-
+  using typename MappableContainer<Data>::MutableMapFunctor;
   void BreadthMap(MutableMapFunctor) override; // Override MutableBreadthMappableContainer member
 
 

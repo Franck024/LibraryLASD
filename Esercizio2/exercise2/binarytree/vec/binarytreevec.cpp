@@ -136,7 +136,7 @@ bool BinaryTreeVec<Data>::operator!=(const BinaryTreeVec<Data> &bt) const noexce
 //******************* Funzioni specifiche
  // Specific member functions (inherited from BinaryTree)
 template <typename Data>
-  Node& BinaryTreeVec<Data>::Root() const{
+  BinaryTreeVec<Data>::NodeVec& BinaryTreeVec<Data>::Root() const{
     if(size == 0)
         throw std::length_error("Albero vuoto");
     return *(treevec->operator[](0));
@@ -146,7 +146,7 @@ template <typename Data>
 
   // Specific member function (inherited from MutableBinaryTree)
 template <typename Data>
-  MutableNode& BinaryTreeVec<Data>::Root() const {
+  BinaryTreeVec<Data>::NodeVec& BinaryTreeVec<Data>::Root()  {
     if(size == 0)
         throw std::length_error("Albero vuoto");
     return *(treevec->operator[](0));

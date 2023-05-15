@@ -10,7 +10,9 @@
 #include "../iterator/iterator.hpp"
 
 #include "../stack/vec/stackvec.hpp"
+#include "../stack/lst/stacklst.hpp"
 #include "../queue/vec/queuevec.hpp"
+#include "../queue/lst/queuelst.hpp"
 
 /* ************************************************************************** */
 
@@ -123,13 +125,13 @@ public:
 
   // Specific member function (inherited from PreOrderMappableContainer)
 
-  void PreOrderMap(MapFunctor) override ; // Override PreOrderMappableContainer member
+  void PreOrderMap(MapFunctor) const override ; // Override PreOrderMappableContainer member
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from PostOrderMappableContainer)
 
-  void PostOrderMap(MapFunctor) override ;// Override PostOrderMappableContainer member
+  void PostOrderMap(MapFunctor) const override ;// Override PostOrderMappableContainer member
 
   /* ************************************************************************ */
 
@@ -141,31 +143,31 @@ public:
 
   // Specific member function (inherited from BreadthMappableContainer)
 
-  void BreadthMap(const MapFunctor) override ; // Override BreadthMappableContainer member
+  void BreadthMap(const MapFunctor) const override ; // Override BreadthMappableContainer member
 
 protected:
 
   // Auxiliary member function (for PreOrderMappableContainer)
 
-  void PreOrderMap(MapFunctor, Node&) const ;// Accessory function executing from one node of the tree
+  void PreOrderMap(MapFunctor, Node*) const ;// Accessory function executing from one node of the tree
 
   /* ************************************************************************ */
 
   // Auxiliary member function (for PostOrderMappableContainer)
 
-  void PostOrderMap(MapFunctor, Node&) const; // Accessory function executing from one node of the tree
+  void PostOrderMap(MapFunctor, Node*) const; // Accessory function executing from one node of the tree
 
   /* ************************************************************************ */
 
   // Auxiliary member function (for InOrderMappableContainer)
 
-  void InOrderMap(const MapFunctor, Node&) const; // Accessory function executing from one node of the tree
+  void InOrderMap(const MapFunctor, Node*) const; // Accessory function executing from one node of the tree
 
   /* ************************************************************************ */
 
   // Auxiliary member function (for BreadthMappableContainer)
 
-  void BreadthMap(const MapFunctor, Node&) const;// Accessory function executing from one node of the tree
+  void BreadthMap(const MapFunctor, Node*) const;// Accessory function executing from one node of the tree
 
 };
 
@@ -211,7 +213,7 @@ public:
     bool operator=(const MutableNode&) = delete; // Copy assignment of abstract types should not be possible.
 
     // Move assignment
-    bool operator=(const MutableNode&) = delete; // Move assignment of abstract types should not be possible.
+    bool operator=(MutableNode&&) = delete; // Move assignment of abstract types should not be possible.
 
     /* ********************************************************************** */
 
@@ -219,8 +221,8 @@ public:
 
     virtual Data& Element() noexcept = 0; // Mutable access to the element (concrete function should not throw exceptions)
 
-    virtual Node& LeftChild() const = 0 ; // (concrete function must throw std::out_of_range when not existent)
-    virtual Node& RightChild() const = 0; // (concrete function must throw std::out_of_range when not existent)
+    virtual MutableNode& LeftChild() const = 0 ; // (concrete function must throw std::out_of_range when not existent)
+    virtual MutableNode& RightChild() const = 0; // (concrete function must throw std::out_of_range when not existent)
 
   };
 
@@ -235,13 +237,13 @@ public:
   bool operator=(const MutableBinaryTree<Data>&) = delete; // Copy assignment of abstract types should not be possible.
 
   // Move assignment
-  bool operator=(const MutableBinaryTree<Data>&) noexcept = delete; // Move assignment of abstract types should not be possible.
+  bool operator=(MutableBinaryTree<Data>&&) noexcept = delete; // Move assignment of abstract types should not be possible.
 
   /* ************************************************************************ */
 
   // Specific member functions
 
-  MutableNode& Root() const = 0; // (concrete function must throw std::length_error when empty)
+  virtual MutableNode& Root() = 0; // (concrete function must throw std::length_error when empty)
 
   /* ************************************************************************ */
 
@@ -255,13 +257,13 @@ public:
 
   // Specific member function (inherited from MutablePreOrderMappableContainer)
 
-  void PreOrderMap(MutableMapFunctor) override ; // Override MutablePreOrderMappableContainer member
+  void PreOrderMap(MutableMapFunctor) const override ; // Override MutablePreOrderMappableContainer member
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from MutablePostOrderMappableContainer)
 
-  void PostOrderMap(MutableMapFunctor) override ; // Override MutablePostOrderMappableContainer member
+  void PostOrderMap(MutableMapFunctor) const override ; // Override MutablePostOrderMappableContainer member
 
   /* ************************************************************************ */
 
@@ -273,19 +275,19 @@ public:
 
   // Specific member function (inherited from MutableBreadthMappableContainer)
 
-  void BreadthMap(const MutableMapFunctor) override ; // Override MutableBreadthMappableContainer member
+  void BreadthMap(const MutableMapFunctor) const override ; // Override MutableBreadthMappableContainer member
 
 protected:
 
   // Auxiliary member function (for MutablePreOrderMappableContainer)
 
-  void PreOrderMap(MutableMapFunctor, MutableNode*) ; // Accessory function executing from one node of the tree
+  void PreOrderMap(MutableMapFunctor, MutableNode*) const; // Accessory function executing from one node of the tree
 
   /* ************************************************************************ */
 
   // Auxiliary member function (for MutablePostOrderMappableContainer)
 
-  void PostOrderMap(MutableMapFunctor, MutableNode*) ; // Accessory function executing from one node of the tree
+  void PostOrderMap(MutableMapFunctor, MutableNode*) const; // Accessory function executing from one node of the tree
 
   /* ************************************************************************ */
 
@@ -297,7 +299,7 @@ protected:
 
   // Auxiliary member function (for MutableBreadthMappableContainer)
 
-  void BreadthMap(const MutableMapFunctor, MutableNode*) ; // Accessory function executing from one node of the tree
+  void BreadthMap(const MutableMapFunctor, MutableNode*) const; // Accessory function executing from one node of the tree
 
 };
 
@@ -316,7 +318,7 @@ private:
 protected:
 
   struct BinaryTree<Data>::Node* current = nullptr;
-  StackList<struct BinaryTree<Data>::Node*> stk;
+  StackLst<struct BinaryTree<Data>::Node*> stk;
 
 public:
 
@@ -595,7 +597,7 @@ public:
   BTInOrderIterator& operator=(const BTInOrderIterator<Data>&);
 
   // Move assignment
-  BTInOrderIterator& operator=(BTInOrderIterator<Data>&&) const noexcept;
+  BTInOrderIterator& operator=(BTInOrderIterator<Data>&&) noexcept;
 
   /* ************************************************************************ */
 
@@ -639,8 +641,6 @@ private:
 
 protected:
 
-  BTInOrderIterator<Data>::current;
-  BTInOrderIterator<Data>::stk;
 
 public:
 
@@ -784,7 +784,7 @@ public:
   /* ************************************************************************ */
 
   // Destructor
-  virtual ~BTBreadthIterator();
+  virtual ~BTBreadthMutableIterator();
 
   /* ************************************************************************ */
 

@@ -42,9 +42,9 @@ public:
 
   // Specific member functions
 
-  virtual operator*() const = 0; // (non-mutable version; concrete function must throw std::out_of_range when terminated)
+  virtual Data& operator*() const = 0; // (non-mutable version; concrete function must throw std::out_of_range when terminated)
 
-  virtual Terminated() const noexcept = 0; // (concrete function should not throw exceptions)
+  virtual bool Terminated() const noexcept = 0; // (concrete function should not throw exceptions)
 
 };
 
@@ -73,7 +73,7 @@ public:
   MutableIterator& operator=(const MutableIterator<Data>&) = delete; // Copy assignment of abstract types should not be possible.
 
   // Move assignment
-  MutableIterator& operator=(const MutableIterator<Data>&) noexcept = delete; // Move assignment of abstract types should not be possible.
+  MutableIterator& operator=(MutableIterator<Data>&&) noexcept = delete; // Move assignment of abstract types should not be possible.
 
   /* ************************************************************************ */
 
@@ -85,7 +85,7 @@ public:
 
   // Specific member functions
 
-  virtual operator*() = 0; // (mutable version; concrete function must throw std::out_of_range when terminated)
+  virtual Data& operator*() = 0; // (mutable version; concrete function must throw std::out_of_range when terminated)
 
 };
 
@@ -126,7 +126,7 @@ public:
 
   // Specific member functions
 
-  virtual operator++() = 0; // (concrete function must throw std::out_of_range when terminated)
+  virtual ForwardIterator& operator++() = 0; // (concrete function must throw std::out_of_range when terminated)
 
 };
 
@@ -155,7 +155,7 @@ public:
   BackwardIterator& operator=(const BackwardIterator<Data>&) = delete; // Copy assignment of abstract types should not be possible.
 
   // Move assignment
-  BackwardIterator& operator=(const BackwardIterator<Data>&) noexcept = delete; // Move assignment of abstract types should not be possible.
+  BackwardIterator& operator=(BackwardIterator<Data>&&) noexcept = delete; // Move assignment of abstract types should not be possible.
 
   /* ************************************************************************ */
 
@@ -167,7 +167,7 @@ public:
 
   // Specific member functions
 
-  virtual operator--() = 0; // (concrete function must throw std::out_of_range when terminated)
+  virtual BackwardIterator& operator--() = 0; // (concrete function must throw std::out_of_range when terminated)
 
 };
 
@@ -198,7 +198,7 @@ public:
   BidirectionalIterator& operator=(const BidirectionalIterator<Data>&) = delete; // Copy assignment of abstract types should not be possible.
 
   // Move assignment
-  BidirectionalIterator& operator=(const BidirectionalIterator<Data>&) noexcept = delete; // Move assignment of abstract types should not be possible.
+  BidirectionalIterator& operator=(BidirectionalIterator<Data>&&) noexcept = delete; // Move assignment of abstract types should not be possible.
 
   /* ************************************************************************ */
 
@@ -243,7 +243,7 @@ public:
   ResettableIterator& operator=(const ResettableIterator<Data>&) = delete; // Copy assignment of abstract types should not be possible.
 
   // Move assignment
-  ResettableIterator& operator=(const ResettableIterator<Data>&) noexcept = delete; // Move assignment of abstract types should not be possible.
+  ResettableIterator& operator=(ResettableIterator<Data>&&) noexcept = delete; // Move assignment of abstract types should not be possible.
 
   /* ************************************************************************ */
 
