@@ -56,6 +56,8 @@ protected:
   NodeLnk* copyTree(const NodeLnk*);
   void clearTree(NodeLnk*);
   bool equals(const NodeLnk*, const NodeLnk*) const;
+  void insertElement(const Data&, NodeLnk*);
+  void insertElement(Data&&, NodeLnk*);
 
 public:
 

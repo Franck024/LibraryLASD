@@ -54,23 +54,37 @@ struct BinaryTreeVec<Data>::NodeVec& BinaryTreeVec<Data>::NodeVec::RightChild() 
 
 template<typename Data>
 BinaryTreeVec<Data>::BinaryTreeVec(const MappableContainer<Data>& mp){
-    // size = mp.Size();
-    // treevec = new Data[capacity]{};
-    // ulong index = 0;
-    // mp.Map([&index, this](const auto& element){
-    //     Elements[index++] = element;
-    // });
+    this->size = mp.Size();
+    this->treevec = new Vector<NodeVec*>();
+    treevec->Resize(size);
+    ulong index = 0;
+    mp.Map([this, &index](const auto& element){
+        (*treevec)[index] = new NodeVec(treevec, element, index);
+        index++;
+    });
+
+    if(!treevec->Empty())
+      Root() = (*treevec)[0];
 }
 
 template<typename Data>
-BinaryTreeVec<Data>::BinaryTreeVec(MutableMappableContainer<Data>&& mp){
-    // size = mp.Size();
-    // treevec = new Data[size];
-    // ulong index = 0;
-    // mp.Map([&index, this](Data& item) {
-    //     Elements[index++] = std::move(item);
-    // });
+BinaryTreeVec<Data>::BinaryTreeVec(MutableMappableContainer<Data>&& mp) {
+    this->size = mp.Size();
+    this->treevec = new Vector<NodeVec*>();
+    treevec->Resize(size); 
+    
+    ulong index = 0;
+    mp.Map([this, &index](auto&& element) {
+        (*treevec)[index] = new NodeVec(treevec, std::move(element), index);
+        index++;
+    });
+    
+    // Logica per impostare il puntatore root all'elemento radice dell'albero
+    if (!treevec->IsEmpty()) {
+        Root() = (*treevec)[0];
+    }
 }
+
 
 // Copy constructor
 template <typename Data>

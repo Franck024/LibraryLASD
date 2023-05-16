@@ -57,11 +57,73 @@ BinaryTreeLnk<Data>::NodeLnk* copyTree(const typename BinaryTreeLnk<Data>::NodeL
     return newNode;
 }
 
-template <typename Data>
-BinaryTreeLnk<Data>::BinaryTreeLnk(const MappableContainer<Data>& mp){}
+template<typename Data>
+BinaryTreeLnk<Data>::BinaryTreeLnk(const MappableContainer<Data>& mp) {
+    this->size = mp.Size();
+    root = copyTree(nullptr); // Chiamata alla funzione di copia dell'albero
+    ulong index = 0;
+    mp.Map([this, &index](const auto& element) {
+        // Inserisci gli elementi nell'albero
+        if (index == 0) {
+            root->element = element;
+        } else {
+            insertElement(element, root);
+        }
+        index++;
+    });
+}
 
-template <typename Data>
-BinaryTreeLnk<Data>::BinaryTreeLnk(MutableMappableContainer<Data>&& mmp) noexcept{}
+template<typename Data>
+BinaryTreeLnk<Data>::BinaryTreeLnk(MutableMappableContainer<Data>&& mp) noexcept {
+    this->size = mp.Size();
+    root = copyTree(nullptr); // Chiamata alla funzione di copia dell'albero
+    ulong index = 0;
+    mp.Map([this, &index](auto&& element) {
+        // Inserisci gli elementi nell'albero
+        if (index == 0) {
+            root->element = std::move(element);
+        } else {
+            insertElement(std::move(element), root);
+        }
+        index++;
+    });
+}
+
+//------------ per fare gli inserimenti -----------
+template<typename Data>
+void BinaryTreeLnk<Data>::insertElement(const Data& data, NodeLnk* currentNode) {
+    if (data < currentNode->element) {
+        if (currentNode->leftChild == nullptr) {
+            currentNode->leftChild = new NodeLnk(data);
+        } else {
+            insertElement(data, currentNode->leftChild);
+        }
+    } else {
+        if (currentNode->rightChild == nullptr) {
+            currentNode->rightChild = new NodeLnk(data);
+        } else {
+            insertElement(data, currentNode->rightChild);
+        }
+    }
+}
+
+template<typename Data>
+void BinaryTreeLnk<Data>::insertElement(Data&& data, NodeLnk* currentNode) {
+    if (data < currentNode->element) {
+        if (currentNode->leftChild == nullptr) {
+            currentNode->leftChild = new NodeLnk(std::move(data));
+        } else {
+            insertElement(std::move(data), currentNode->leftChild);
+        }
+    } else {
+        if (currentNode->rightChild == nullptr) {
+            currentNode->rightChild = new NodeLnk(std::move(data));
+        } else {
+            insertElement(std::move(data), currentNode->rightChild);
+        }
+    }
+}
+//------------------------------------------------
 
 template <typename Data>
 BinaryTreeLnk<Data>::BinaryTreeLnk(const BinaryTreeLnk<Data>& copy) : root(copyTree(copy.root)){}
