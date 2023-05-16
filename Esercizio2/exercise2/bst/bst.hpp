@@ -75,20 +75,20 @@ public:
 
   // Specific member functions
 
-  Data& Min() const; // (concrete function must throw std::length_error when empty)
-  Data& MinNRemove() ; // (concrete function must throw std::length_error when empty)
+  Data Min() const; // (concrete function must throw std::length_error when empty)
+  Data MinNRemove() ; // (concrete function must throw std::length_error when empty)
   void RemoveMin() ; // (concrete function must throw std::length_error when empty)
 
-  Data& Max() const; // (concrete function must throw std::length_error when empty)
-  Data& MaxNRemove() ; // (concrete function must throw std::length_error when empty)
+  Data Max() const; // (concrete function must throw std::length_error when empty)
+  Data MaxNRemove() ; // (concrete function must throw std::length_error when empty)
   void RemoveMax() ; // (concrete function must throw std::length_error when empty)
 
-  Data& Predecessor(const Data&) const; // (concrete function must throw std::length_error when not found)
-  Data& PredecessorNRemove(const Data&) ; // (concrete function must throw std::length_error when not found)
+  Data Predecessor(const Data&) const; // (concrete function must throw std::length_error when not found)
+  Data PredecessorNRemove(const Data&) ; // (concrete function must throw std::length_error when not found)
   void RemovePredecessor(const Data&) ; // (concrete function must throw std::length_error when not found)
 
-  Data& Successor(const Data&) const; // (concrete function must throw std::length_error when not found)
-  Data& SuccessorNRemove(const Data&) ; // (concrete function must throw std::length_error when not found)
+  Data Successor(const Data&) const; // (concrete function must throw std::length_error when not found)
+  Data SuccessorNRemove(const Data&) ; // (concrete function must throw std::length_error when not found)
   void RemoveSuccessor(const Data&) ; // (concrete function must throw std::length_error when not found)
 
   /* ************************************************************************ */
@@ -126,17 +126,17 @@ protected:
   struct BST<Data>:NodeLnk* Skip2Right(struct BST<Data>::NodeLnk*&) noexcept;
 
   struct BST<Data>::NodeLnk*& FindPointerToMin(struct BST<Data>::NodeLnk*&) noexcept;
-  struct BST<Data>::NodeLnk* const& FindPointerToMin(struct BST<Data>::NodeLnk* const&) const noexcept;
+  struct BST<Data>::NodeLnk*  FindPointerToMin(struct BST<Data>::NodeLnk* const&) const noexcept;
   struct BST<Data>::NodeLnk*& FindPointerToMax(struct BST<Data>::NodeLnk*&) noexcept;   
-  struct BST<Data>::NodeLnk* const& FindPointerToMax(struct BST<Data>::NodeLnk* const&) const noexcept;
+  struct BST<Data>::NodeLnk* FindPointerToMax(struct BST<Data>::NodeLnk* const&) const noexcept;
 
   struct BST<Data>::NodeLnk*& FindPointerTo(struct BST<Data>::NodeLnk*&, const Data&) noexcept;
-  struct BST<Data>::NodeLnk* const& FindPointerTo(struct BST<Data>::NodeLnk* const&, const Data&) const noexcept;
+  struct BST<Data>::NodeLnk*  FindPointerTo(struct BST<Data>::NodeLnk* const&, const Data&) const noexcept;
 
   struct BST<Data>::NodeLnk*& FindPointerToPredecessor(struct BST<Data>::NodeLnk*&, const Data&) noexcept;
-  struct BST<Data>::NodeLnk* const& FindPointerToPredecessor(struct BST<Data>::NodeLnk* const&, const Data&) const noexcept;
+  struct BST<Data>::NodeLnk*  FindPointerToPredecessor(struct BST<Data>::NodeLnk* const&, const Data&) const noexcept;
   struct BST<Data>::NodeLnk*& FindPointerToSuccessor(struct BST<Data>::NodeLnk*&, const Data&) noexcept;
-  struct BST<Data>::NodeLnk* const& FindPointerToSuccessor(struct BST<Data>::NodeLnk* const&, const Data&) const noexcept;
+  struct BST<Data>::NodeLnk*  FindPointerToSuccessor(struct BST<Data>::NodeLnk* const&, const Data&) const noexcept;
 
 };
 
