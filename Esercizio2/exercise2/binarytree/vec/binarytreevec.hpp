@@ -46,7 +46,7 @@ protected:
     Data& Element() noexcept override;
     bool HasLeftChild() const noexcept override; 
     bool HasRightChild() const noexcept override; 
-    NodeVec& LeftChild() const ; 
+    NodeVec& LeftChild() const override; 
     NodeVec& RightChild() const override;
 ///***** fine
   };
