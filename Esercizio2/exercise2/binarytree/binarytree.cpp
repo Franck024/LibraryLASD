@@ -70,13 +70,13 @@ void BinaryTree<Data>::Map(const MapFunctor& fun) const{
 
 //*******     ''       ''    PreOrderMap
 template <typename Data>
-void BinaryTree<Data>::PreOrderMap(MapFunctor fun) const{
+void BinaryTree<Data>::PreOrderMap( MapFunctor fun) {
     if(size != 0)
         PreOrderMap(fun, &(Root()));
 }
 
 template <typename Data>
-void BinaryTree<Data>::PreOrderMap(MapFunctor fun, Node* node ) const{
+void BinaryTree<Data>::PreOrderMap( MapFunctor fun, Node* node ) {
     if(node != nullptr){
         fun(node->Element()); 
         if(node->HasLeftChild())
@@ -88,13 +88,13 @@ void BinaryTree<Data>::PreOrderMap(MapFunctor fun, Node* node ) const{
 
 //***********   ''     ''    PostOrderMap
 template <typename Data>
-void BinaryTree<Data>::PostOrderMap(MapFunctor fun) const{
+void BinaryTree<Data>::PostOrderMap(MapFunctor fun) {
     if(size != 0)
         PostOrderMap(fun, &(Root()));
 }
 
 template <typename Data>
-void BinaryTree<Data>::PostOrderMap(MapFunctor fun, Node* node)const{
+void BinaryTree<Data>::PostOrderMap(MapFunctor fun, Node* node){
     if(node != nullptr){
         if(node->HasLeftChild())
             PostOrderMap(fun, &(node->LeftChild()));
@@ -125,13 +125,13 @@ void BinaryTree<Data>::InOrderMap(MapFunctor fun, Node* node) const{
 
 //************* ''        ''          BreadthMap
 template <typename Data>
-void BinaryTree<Data>::BreadthMap(MapFunctor fun) const{
+void BinaryTree<Data>::BreadthMap(MapFunctor fun) {
     if(size != 0)
         BreadthMap(fun, &(Root()));
 }
 
 template <typename Data>
-void BinaryTree<Data>::BreadthMap(MapFunctor fun, Node* node) const{
+void BinaryTree<Data>::BreadthMap(MapFunctor fun, Node* node) {
     lasd::QueueLst<Node*> coda;
     coda.Enqueue(node);
     Node* tmp;
@@ -148,6 +148,22 @@ void BinaryTree<Data>::BreadthMap(MapFunctor fun, Node* node) const{
   }
 }
 
+template <typename Data>
+bool BinaryTree<Data>::Exists(const Data& value) const noexcept{
+    return ExistsRecursive(&(Root()), value);
+}
+
+template <typename Data>
+bool BinaryTree<Data>::ExistsRecursive(Node* node, const Data& value) const noexcept{
+    if(!(node->IsLeaf()))
+        return false;
+    if(node->Element() == value)
+        return true;
+    bool existsLeft = ExistsRecursive(&(node->LeftChild()), value);
+    bool existsRight = ExistsRecursive(&(node->RightChild()), value);
+    return existsLeft || existsRight;
+}
+
 //*********************** MutableBinaryTree *************************
 //*******************************************************************
 
@@ -155,74 +171,75 @@ void BinaryTree<Data>::BreadthMap(MapFunctor fun, Node* node) const{
 
 template <typename Data>
 void MutableBinaryTree<Data>::Map(const MutableMapFunctor& f) const {
+  MutableBinaryTree<Data>& nonConstTree = const_cast<MutableBinaryTree<Data>&>(*this);
+  nonConstTree.PreOrderMap(const_cast<MutableMapFunctor&>(f), &(nonConstTree.Root()));
+}
+
+template <typename Data>
+void MutableBinaryTree<Data>::PreOrderMap( MutableMapFunctor f)  {
     this->PreOrderMap(f, &(Root()));
 }
 
 template <typename Data>
-void MutableBinaryTree<Data>::PreOrderMap(MutableMapFunctor f) const {
-    this->PreOrderMap(f, &(Root()));
-}
-
-template <typename Data>
-void MutableBinaryTree<Data>::PreOrderMap(MutableMapFunctor f, MutableNode* node) const{
+void MutableBinaryTree<Data>::PreOrderMap( MutableMapFunctor f, MutableNode* node) {
     if (node) {
         f(node->Element());
-        PreOrderMap(f, node->LeftChild());
-        PreOrderMap(f, node->RightChild());
+        PreOrderMap(f, &(node->LeftChild()));
+        PreOrderMap(f, &(node->RightChild()));
     }
 }
 
 template <typename Data>
-void MutableBinaryTree<Data>::PostOrderMap(MutableMapFunctor f) const{
+void MutableBinaryTree<Data>::PostOrderMap(MutableMapFunctor f) {
     this->PostOrderMap(f, &(Root()));
 }
 
 template <typename Data>
-void MutableBinaryTree<Data>::PostOrderMap(MutableMapFunctor f, MutableNode* node) const{
+void MutableBinaryTree<Data>::PostOrderMap(MutableMapFunctor f, MutableNode* node) {
     if (node) {
-        PostOrderMap(f, node->LeftChild());
-        PostOrderMap(f, node->RightChild());
+        PostOrderMap(f, &(node->LeftChild()));
+        PostOrderMap(f, &(node->RightChild()));
         f(node->Element());
     }
 }
 
 template <typename Data>
-void MutableBinaryTree<Data>::InOrderMap(const MutableMapFunctor f) const {
+void MutableBinaryTree<Data>::InOrderMap(const MutableMapFunctor f)  {
     this->InOrderMap(f, &(Root()));
 }
 
 template <typename Data>
-void MutableBinaryTree<Data>::InOrderMap(const MutableMapFunctor f, MutableNode* node) const {
+void MutableBinaryTree<Data>::InOrderMap(const MutableMapFunctor f, MutableNode* node)  {
     if (node) {
-        InOrderMap(f, node->LeftChild());
+        InOrderMap(f, &(node->LeftChild()));
         f(node->Element());
-        InOrderMap(f, node->RightChild());
+        InOrderMap(f, &(node->RightChild()));
     }
 }
 
 template <typename Data>
-void MutableBinaryTree<Data>::BreadthMap(const MutableMapFunctor f) const{
+void MutableBinaryTree<Data>::BreadthMap(const MutableMapFunctor f) {
     if(size != 0){
         BreadthMap(f, &(Root()));
     }
 }
 
 template <typename Data>
-void MutableBinaryTree<Data>::BreadthMap(const MutableMapFunctor f, MutableNode* node) const{
+void MutableBinaryTree<Data>::BreadthMap(const MutableMapFunctor f, MutableNode* node) {
     QueueLst<MutableNode*> q;
-    q.Push(node);
+    q.Enqueue(node);
 
     while(!q.Empty()){
-        MutableNode* current = q.Front();
-        q.Pop();
+        MutableNode* current = q.Head();
+        q.Dequeue();
 
         f(current->Element());
 
-        if(current->Left() != nullptr){
-            q.Push(&(current->Left()));
+        if(current->HasLeftChild()){
+            q.Enqueue(&(current->LeftChild()));
         }
-        if(current->Right() != nullptr){
-            q.Push(&(current->Right()));
+        if(current->HasRightChild()){
+            q.Enqueue(&(current->RightChild()));
         }
     }
 }
@@ -308,24 +325,21 @@ bool BTPreOrderIterator<Data>::Terminated() const noexcept {
 
 template <typename Data>
 BTPreOrderIterator<Data>& BTPreOrderIterator<Data>::operator++() {
-    // If the stack is empty, there are no more nodes to visit
-    if (stk.Empty()) {
+    if(Terminated())
+        throw std::out_of_range("Iterator PreOrder terminated.");
+
+    if(current->HasRightChild())
+        stk.Push(&(current->RightChild()));
+    
+    if(current->HasLeftChild())
+        stk.Push(&(current->LeftChild()));
+
+    if(stk.Empty())
         current = nullptr;
-        return *this;
-    }
+    else
+        current = stk.TopNPop(); 
     
-    // Pop the next node to visit from the stack
-    current = stk.Pop();
-    
-    // Push its RightChild child and then its LeftChild child, if they exist
-    if (current->HasRightChild()) {
-        stk.Push(&current->RightChild());
-    }
-    if (current->HasLeftChild()) {
-        stk.Push(&current->LeftChild());
-    }
-    
-    return *this;
+    return (*this);
 }
 
 template<typename Data>
@@ -646,7 +660,7 @@ template <typename Data>
 // Specific constructors
 template <typename Data>
 BTInOrderIterator<Data>::BTInOrderIterator(const BinaryTree<Data> &bt) : current(nullptr), stk(){
-    Data root = bt.Root();
+    typename BinaryTree<Data>::Node* root = bt.Root();
     while (root != nullptr) {
         stk.Push(root);
         root = &root->LeftChild();
@@ -759,11 +773,11 @@ template <typename Data>
 void BTInOrderIterator<Data>::Reset() const noexcept {
     // Svuota lo stack e riposiziona il puntatore alla radice dell'albero
     stk.Clear();
-    current = &this->Root();
+    current = &(this->Root());
     // Aggiungi tutti i nodi del sottoalbero sinistro alla pila
     while (current != nullptr) {
         stk.Push(current);
-        current = &current->LeftChild();
+        current = &(current->LeftChild());
     }
 }
 

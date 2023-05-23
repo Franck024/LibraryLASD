@@ -511,7 +511,7 @@ public:
 
   using typename MutableMappableContainer<Data>::MutableMapFunctor;
 
-  virtual void InOrderMap(MutableMapFunctor) = 0;
+  virtual void InOrderMap(const MutableMapFunctor) = 0;
 
   /* ************************************************************************ */
 

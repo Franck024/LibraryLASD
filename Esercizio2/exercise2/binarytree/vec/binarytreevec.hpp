@@ -124,7 +124,7 @@ public:
   /* ************************************************************************ */
 
   // Specific member functions (inherited from MutableBreadthMappableContainer)
-  using typename MappableContainer<Data>::MutableMapFunctor;
+  using typename MutableMappableContainer<Data>::MutableMapFunctor;
   void BreadthMap(MutableMapFunctor) override; // Override MutableBreadthMappableContainer member
 
 
