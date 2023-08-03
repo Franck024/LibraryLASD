@@ -45,7 +45,7 @@ int main() {
       lasdtest(); // Call in the menu of your library test!
     if (choise == 2){
       std::cout << "Hai scelto l'opzione 2.\n";
-      test();
+      //test();  non funziona
     }
           
     if (choise == 3)

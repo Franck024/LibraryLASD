@@ -63,8 +63,6 @@ BinaryTreeVec<Data>::BinaryTreeVec(const MappableContainer<Data>& mp){
         index++;
     });
 
-    if(!treevec->Empty())
-      Root() = (*treevec)[0];
 }
 
 template<typename Data>
@@ -92,7 +90,7 @@ BinaryTreeVec<Data>::BinaryTreeVec(const BinaryTreeVec<Data> &bt) {
     size = bt.size;
     treevec = new Vector<NodeVec*>(size);
     for(uint i = 0; i < size; i++){
-        NodeVec* node = new NodeVec(treevec, bt.treevec->operator[](i)->Element(),i);
+        NodeVec* node = new NodeVec(bt.treevec, bt.treevec->operator[](i)->Element(),i);
         treevec->operator[](i) = node;
     }
 }

@@ -240,7 +240,7 @@ public:
   /* ************************************************************************ */
 
   // Destructor
-  virtual ~MutableBinaryTree();
+  virtual ~MutableBinaryTree() = default;
 
   /* ************************************************************************ */
 
@@ -381,7 +381,7 @@ public:
 
   // Specific member functions (inherited from ResettableIterator)
 
-  void Reset() const noexcept override; // (should not throw exceptions)
+  void Reset() noexcept override; // (should not throw exceptions)
 
 };
 
@@ -403,7 +403,7 @@ protected:
 public:
 
   // Specific constructors
-  BTPreOrderMutableIterator(const MutableBinaryTree<Data>&) ; // An iterator over a given mutable binary tree
+  BTPreOrderMutableIterator( MutableBinaryTree<Data>&) ; // An iterator over a given mutable binary tree
 
   /* ************************************************************************ */
 
@@ -508,7 +508,7 @@ public:
 
   // Specific member functions (inherited from ResettableIterator)
 
-  void Reset() const noexcept; // (should not throw exceptions)
+  void Reset()  noexcept; // (should not throw exceptions)
 
 };
 
@@ -530,7 +530,7 @@ protected:
 public:
 
   // Specific constructors
-  BTPostOrderMutableIterator(const MutableBinaryTree<Data>&) ; // An iterator over a given mutable binary tree
+  BTPostOrderMutableIterator( MutableBinaryTree<Data>&) ; // An iterator over a given mutable binary tree
 
   /* ************************************************************************ */
 
@@ -634,7 +634,7 @@ public:
 
   // Specific member functions (inherited from ResettableIterator)
 
-  void Reset() const noexcept override; // (should not throw exceptions)
+  void Reset()  noexcept override; // (should not throw exceptions)
 
 };
 
@@ -656,7 +656,7 @@ protected:
 public:
 
   // Specific constructors
-  BTInOrderMutableIterator(const MutableBinaryTree<Data>&) ; // An iterator over a given mutable binary tree
+  BTInOrderMutableIterator( MutableBinaryTree<Data>&) ; // An iterator over a given mutable binary tree
 
   /* ************************************************************************ */
 
@@ -760,7 +760,7 @@ public:
 
   // Specific member functions (inherited from ResettableIterator)
 
-  void Reset() const noexcept; // (should not throw exceptions)
+  void Reset()  noexcept; // (should not throw exceptions)
 
 };
 
@@ -782,7 +782,7 @@ protected:
 public:
 
   // Specific constructors
-  BTBreadthMutableIterator(const MutableBinaryTree<Data>&); // An iterator over a given mutable binary tree
+  BTBreadthMutableIterator( MutableBinaryTree<Data>&); // An iterator over a given mutable binary tree
 
   /* ************************************************************************ */
 

@@ -343,16 +343,14 @@ BTPreOrderIterator<Data>& BTPreOrderIterator<Data>::operator++() {
 }
 
 template<typename Data>
-void BTPreOrderIterator<Data>::Reset() const noexcept {
+void BTPreOrderIterator<Data>::Reset() noexcept {
     stk.Clear();
-    if (this->Root() != nullptr) {
-        stk.Push(this->Root());
-        current = this->Root();
+    if (current != nullptr) {
+        stk.Push(current);
     }
-    else {
-        current = nullptr;
-    }
+    current = nullptr;
 }
+
 
 
 //******************************BTPreOrderMutableIterator******************************
@@ -360,9 +358,9 @@ void BTPreOrderIterator<Data>::Reset() const noexcept {
 
 // Specific constructors
 template <typename Data>
-BTPreOrderMutableIterator<Data>::BTPreOrderMutableIterator(const MutableBinaryTree<Data>& tree) :
-    BTPreOrderIterator<Data>(tree) // Call the base class constructor
-{}
+BTPreOrderMutableIterator<Data>::BTPreOrderMutableIterator( MutableBinaryTree<Data>& tree) 
+{//fare----------
+}
 
 /* ************************************************************************ */
 
@@ -422,7 +420,7 @@ Data& BTPreOrderMutableIterator<Data>::operator*() const {
     if (this->current == nullptr) {
         throw std::out_of_range("Iterator out of range");
     }
-    return this->current->element;
+    return this->current->Element();
 }
 
 //************************** BTPostOrderIterator ****************************
@@ -558,28 +556,31 @@ BTPostOrderIterator<Data>& BTPostOrderIterator<Data>::operator++() {
 
 
 template <typename Data>
-void BTPostOrderIterator<Data>::Reset() const noexcept {
+void BTPostOrderIterator<Data>::Reset()  noexcept {
     // Svuota lo stack
     while (!stk.Empty()) {
         stk.Pop();
     }
 
     // Reimposta i puntatori
-    current = this->Root();
+    current = nullptr;
     last = nullptr;
 }
 
 //************************** BTPostOrderMutableIterator ************************
 //******************************************************************************
 template <typename Data>
-  BTPostOrderMutableIterator<Data>::BTPostOrderMutableIterator(const MutableBinaryTree<Data>& tree) {
+BTPostOrderMutableIterator<Data>::BTPostOrderMutableIterator( MutableBinaryTree<Data>& tree){
     this->current = nullptr;
     this->last = nullptr;
-    // Push the root of the tree onto the stack
+    this->stk();
     if (!tree.Empty()) {
-        this->stk->Push(&tree.Root());
+
+        // Push the root of the tree onto the stack
+        this->stk->Push(tree.Root());
     }
-  }
+}
+
 
   /* ************************************************************************ */
 
@@ -770,12 +771,13 @@ BTInOrderIterator<Data>& BTInOrderIterator<Data>::operator++() {
 }
 
 template <typename Data>
-void BTInOrderIterator<Data>::Reset() const noexcept {
-    // Svuota lo stack e riposiziona il puntatore alla radice dell'albero
+void BTInOrderIterator<Data>::Reset() noexcept {
     stk.Clear();
-    current = &(this->Root());
-    // Aggiungi tutti i nodi del sottoalbero sinistro alla pila
-    while (current != nullptr) {
+
+    if (current == nullptr)
+        return;
+
+    while ((current->LeftChild()).IsLeaf()) {
         stk.Push(current);
         current = &(current->LeftChild());
     }
@@ -784,9 +786,9 @@ void BTInOrderIterator<Data>::Reset() const noexcept {
 //*************************** BTInOrderMutableIterator ************************
 //*****************************************************************************
 template <typename Data>
-  BTInOrderMutableIterator<Data>::BTInOrderMutableIterator(const MutableBinaryTree<Data>& tree){
-    this->stk = tree.stk;
-    this->current = tree.current; 
+  BTInOrderMutableIterator<Data>::BTInOrderMutableIterator( MutableBinaryTree<Data>& tree){
+    // this->stk = tree.stk;
+    // this->current = tree.current; 
   }
 
   /* ************************************************************************ */
@@ -969,7 +971,7 @@ BTBreadthIterator<Data>& BTBreadthIterator<Data>::operator++() {
 }
 
 template <typename Data>
-void BTBreadthIterator<Data>::Reset() const noexcept {
+void BTBreadthIterator<Data>::Reset()  noexcept {
     while (!que.Empty()) {
         que.Dequeue();
     }
@@ -981,9 +983,11 @@ void BTBreadthIterator<Data>::Reset() const noexcept {
 //************************* MutableBTBreadthIterator ***************************
 //******************************************************************************
 template <typename Data>
-  BTBreadthMutableIterator<Data>::BTBreadthMutableIterator(const MutableBinaryTree<Data>& tree){
-    this->current = &tree.Root();
-    this->que.Push(this->current);
+  BTBreadthMutableIterator<Data>::BTBreadthMutableIterator( MutableBinaryTree<Data>& tree){
+    // MutableBinaryTree<Data> nonConstTree(std::move(tree));
+    // const typename MutableBinaryTree<Data>::MutableNode* rootNode = nonConstTree.Root();
+    // this->current = rootNode;
+    // this->que.Push(this->current);
   }
 
 template <typename Data>
