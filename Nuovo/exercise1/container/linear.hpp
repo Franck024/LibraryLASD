@@ -76,7 +76,7 @@ public:
 
   // Specific member function (inherited from PostOrderFoldableContainer)
 
-  virtual void PostOrderFold(const FoldFuctor, void *) const override = 0; // Override PostOrderFoldableContainer member
+  virtual void PostOrderFold(const FoldFunctor, void *) const override = 0; // Override PostOrderFoldableContainer member
 
   /* ************************************************************************ */
 

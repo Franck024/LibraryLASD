@@ -45,7 +45,7 @@ public:
     return (size == 0);
   }; // (concrete function should not throw exceptions)
 
-  virtual inline ulong Size() {
+  virtual inline ulong Size() const noexcept{
     return size;
   }; // (concrete function should not throw exceptions)
 
