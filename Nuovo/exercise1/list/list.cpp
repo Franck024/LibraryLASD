@@ -264,6 +264,7 @@ bool List<Data>::Remove(const Data& val){
             return true;
         }
     }
+    return false;
 }
 
 // Specific member functions (inherited from LinearContainer)
@@ -406,7 +407,7 @@ template <typename Data>
 void List<Data>::Map(const MutableMapFunctor mutFun){
     Node* tmp = head;
     while(tmp != nullptr){
-        mapFun(tmp->valore);
+        mutFun(tmp->valore);
         tmp = tmp->next;
     }    
 }

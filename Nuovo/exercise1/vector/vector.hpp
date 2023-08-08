@@ -21,7 +21,7 @@ class Vector : virtual public ResizableContainer,
 
 private:
 
-  // ...
+
 
 protected:
 
@@ -103,6 +103,36 @@ protected:
 
   // Auxiliary functions, if necessary!
 
+  //per non rendere la classe astratta vado ad implementare tutti i metodi virtual
+  using typename FoldableContainer<Data>::FoldFunctor;
+  inline void Fold(const FoldFunctor, void*)const override {}; // Override FoldableContainer member
+  /* ************************************************************************ */
+  // Specific member function (inherited from PreOrderFoldableContainer)
+  inline void  PreOrderFold(const FoldFunctor, void*) const override {}; // Override PreOrderFoldableContainer member
+  /* ************************************************************************ */
+  // Specific member function (inherited from PostOrderFoldableContainer)
+  inline void  PostOrderFold(const FoldFunctor, void*) const override{}; // Override PostOrderFoldableContainer member
+  /* ************************************************************************ */
+  // Specific member function (inherited from MappableContainer)
+  using typename MappableContainer<Data>::MapFunctor;
+  inline void Map(const MapFunctor) override {}; // Override MappableContainer member
+  /* ************************************************************************ */
+  // Specific member function (inherited from PreOrderMappableContainer)
+  inline void PreOrderMap(const MapFunctor) override {}; // Override PreOrderMappableContainer member
+  /* ************************************************************************ */
+  // Specific member function (inherited from PostOrderMappableContainer)
+  inline void PostOrderMap(const MapFunctor) override {}; // Override PostOrderMappableContainer member
+  /* ************************************************************************ */
+  // Specific member function (inherited from MutableMappableContainer)
+  using typename MutableMappableContainer<Data>::MutableMapFunctor;
+  inline void Map(const MutableMapFunctor) override{}; // Override MutableMappableContainer member
+  /* ************************************************************************ */
+  // Specific member function (inherited from MutablePreOrderMappableContainer)
+  inline void PreOrderMap(const  MutableMapFunctor) override {}; // Override MutablePreOrderMappableContainer member
+  /* ************************************************************************ */
+  // Specific member function (inherited from MutablePostOrderMappableContainer)
+  inline void PostOrderMap(const MutableMapFunctor) override {}; // Override MutablePostOrderMappableContainer member
+  
 };
 
 /* ************************************************************************** */

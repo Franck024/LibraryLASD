@@ -7,7 +7,10 @@ namespace lasd {
 
   // Default constructor
   template <typename Data>
-  QueueVec<Data>::QueueVec() : size(0), capacity(5){ elem = new Data[capacity]{}; }
+  QueueVec<Data>::QueueVec() :  capacity(5){ 
+    size = 0;
+    elem = new Data[capacity]{}; 
+    }
 
   // Specific constructor
   template <typename Data>
@@ -112,7 +115,7 @@ namespace lasd {
   void QueueVec<Data>::Enqueue(const Data& dato) {
     ulong tmp = size;
     if(size == capacity) Expand(capacity * 2);
-    elem[tmp] = val;
+    elem[tmp] = dato;
     size = ++tmp;
   }
 
@@ -146,8 +149,6 @@ namespace lasd {
     Vector<Data>::Clear();
   }
 
-protected:
-
   // Auxiliary member functions
 
     // Espande la capacità del vector sottostante a una nuova capacità
@@ -178,7 +179,7 @@ protected:
   void QueueVec<Data>::SwapVectors(QueueVec<Data>& que){
     std::swap(size, que.size);
     std::swap(capacity, que.capacity);
-    std::swap(Elements, que.Elements);
+    std::swap(elem, que.elem);
   }
 
 /* ************************************************************************** */

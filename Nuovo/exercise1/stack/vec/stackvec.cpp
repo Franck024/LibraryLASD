@@ -6,15 +6,18 @@ namespace lasd {
 /* ************************************************************************** */
   // Default constructor
   template <typename Data>
-  StackVec<Data>::StackVec() : size(0), capacity(5){ elem = new Data[capacity]{}}
+  StackVec<Data>::StackVec() :  capacity(5){ 
+    size = 0;
+    elem = new Data[capacity]{};
+    }
 
   // Specific constructor
   template <typename Data>
   StackVec<Data>::StackVec(const MappableContainer<Data>& mapCon) {
     size = mapCon.Size();
     capacity = mapCon.Size();
-    MappableContainer<Data>::MapFunctor mapFunctor = [this](const Data& dato){
-        this->Top(dato);
+    typename MappableContainer<Data>::MapFunctor mapFunctor = [this](const Data& dato){
+        this->Push(dato);
     };
     mapCon.Map(mapFunctor);
   }
@@ -23,8 +26,8 @@ namespace lasd {
   StackVec<Data>::StackVec(const MutableMappableContainer<Data>& mutMap)  {
     size = mutMap.Size();
     capacity = mutMap.Size();
-    MappableContainer<Data>::MapFunctor mapFunctor = [this](const Data& dato){
-        this->Top(dato);
+    typename MappableContainer<Data>::MapFunctor mapFunctor = [this](const Data& dato){
+        this->Push(dato);
     };
     mutMap.Map(mapFunctor);
   }
@@ -54,15 +57,15 @@ namespace lasd {
 
   // Copy assignment
   template <typename Data>
-  StackVec& StackVec<Data>::operator=(const StackVec& stk){
-    Vecto<Data>::operator=(stk);
+  StackVec<Data>& StackVec<Data>::operator=(const StackVec& stk){
+    Vector<Data>::operator=(stk);
     capacity = stk.capacity;
     return *this;
   }
 
   // Move assignment
   template <typename Data>
-  StackVec& StackVec<Data>::operator=(StackVec&& stk) noexcept{
+  StackVec<Data>& StackVec<Data>::operator=(StackVec&& stk) noexcept{
     Vector<Data>::operator=(std::move(stk));
     capacity = stk.capacity;
     return *this;
@@ -119,7 +122,7 @@ namespace lasd {
   }
 
   template <typename Data>
-  void StackVec<Data>::Push(const Data& dato) {
+  void StackVec<Data>::Push(const Data& dato) noexcept {
     ulong tmp = size;
     if(size == capacity) Expand(capacity * 2); // raddoppia la capac dello stack se pieno
     elem[size] = dato;
@@ -155,7 +158,7 @@ namespace lasd {
 
     // Espande la capacità del vector sottostante a una nuova capacità
     template <typename Data>
-    void StackVec<Data>::Expand(const ulong new_capacity){
+    void StackVec<Data>::Expand(const ulong new_capacity) noexcept{
     if (new_capacity < capacity) { // verifica se la nuova capacità è maggiore di quella attuale
         return;
     }
@@ -168,12 +171,12 @@ namespace lasd {
 
     // Riduce la capacità del vector sottostante al numero di elementi presenti
     template <typename Data>
-    void StackVec<Data>::Reduce(const ulong new_capacity){
+    void StackVec<Data>::Reduce(const ulong new_capacity) noexcept{
+    if (new_capacity > capacity) { // verifica se la nuova capacità è maggiore di quella attuale
+        return;
+    }        
     if( new_capacity < size)
         Vector<Data>::Resize(size);
-    if (new_capacity > capacity) { // verifica se la nuova capacità è maggiore di quella attuale
-        throw std::length_error("Nuova capacità maggiore alla capacità attuale");
-    }    
     Vector<Data>::Resize(capacity - new_capacity);
     }
 

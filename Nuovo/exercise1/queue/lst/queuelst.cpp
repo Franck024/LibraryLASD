@@ -84,12 +84,12 @@ namespace lasd {
 
   template <typename Data>
   void QueueLst<Data>::Enqueue(const Data& dato) {
-    Vector<Data>::InsertAtBack(dato);
+    List<Data>::InsertAtBack(dato);
   }
 
   template <typename Data>
   void QueueLst<Data>::Enqueue(Data&& dato) noexcept{
-    Vector<Data>::InsertAtBack(std::move(dato));
+    List<Data>::InsertAtBack(std::move(dato));
   }
 
 /* ************************************************************************** */

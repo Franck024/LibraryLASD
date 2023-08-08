@@ -23,8 +23,9 @@ namespace lasd {
   template<typename Data>
   Vector<Data>::Vector(const MutableMappableContainer<Data>& map){
     size = map.Size();
-    ulong index = -1;
-    typename MutableMappableContainer<Data>::MapFunctor mapFunctor = [&index, this](const Data& el){    
+    elem = new Data[size];
+    ulong index = 0;
+    typename MutableMappableContainer<Data>::MutableMapFunctor mapFunctor = [&index, this](Data& el){    
         this->elem[index++] = el;
     };
     map.Map(mapFunctor);
@@ -160,8 +161,17 @@ namespace lasd {
   // Specific member function (inherited from SortableLinearContainer)
   template<typename Data>
   void Vector<Data>::Sort(){
-    std::sort(this, size);
+    if(size != 0){
+      for (ulong i = 0; i < size - 1; ++i) {
+        for (ulong j = 0; j < size - i - 1; ++j) {
+          if (elem[j] > elem[j + 1]) {
+            std::swap(elem[j], elem[j + 1]);
+          }
+        }
+      }
+    }
   }
+
 
 /* ************************************************************************** */
 

@@ -5,10 +5,10 @@ namespace lasd {
 
   // Specific constructor
   template <typename Data>
-  StackLst& StackLst<Data>::StackLst(const MappableContainer<Data>& mapCont) : List<Data>(mapCont){}
+  StackLst<Data>::StackLst(const MappableContainer<Data>& mapCont) : List<Data>(mapCont){}
 
   template <typename Data>
-  StackLst& StackLst<Data>::StackLst(const MutableMappableContainer<Data>& mutMap) : List<Data>(mutMap){}
+  StackLst<Data>::StackLst(const MutableMappableContainer<Data>& mutMap) : List<Data>(mutMap){}
 
   /* ************************************************************************ */
 
@@ -54,37 +54,37 @@ namespace lasd {
   // Specific member functions (inherited from Stack)
   template <typename Data>
   Data& StackLst<Data>::Top() const {
-    if(size == 0) throw std::length_error when empty("Struttura vuota");
+    if(size == 0) throw std::length_error("Struttura vuota");
     return this->Front();
   } 
   
   template <typename Data>
   Data& StackLst<Data>::Top() {
-    if(size == 0) throw std::length_error when empty("Struttura vuota");
+    if(size == 0) throw std::length_error("Struttura vuota");
     return this->Front();    
   }
 
   template <typename Data>
   void StackLst<Data>::Pop() {
-    if(size == 0) throw std::length_error when empty("Struttura vuota");   
+    if(size == 0) throw std::length_error("Struttura vuota");   
     this->RemoveFromFront(); 
   }
 
   template <typename Data>
   Data StackLst<Data>::TopNPop() {
-    if(size == 0) throw std::length_error when empty("Struttura vuota");
+    if(size == 0) throw std::length_error("Struttura vuota");
     Data val = this->FrontNRemove();
     return val;
   }
 
   template <typename Data>
-  void StackLst<Data>::Push(const Data& val) {
+  void StackLst<Data>::Push(const Data& val) noexcept{
     this->InsertAtFront(val);
   }
 
   template <typename Data>
-  void StackLst<Data>::Push(Data&&) noexcept {
-    this->InsertAtFront(val);
+  void StackLst<Data>::Push(Data&& val) noexcept {
+    this->InsertAtFront(std::move(val));
   }
 
 /* ************************************************************************** */
