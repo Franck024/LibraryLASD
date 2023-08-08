@@ -5,31 +5,29 @@ namespace lasd {
   // Specific constructors
   template<typename Data>
   Vector<Data>::Vector(const ulong n_alloc) {
-    size = 0;
+    size = n_alloc;
     elem = new Data[n_alloc]{};
   }
 
   template<typename Data>
-  Vector<Data>::Vector(const MappableContainer<Data>& map){
+  Vector<Data>::Vector(MappableContainer<Data>& map){
     size = map.Size();
-    ulong index = -1;
-    typename MappableContainer<Data>::MapFunctor mapFunctor = [&index, this](const Data& dato){    
-        this->elem[index++] = dato;
-    };
-    map.Map(mapFunctor);
+    ulong index = 0;
+    elem = new Data[size];
+    map.Map([&](const Data& item){
+      elem[index++] = item;
+    });
 
   }
 
   template<typename Data>
-  Vector<Data>::Vector(const MutableMappableContainer<Data>& map){
+  Vector<Data>::Vector(MutableMappableContainer<Data>&& map){
     size = map.Size();
     elem = new Data[size];
     ulong index = 0;
-    typename MutableMappableContainer<Data>::MutableMapFunctor mapFunctor = [&index, this](Data& el){    
-        this->elem[index++] = el;
-    };
-    map.Map(mapFunctor);
-
+    map.Map([&](Data& item){
+      elem[index++] = std::move(item);
+    });
   }
 
   /* ************************************************************************ */
@@ -37,11 +35,11 @@ namespace lasd {
   // Copy constructor
   template<typename Data>
   Vector<Data>::Vector(const Vector& vec){
+    size = vec.size;
     elem = new Data[vec.size];
     for(ulong i = 0; i < size; i++){
         elem[i] = vec.elem[i];
     }
-    size = vec.size;
   }
 
   // Move constructor
@@ -55,13 +53,13 @@ namespace lasd {
 
   // Destructor
   template<typename Data>
-  Vector<Data>::~Vector(){ delete[] elem; }
+  Vector<Data>::~Vector(){ Clear(); }
 
   /* ************************************************************************ */
 
   // Copy assignment
   template<typename Data>
-  Vector<Data>& Vector<Data>::operator=(const Vector<Data>& vec){
+  Vector<Data>& Vector<Data>::operator=(const Vector& vec){
     Vector<Data>* tmp = new Vector<Data>(vec);
     std::swap(*tmp, *this);
     delete tmp;
@@ -70,7 +68,7 @@ namespace lasd {
 
   // Move assignment
   template<typename Data>
-  Vector<Data>& Vector<Data>::operator=(Vector<Data>&& vec) noexcept{
+  Vector<Data>& Vector<Data>::operator=(Vector&& vec) noexcept{
 	std::swap(elem, vec.elem);
 	std::swap(size, vec.size);
 	return *this;
@@ -80,7 +78,7 @@ namespace lasd {
 
   // Comparison operators
   template<typename Data>
-  bool Vector<Data>::operator==(const Vector<Data>& vec) const noexcept{
+  bool Vector<Data>::operator==(const Vector& vec) const noexcept{
     if(size != vec.size) return false;
     for(ulong i = 0; i < size; i++){
         if(elem[i] != vec.elem[i]) return false;
@@ -89,7 +87,7 @@ namespace lasd {
   }
 
   template<typename Data>
-  bool Vector<Data>::operator!=(const Vector<Data>& vec) const noexcept{
+  bool Vector<Data>::operator!=(const Vector& vec) const noexcept{
     return !(*this == vec);
   }
 
@@ -135,25 +133,25 @@ namespace lasd {
 
   template<typename Data>
   Data& Vector<Data>::Front() const{
-    if(size == 0) throw std::length_error("Struttura vuota");
+    if(size == 0 || elem == nullptr) throw std::length_error("Struttura vuota");
     return elem[0];
   } 
 
   template<typename Data>
   Data& Vector<Data>::Front() {
-    if(size == 0) throw std::length_error("Struttura vuota");
+    if(size == 0 || elem == nullptr) throw std::length_error("Struttura vuota");
     return elem[0];
   } 
   
   template<typename Data>
   Data& Vector<Data>::Back() const{
-    if(size == 0) throw std::length_error("Struttura vuota");
+    if(size == 0 || elem == nullptr) throw std::length_error("Struttura vuota");
     return elem[size-1];
   } 
   
   template<typename Data>
   Data& Vector<Data>::Back() {
-    if(size == 0) throw std::length_error("Struttura vuota");
+    if(size == 0 || elem == nullptr) throw std::length_error("Struttura vuota");
     return elem[size-1];
   } 
 
@@ -172,6 +170,86 @@ namespace lasd {
     }
   }
 
+
+
+/* ************************************************************************** */
+/* ************************************************************************** */
+/************Funzioni aggiuntive*********************/
+
+//Vector Fold
+template<typename Data>
+void Vector<Data>::Fold(const FoldFunctor function, void* parametro) const {
+	for (ulong i = 0; i < size; i++) {
+		function(elem[i], parametro);
+	}
+}
+
+//Vector FoldPreOrder
+template<typename Data>
+void Vector<Data>::PreOrderFold(const FoldFunctor function, void* parametro) const {
+	for (ulong i = 0; i < size; i++) {
+		function(elem[i], parametro);
+	}
+}
+
+//Vector FoldPostOrder
+template<typename Data>
+void Vector<Data>::PostOrderFold(const FoldFunctor function, void* parametro) const {
+	ulong index = size;
+	while (index > 0) {
+		function(elem[--index], parametro);
+	}
+}
+
+/* ************************************************************************** */
+template <typename Data>
+void Vector<Data>::Map(const MapFunctor fun) {
+    for(ulong i = 0; i < size; i++){
+        fun(elem[i]);
+    }
+}
+
+//Vector MapPreOrder
+template<typename Data>
+void Vector<Data>::PreOrderMap(MapFunctor function) {
+	for (ulong i = 0; i < size; i++) {
+		function(elem[i]);
+	}
+}
+
+//Vector MapPostOrder
+template<typename Data>
+void Vector<Data>::PostOrderMap(MapFunctor function) {
+	ulong index = size;
+	while (index > 0) {
+		function(elem[--index]);
+	}
+}
+
+template <typename Data>
+void Vector<Data>::Map( MutableMapFunctor fun) {
+    for(ulong i = 0; i < size; i++){
+        fun(elem[i]);
+    }
+}
+
+
+//Vector MapPreOrder
+template<typename Data>
+void Vector<Data>::PreOrderMap(MutableMapFunctor function) {
+	for (ulong i = 0; i < size; i++) {
+		function(elem[i]);
+	}
+}
+
+//Vector MapPostOrder
+template<typename Data>
+void Vector<Data>::PostOrderMap(MutableMapFunctor function) {
+	ulong index = size;
+	while (index > 0) {
+		function(elem[--index]);
+	}
+}
 
 /* ************************************************************************** */
 

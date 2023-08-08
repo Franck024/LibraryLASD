@@ -5,10 +5,10 @@ namespace lasd {
 
   // Specific constructor
   template <typename Data>
-  StackLst<Data>::StackLst(const MappableContainer<Data>& mapCont) : List<Data>(mapCont){}
+  StackLst<Data>::StackLst(MappableContainer<Data>& mapCont) : List<Data>(mapCont){}
 
   template <typename Data>
-  StackLst<Data>::StackLst(const MutableMappableContainer<Data>& mutMap) : List<Data>(mutMap){}
+  StackLst<Data>::StackLst(MutableMappableContainer<Data>&& mutMap) : List<Data>(mutMap){}
 
   /* ************************************************************************ */
 

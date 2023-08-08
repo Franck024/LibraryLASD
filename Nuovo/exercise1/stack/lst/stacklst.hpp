@@ -37,8 +37,8 @@ public:
   /* ************************************************************************ */
 
   // Specific constructor
-  StackLst(const MappableContainer<Data>&) ; // A stack obtained from a MappableContainer
-  StackLst(const MutableMappableContainer<Data>&) ; // A stack obtained from a MutableMappableContainer
+  StackLst(MappableContainer<Data>&) ; // A stack obtained from a MappableContainer
+  StackLst(MutableMappableContainer<Data>&&) ; // A stack obtained from a MutableMappableContainer
 
   /* ************************************************************************ */
 

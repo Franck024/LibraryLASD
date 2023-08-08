@@ -14,10 +14,10 @@ namespace lasd {
 
   // Specific constructor
   template <typename Data>
-  QueueVec<Data>::QueueVec(const MappableContainer<Data>& mapCon) : List<Data>(mapCon){}
+  QueueVec<Data>::QueueVec(MappableContainer<Data>& mapCon) : Vector<Data>(mapCon){}
 
   template <typename Data>
-  QueueVec<Data>::QueueVec(const MutableMappableContainer<Data>& mutMap) : List<Data>(mutMap){}
+  QueueVec<Data>::QueueVec(MutableMappableContainer<Data>&& mutMap) : Vector<Data>(mutMap){}
 
   /* ************************************************************************ */
 

@@ -5,10 +5,10 @@ namespace lasd {
 
   // Specific constructor
   template <typename Data>
-  QueueLst<Data>::QueueLst(const MappableContainer<Data>& mapCon) : List<Data>(mapCon) {}
+  QueueLst<Data>::QueueLst(MappableContainer<Data>& mapCon) : List<Data>(mapCon) {}
 
   template <typename Data>
-  QueueLst<Data>::QueueLst(const MutableMappableContainer<Data>& mutMap) : List<Data>(mutMap){}
+  QueueLst<Data>::QueueLst(MutableMappableContainer<Data>&& mutMap) : List<Data>(mutMap){}
 
   /* ************************************************************************ */
 

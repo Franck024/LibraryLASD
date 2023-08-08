@@ -13,23 +13,21 @@ namespace lasd {
 
   // Specific constructor
   template <typename Data>
-  StackVec<Data>::StackVec(const MappableContainer<Data>& mapCon) {
-    size = mapCon.Size();
-    capacity = mapCon.Size();
-    typename MappableContainer<Data>::MapFunctor mapFunctor = [this](const Data& dato){
-        this->Push(dato);
-    };
-    mapCon.Map(mapFunctor);
+  StackVec<Data>::StackVec(MappableContainer<Data>& map) {
+    size = map.Size();
+    capacity = map.Size();
+    map.Map([&](const Data& item){
+        Push(item);
+    });
   }
 
   template <typename Data>
-  StackVec<Data>::StackVec(const MutableMappableContainer<Data>& mutMap)  {
-    size = mutMap.Size();
-    capacity = mutMap.Size();
-    typename MappableContainer<Data>::MapFunctor mapFunctor = [this](const Data& dato){
-        this->Push(dato);
-    };
-    mutMap.Map(mapFunctor);
+  StackVec<Data>::StackVec(MutableMappableContainer<Data>&& map)  {
+    size = map.Size();
+    capacity = map.Size();
+    map.Map([&]( Data& item){
+        Push(item);
+    });
   }
 
   /* ************************************************************************ */

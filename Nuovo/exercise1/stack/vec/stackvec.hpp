@@ -39,8 +39,8 @@ public:
   /* ************************************************************************ */
 
   // Specific constructor
-  StackVec(const MappableContainer<Data>&) ; // A stack obtained from a MappableContainer
-  StackVec(const MutableMappableContainer<Data>&) ; // A stack obtained from a MutableMappableContainer
+  StackVec(MappableContainer<Data>&) ; // A stack obtained from a MappableContainer
+  StackVec(MutableMappableContainer<Data>&&) ; // A stack obtained from a MutableMappableContainer
 
   /* ************************************************************************ */
 

@@ -21,25 +21,21 @@ namespace lasd {
 // }
 
 template <typename Data>
-bool FoldableContainer<Data>::Exists(const Data& data) const noexcept{
-    struct ExistsFoldFunctor {
-        const Data& targetData;
-        bool result = false;
+bool FoldableContainer<Data>::Exists(const Data& item) const noexcept {
+    bool exists = false;
 
-        ExistsFoldFunctor(const Data& data) : targetData(data) {}
-
-        void operator()(const Data& currentData, void*) {
-            if (currentData == targetData) {
-                result = true;
-            }
+    // Implementazione specifica per verificare l'esistenza dell'elemento 'item' nel contenitore
+    Fold([&](const Data& data, void* context) {
+        if (data == item) {
+            exists = true;
+            // Stop folding since the item has been found
+            *reinterpret_cast<bool*>(context) = true;
         }
-    };
+    }, &exists);
 
-    ExistsFoldFunctor existsFoldFunctor(data);
-    Fold(existsFoldFunctor, nullptr);
-
-    return existsFoldFunctor.result;
+    return exists;
 }
+
 
 /* ************************************************************************** */
 

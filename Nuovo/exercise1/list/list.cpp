@@ -50,23 +50,19 @@ bool List<Data>::Node::operator!=(const Node& nodo) const noexcept{
 
 //Costruttori
 template <typename Data>
-List<Data>::List(const MappableContainer<Data>& map){
+List<Data>::List( MappableContainer<Data>& map){
     size = 0;
-    typename MappableContainer<Data>::MapFunctor mapFunctor = [this](const Data& elem){
-        this->InsertAtBack(elem);
-    };
-    map.Map(mapFunctor);
-
+    map.Map([&](const Data& item){
+        InsertAtBack(item);
+    });
 }
 
 template <typename Data>
-List<Data>::List(const MutableMappableContainer<Data>& map) {
+List<Data>::List(MutableMappableContainer<Data>&& map) {
     size = 0;
-    typename MutableMappableContainer<Data>::MapFunctor mapFunctor = [this](const Data& elem){
-        this->InsertAtBack(elem);
-    };
-    map.Map(mapFunctor);
-
+    map.Map([&](Data& item){
+        InsertAtBack(item);
+    });
 }
 
 // Copy constructor
@@ -293,26 +289,30 @@ Data& List<Data>::operator[](const ulong index){
 
 template <typename Data>
 Data& List<Data>::Front() const{
-    if(size != 0) throw std::length_error("Fuori indice");
-    return head->valore;    
+    if(size > 0)return head->valore; 
+    throw std::length_error("Fuori indice");
+        
 }
 
 template <typename Data>
 Data& List<Data>::Front() {
-    if(size != 0) throw std::length_error("Fuori indice");
-    return head->valore;    
+    if(size > 0)return head->valore; 
+    throw std::length_error("Fuori indice");
+        
 }
 
 template <typename Data>
 Data& List<Data>::Back() const{
-    if(size != 0) throw std::length_error("Fuori indice");
-    return tail->valore;  
+    if(size > 0)return tail->valore;  
+    throw std::length_error("Fuori indice");
+     
 }
 
 template <typename Data>
 Data& List<Data>::Back() {
-    if(size != 0) throw std::length_error("Fuori indice");
-    return tail->valore;  
+    if(size > 0)return tail->valore; 
+    throw std::length_error("Fuori indice");
+      
 }
 
 // Specific member function (inherited from FoldableContainer)
@@ -404,7 +404,7 @@ void List<Data>::PostOrderMap(const MapFunctor mapFun, Node* nodo){
 
 // Specific member function (inherited from MutableMappableContainer)
 template <typename Data>
-void List<Data>::Map(const MutableMapFunctor mutFun){
+void List<Data>::Map(MutableMapFunctor mutFun){
     Node* tmp = head;
     while(tmp != nullptr){
         mutFun(tmp->valore);
@@ -416,7 +416,7 @@ void List<Data>::Map(const MutableMapFunctor mutFun){
 
 // Specific member function (inherited from MutablePreOrderMappableContainer)
 template <typename Data>
-void List<Data>::PreOrderMap(const MutableMapFunctor mutFun){
+void List<Data>::PreOrderMap(MutableMapFunctor mutFun){
     PreOrderMap(mutFun, head);
 }
 
@@ -424,13 +424,13 @@ void List<Data>::PreOrderMap(const MutableMapFunctor mutFun){
 
 // Specific member function (inherited from MutablePostOrderMappableContainer)
 template <typename Data>
-void List<Data>::PostOrderMap(const MutableMapFunctor mutFun){
+void List<Data>::PostOrderMap(MutableMapFunctor mutFun){
     PostOrderMap(mutFun, head);
 }
 
 // Auxiliary member functions (for MutablePreOrderMappableContainer & MutablePostOrderMappableContainer)
 template <typename Data>
-void List<Data>::PreOrderMap(const MutableMapFunctor mutFun, Node* nodo){
+void List<Data>::PreOrderMap(MutableMapFunctor mutFun, Node* nodo){
     Node* tmp = nodo;
     while( tmp != nullptr){
         mutFun(tmp->valore);
@@ -439,7 +439,7 @@ void List<Data>::PreOrderMap(const MutableMapFunctor mutFun, Node* nodo){
 }
 
 template <typename Data>
-void List<Data>::PostOrderMap(const MutableMapFunctor mutFun, Node* nodo){
+void List<Data>::PostOrderMap(MutableMapFunctor mutFun, Node* nodo){
     if (nodo == nullptr) return;
     PostOrderMap(mutFun, nodo->next);
     mutFun(nodo->valore);

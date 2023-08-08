@@ -37,8 +37,8 @@ public:
   /* ************************************************************************ */
 
   // Specific constructor
-  QueueLst(const MappableContainer<Data>&) ; // A queue obtained from a MappableContainer
-  QueueLst(const MutableMappableContainer<Data>&) ; // A queue obtained from a MutableMappableContainer
+  QueueLst(MappableContainer<Data>&) ; // A queue obtained from a MappableContainer
+  QueueLst(MutableMappableContainer<Data>&&) ; // A queue obtained from a MutableMappableContainer
 
   /* ************************************************************************ */
 

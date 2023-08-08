@@ -88,8 +88,8 @@ public:
   /* ************************************************************************ */
 
   // Specific constructor
-  List(const MappableContainer<Data>&) ; // A list obtained from a MappableContainer
-  List(const MutableMappableContainer<Data>&) ; // A list obtained from a MutableMappableContainer
+  List(MappableContainer<Data>&) ; // A list obtained from a MappableContainer
+  List(MutableMappableContainer<Data>&&) ; // A list obtained from a MutableMappableContainer
 
   /* ************************************************************************ */
 
@@ -203,19 +203,19 @@ public:
 
   using typename MutableMappableContainer<Data>::MutableMapFunctor;
 
-  void Map(const MutableMapFunctor) override; // Override MutableMappableContainer member
+  void Map(MutableMapFunctor) override; // Override MutableMappableContainer member
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from MutablePreOrderMappableContainer)
 
-  void PreOrderMap(const MutableMapFunctor) override; // Override MutablePreOrderMappableContainer member
+  void PreOrderMap(MutableMapFunctor) override; // Override MutablePreOrderMappableContainer member
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from MutablePostOrderMappableContainer)
 
-  void PostOrderMap(const MutableMapFunctor) override; // Override MutablePostOrderMappableContainer member
+  void PostOrderMap(MutableMapFunctor) override; // Override MutablePostOrderMappableContainer member
 
 protected:
 
@@ -235,8 +235,8 @@ protected:
 
   // Auxiliary member functions (for MutablePreOrderMappableContainer & MutablePostOrderMappableContainer)
 
-  void PreOrderMap(const MutableMapFunctor, Node*) ; // Accessory function executing from one point of the list onwards
-  void PostOrderMap(const MutableMapFunctor, Node*); // Accessory function executing from one point of the list onward
+  void PreOrderMap(MutableMapFunctor, Node*) ; // Accessory function executing from one point of the list onwards
+  void PostOrderMap(MutableMapFunctor, Node*); // Accessory function executing from one point of the list onward
 
   /* ************************************************************************ */
 
