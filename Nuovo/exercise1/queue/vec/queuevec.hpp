@@ -27,7 +27,8 @@ protected:
 
   using Vector<Data>::size;
   using Vector<Data>::elem;
-  ulong capacity;
+  ulong front = 1;
+  ulong rear = 0;
   // ...
 
 public:
@@ -97,9 +98,9 @@ protected:
 
   // Auxiliary member functions
 
-  void Expand( const ulong) ;
-  void Reduce(const ulong) ;
-  void SwapVectors(QueueVec<Data>&) ;
+  void Expand( ) noexcept;
+  void Reduce() noexcept;
+  void SwapVectors(ulong) ;
 
 };
 

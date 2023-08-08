@@ -7,9 +7,9 @@ namespace lasd {
 
   // Default constructor
   template <typename Data>
-  QueueVec<Data>::QueueVec() :  capacity(5){ 
-    size = 0;
-    elem = new Data[capacity]{}; 
+  QueueVec<Data>::QueueVec() { 
+    size = 5;
+    elem = new Data[size]{}; 
     }
 
   // Specific constructor
@@ -24,9 +24,10 @@ namespace lasd {
   // Copy constructor
   template <typename Data>
   QueueVec<Data>::QueueVec(const QueueVec<Data>& que) {
-    capacity = que.capacity;
+    front = que.front;
+    rear = que.rear;
     size = que.size;
-    elem = new Data[capacity]{};
+    elem = new Data[size];
     for(ulong i = 0; i < size; i++){
         elem[i] = que.elem[i];
     }
@@ -35,7 +36,8 @@ namespace lasd {
   // Move constructor
   template <typename Data>
   QueueVec<Data>::QueueVec(QueueVec<Data>&& que) noexcept{
-    std::swap(capacity, que.capacity);
+    std::swap(front, que.front);
+    std::swap(rear, que.rear);
     std::swap(size, que.size);
     std::swap(elem, que.elem);
   }
@@ -46,6 +48,8 @@ namespace lasd {
   template <typename Data>
   QueueVec<Data>& QueueVec<Data>::operator=(const QueueVec<Data>& que){
     Vector<Data>::operator=(que);
+    front = que.front;
+    rear = que.rear;
     return *this;
   }
 
@@ -53,6 +57,8 @@ namespace lasd {
   template <typename Data>
   QueueVec<Data>& QueueVec<Data>::operator=(QueueVec<Data>&& que){
     Vector<Data>::operator=(std::move(que));
+    std::swap(front, que.front);
+    std::swap(rear, que.rear);
     return *this;
   }
 
@@ -61,10 +67,19 @@ namespace lasd {
   // Comparison operators
   template <typename Data>
   bool QueueVec<Data>::operator==(const QueueVec<Data>& que) const noexcept{
-    if(size != que.size) return false;
-    for(ulong i = 0; i < size; i++){
-        if(elem[i] != que.elem[i]) return false;
+    if(Size() != que.Size()) return false;
+    // for(ulong i = 0; i < size; i++){
+    //     if(elem[i] != que.elem[i]) return false;
+    // }
+    ulong i = front;
+    ulong j = rear;
+    ulong k = que.front;
+    while(i != j){
+      if(elem[i] != que.elem[k]) return false;
+      i = (i + 1 ) % size;
+      k = (k + 1) % que.size;
     }
+
     return true;
   }
 
@@ -79,52 +94,59 @@ namespace lasd {
 
   template <typename Data>
   Data& QueueVec<Data>::Head() const{
-    if(size == 0) throw std::length_error("Struttura vuota!");
-    return elem[0];
+    if(Size() == 0) throw std::length_error("Struttura vuota!");
+    return elem[front];
   } 
 
   template <typename Data>
   Data& QueueVec<Data>::Head(){
-    if(size == 0) throw std::length_error("Struttura vuota!");
-    return elem[0];
+    if(Size() == 0) throw std::length_error("Struttura vuota!");
+    return elem[front];
   } 
 
   template <typename Data>
   void QueueVec<Data>::Dequeue(){
-    if(size == 0) throw std::length_error("Struttura vuota!");
-    for(ulong i = 0; i < size - 1; i++){
-        elem[i] = elem[i+1];
-    }
-    elem[size--].~Data();
-    size--;
-    ulong tmp = size;
-    if(size <= capacity / 4)
-        Reduce(capacity / 2);
-    size = tmp;
+    if(Size() == 0) throw std::length_error("Struttura vuota!");
+    // for(ulong i = 0; i < size - 1; i++){
+    //     elem[i] = elem[i+1];
+    // }
+    // elem[size--].~Data();
+    // size--;
+    // ulong tmp = size;
+    // if(size <= capacity / 4)
+    //     Reduce(capacity / 2);
+    // size = tmp;
+    front = (front + 1) % size;
+    if(Size() == (size / 4) ) Reduce(  );
   } 
 
   template <typename Data>
   Data QueueVec<Data>::HeadNDequeue(){
-    if(size == 0) throw std::length_error("Struttura vuota!");
-    Data val = elem[0];
+    if(Size() == 0) throw std::length_error("Struttura vuota!");
+    Data val = Head();
     Dequeue();
     return val;    
   }
 
   template <typename Data>
   void QueueVec<Data>::Enqueue(const Data& dato) {
-    ulong tmp = size;
-    if(size == capacity) Expand(capacity * 2);
-    elem[tmp] = dato;
-    size = ++tmp;
+    // if(size == capacity) Expand(capacity * 2);
+    // elem[tmp] = dato;
+    // size = ++tmp;
+    if( (rear+2 % size) != front)  Expand();
+    rear = (rear+1) % size;
+    elem[rear] = dato;
   }
 
   template <typename Data>
   void QueueVec<Data>::Enqueue(Data&& dato) noexcept {
-    ulong tmp = size;
-    if(size == capacity) Expand(capacity * 2);
-    elem[tmp] = std::move(dato);
-    size = ++tmp;
+    // ulong tmp = size;
+    // if(size == capacity) Expand(capacity * 2);
+    // elem[tmp] = std::move(dato);
+    // size = ++tmp;
+    if( (rear+2 % size) != front)  Expand();
+    rear = (rear+1) % size;
+    elem[rear] = std::move(dato);
   }
 
   /* ************************************************************************ */
@@ -133,12 +155,12 @@ namespace lasd {
 
   template <typename Data>
   bool QueueVec<Data>::Empty() const noexcept{
-    return (size == 0);
+    return (Size() == 0);
   }
 
   template <typename Data>
   ulong QueueVec<Data>::Size() const noexcept{
-    return size;
+    return ((rear + size) - front + 1) % size;
   }
 
   /* ************************************************************************ */
@@ -153,34 +175,36 @@ namespace lasd {
 
     // Espande la capacità del vector sottostante a una nuova capacità
     template <typename Data>
-    void QueueVec<Data>::Expand(const ulong new_capacity){
-        if (new_capacity < capacity) { // verifica se la nuova capacità è maggiore di quella attuale
-            return;
-        }
-        if(new_capacity > ULONG_MAX - sizeof(Data)) {
-            Vector<Data>::Resize(ULONG_MAX - sizeof(Data));
-        }
-        else
-            Vector<Data>::Resize(new_capacity);
+    void QueueVec<Data>::Expand() noexcept{
+      SwapVectors(size * 2);
     }
 
     // Riduce la capacità del vector sottostante al numero di elementi presenti
     template <typename Data>
-    void QueueVec<Data>::Reduce(const ulong new_capacity){
-        if( new_capacity < size)
-            Vector<Data>::Resize(size);
-        if (new_capacity > capacity) { // verifica se la nuova capacità è maggiore di quella attuale
-            throw std::length_error("Nuova capacità maggiore alla capacità attuale");
-        }    
-        Vector<Data>::Resize(capacity - new_capacity);
+    void QueueVec<Data>::Reduce() noexcept{
+      SwapVectors(size - (size / 4));
     }
 
-  template <typename Data>
-  void QueueVec<Data>::SwapVectors(QueueVec<Data>& que){
-    std::swap(size, que.size);
-    std::swap(capacity, que.capacity);
-    std::swap(elem, que.elem);
-  }
+    template <typename Data>
+    void QueueVec<Data>::SwapVectors(ulong newSize){
+      Data *tmp = new Data[newSize] {};
+      uint c = 1;
+
+      uint i = front-1;
+      uint j = rear;
+
+      while(i!=j){
+          i = (i+1) % size;
+          tmp[c]=elem[i];
+          c++;
+      }
+      std::swap(elem, tmp);
+      front = 1;
+      rear = c;
+      size = newSize;
+
+      delete[] tmp;
+    }
 
 /* ************************************************************************** */
 
