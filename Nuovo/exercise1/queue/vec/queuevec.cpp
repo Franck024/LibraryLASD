@@ -17,28 +17,24 @@ namespace lasd {
   QueueVec<Data>::QueueVec(MappableContainer<Data>& mapCon) : Vector<Data>(mapCon){}
 
   template <typename Data>
-  QueueVec<Data>::QueueVec(MutableMappableContainer<Data>&& mutMap) : Vector<Data>(mutMap){}
+  QueueVec<Data>::QueueVec(MutableMappableContainer<Data>&& mutMap) : Vector<Data>(std::move(mutMap)){}
 
   /* ************************************************************************ */
 
   // Copy constructor
   template <typename Data>
-  QueueVec<Data>::QueueVec(const QueueVec<Data>& que) {
+  QueueVec<Data>::QueueVec(const QueueVec<Data>& que) : Vector<Data>(que){
     front = que.front;
     rear = que.rear;
-    size = que.size;
-    elem = new Data[size];
-    for(ulong i = 0; i < size; i++){
-        elem[i] = que.elem[i];
-    }
   }
 
   // Move constructor
   template <typename Data>
   QueueVec<Data>::QueueVec(QueueVec<Data>&& que) noexcept{
+    std::swap(size, que.size);
+    elem = new Data[size];
     std::swap(front, que.front);
     std::swap(rear, que.rear);
-    std::swap(size, que.size);
     std::swap(elem, que.elem);
   }
 
@@ -71,9 +67,9 @@ namespace lasd {
     // for(ulong i = 0; i < size; i++){
     //     if(elem[i] != que.elem[i]) return false;
     // }
-    ulong i = front;
-    ulong j = rear;
-    ulong k = que.front;
+    uint i = front;
+    uint j = rear;
+    uint k = que.front;
     while(i != j){
       if(elem[i] != que.elem[k]) return false;
       i = (i + 1 ) % size;
@@ -94,19 +90,19 @@ namespace lasd {
 
   template <typename Data>
   Data& QueueVec<Data>::Head() const{
-    if(Size() == 0) throw std::length_error("Struttura vuota!");
+    if(Empty()) throw std::length_error("Struttura vuota!");
     return elem[front];
   } 
 
   template <typename Data>
   Data& QueueVec<Data>::Head(){
-    if(Size() == 0) throw std::length_error("Struttura vuota!");
+    if(Empty()) throw std::length_error("Struttura vuota!");
     return elem[front];
   } 
 
   template <typename Data>
   void QueueVec<Data>::Dequeue(){
-    if(Size() == 0) throw std::length_error("Struttura vuota!");
+    if(Empty()) throw std::length_error("Struttura vuota!");
     // for(ulong i = 0; i < size - 1; i++){
     //     elem[i] = elem[i+1];
     // }
@@ -117,12 +113,12 @@ namespace lasd {
     //     Reduce(capacity / 2);
     // size = tmp;
     front = (front + 1) % size;
-    if(Size() == (size / 4) ) Reduce(  );
+    if(Size() == (size / 4)) Reduce(  );
   } 
 
   template <typename Data>
   Data QueueVec<Data>::HeadNDequeue(){
-    if(Size() == 0) throw std::length_error("Struttura vuota!");
+    if(Empty()) throw std::length_error("Struttura vuota!");
     Data val = Head();
     Dequeue();
     return val;    
@@ -133,8 +129,11 @@ namespace lasd {
     // if(size == capacity) Expand(capacity * 2);
     // elem[tmp] = dato;
     // size = ++tmp;
-    if( (rear+2 % size) != front)  Expand();
-    rear = (rear+1) % size;
+    if( ((rear+2) % size) != front){
+    rear = (rear+1) % size;        
+    }else{
+      Expand();
+    }  
     elem[rear] = dato;
   }
 
@@ -144,8 +143,11 @@ namespace lasd {
     // if(size == capacity) Expand(capacity * 2);
     // elem[tmp] = std::move(dato);
     // size = ++tmp;
-    if( (rear+2 % size) != front)  Expand();
-    rear = (rear+1) % size;
+    if( ((rear+2) % size) != front){
+    rear = (rear+1) % size;        
+    }else{
+      Expand();
+    }  
     elem[rear] = std::move(dato);
   }
 
@@ -169,6 +171,10 @@ namespace lasd {
   template <typename Data>
   void QueueVec<Data>::Clear(){
     Vector<Data>::Clear();
+    size = 5;
+    elem = new Data[size];
+    rear = 0;
+    front = 1;
   }
 
   // Auxiliary member functions
@@ -186,7 +192,7 @@ namespace lasd {
     }
 
     template <typename Data>
-    void QueueVec<Data>::SwapVectors(ulong newSize){
+    void QueueVec<Data>::SwapVectors(uint newSize){
       Data *tmp = new Data[newSize] {};
       uint c = 1;
 

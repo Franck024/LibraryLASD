@@ -6,47 +6,38 @@ namespace lasd {
 /* ************************************************************************** */
   // Default constructor
   template <typename Data>
-  StackVec<Data>::StackVec() :  capacity(5){ 
-    size = 0;
-    elem = new Data[capacity]{};
+  StackVec<Data>::StackVec() { 
+    size = 5;
+    elem = new Data[size];
+    capacity = 0;
     }
 
   // Specific constructor
   template <typename Data>
-  StackVec<Data>::StackVec(MappableContainer<Data>& map) {
-    size = map.Size();
+  StackVec<Data>::StackVec(MappableContainer<Data>& map) : Vector<Data>(map) {
     capacity = map.Size();
-    map.Map([&](const Data& item){
-        Push(item);
-    });
+    Vector<Data>::Resize(map.Size()*2);
   }
 
   template <typename Data>
-  StackVec<Data>::StackVec(MutableMappableContainer<Data>&& map)  {
-    size = map.Size();
+  StackVec<Data>::StackVec(MutableMappableContainer<Data>&& map) : Vector<Data>(std::move(map)) {
     capacity = map.Size();
-    map.Map([&]( Data& item){
-        Push(item);
-    });
+    Vector<Data>::Resize(map.Size()*2);
   }
 
   /* ************************************************************************ */
 
   // Copy constructor
   template <typename Data>
-  StackVec<Data>::StackVec(const StackVec& stk){
-    size = stk.size;
+  StackVec<Data>::StackVec(const StackVec& stk) : Vector<Data>(stk){
     capacity = stk.capacity;
-    elem = new Data[capacity];
-    for(ulong i = 0; i < size; i++){
-        elem[i] = stk.elem[i];
-    }
   }
 
   // Move constructor
   template <typename Data>
   StackVec<Data>::StackVec(StackVec&& stk) noexcept{
     std::swap(size, stk.size);
+    elem = new Data[size];
     std::swap(capacity, stk.capacity);
     std::swap(elem, stk.elem);
   }
@@ -74,7 +65,7 @@ namespace lasd {
   // Comparison operators
   template <typename Data>
   bool StackVec<Data>::operator==(const StackVec& stk) const noexcept{
-    if(size != stk.size) return false;
+    if(capacity != stk.capacity) return false;
     for(ulong i = 0; i < size; i++){
         if(elem[i] != stk.elem[i]) return false;
     }
@@ -92,28 +83,27 @@ namespace lasd {
 
   template <typename Data>
   Data& StackVec<Data>::Top() const {
-    if (size == 0) throw std::length_error("Struttura vuota!");
-    return elem[size -1];
+    if (Size() == 0) throw std::length_error("Struttura vuota!");
+    return elem[capacity -1];
   }
 
   template <typename Data>
   Data& StackVec<Data>::Top() {
-    if (size == 0) throw std::length_error("Struttura vuota!");
-    return elem[size -1];
+    if (Size() == 0) throw std::length_error("Struttura vuota!");
+    return elem[capacity -1];
   }
 
   template <typename Data>
   void StackVec<Data>::Pop() {
-    if (size == 0) throw std::length_error("Struttura vuota!");
-    ulong tmp = size;
-    elem[size -1].~Data();
-    if(size <= capacity / 4) Reduce(capacity / 2); // Dimezza la capac dello stack se vuoto al 24%
-    size = tmp--;
+    if (Size() == 0) throw std::length_error("Struttura vuota!");
+    elem[capacity - 1].~Data();
+    capacity--;
+    if(capacity <= size / 4) Reduce(size / 2); // Dimezza la capac dello stack se vuoto al 24%
   }
 
   template <typename Data>
   Data StackVec<Data>::TopNPop() {
-    if (size == 0) throw std::length_error("Struttura vuota!");
+    if (Size() == 0) throw std::length_error("Struttura vuota!");
     Data val = Top();
     Pop();
     return val;
@@ -121,34 +111,35 @@ namespace lasd {
 
   template <typename Data>
   void StackVec<Data>::Push(const Data& dato) noexcept {
-    ulong tmp = size;
-    if(size == capacity) Expand(capacity * 2); // raddoppia la capac dello stack se pieno
-    elem[size] = dato;
-    size = tmp++;  
+    if(Size() == capacity) Expand(size * 2); // raddoppia la capac dello stack se pieno
+    elem[capacity] = dato;
+    capacity++;  
   }
 
   template <typename Data>
   void StackVec<Data>::Push(Data&& dato) noexcept {
-    ulong tmp = size;
-    if(size == capacity) Expand(capacity * 2); // raddoppia la capac dello stack se pieno
-    elem[size] = dato;
-    size = tmp++;  
+    if(Size() == capacity) Expand(size * 2); // raddoppia la capac dello stack se pieno
+    elem[capacity] = std::move(dato);
+    capacity++;  
   }
 
   /* ************************************************************************ */
 
   // Specific member functions (inherited from Container)
   template <typename Data>
-  bool StackVec<Data>::Empty() const noexcept { return (size == 0); }
+  bool StackVec<Data>::Empty() const noexcept { return (capacity == 0); }
 
   template <typename Data>
-  ulong StackVec<Data>::Size() const noexcept { return size;}
+  ulong StackVec<Data>::Size() const noexcept { return capacity;}
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from ClearableContainer)
   template <typename Data>
-  void StackVec<Data>::Clear() { Vector<Data>::Clear();}
+  void StackVec<Data>::Clear() { 
+    Vector<Data>::Clear();
+    capacity = 0;
+  }
 
 
 
@@ -157,7 +148,7 @@ namespace lasd {
     // Espande la capacità del vector sottostante a una nuova capacità
     template <typename Data>
     void StackVec<Data>::Expand(const ulong new_capacity) noexcept{
-    if (new_capacity < capacity) { // verifica se la nuova capacità è maggiore di quella attuale
+    if (new_capacity < size) { // verifica se la nuova capacità è maggiore di quella attuale
         return;
     }
     if(new_capacity > ULONG_MAX - sizeof(Data)) {
@@ -170,12 +161,11 @@ namespace lasd {
     // Riduce la capacità del vector sottostante al numero di elementi presenti
     template <typename Data>
     void StackVec<Data>::Reduce(const ulong new_capacity) noexcept{
-    if (new_capacity > capacity) { // verifica se la nuova capacità è maggiore di quella attuale
+    if (new_capacity > size) { // verifica se la nuova capacità è maggiore di quella attuale
         return;
     }        
     if( new_capacity < size)
-        Vector<Data>::Resize(size);
-    Vector<Data>::Resize(capacity - new_capacity);
+        Vector<Data>::Resize(new_capacity);
     }
 
 

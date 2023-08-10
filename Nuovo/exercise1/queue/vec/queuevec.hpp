@@ -27,8 +27,8 @@ protected:
 
   using Vector<Data>::size;
   using Vector<Data>::elem;
-  ulong front = 1;
-  ulong rear = 0;
+  uint front = 1;
+  uint rear = 0;
   // ...
 
 public:
@@ -100,7 +100,7 @@ protected:
 
   void Expand( ) noexcept;
   void Reduce() noexcept;
-  void SwapVectors(ulong) ;
+  void SwapVectors(uint) ;
 
 };
 
