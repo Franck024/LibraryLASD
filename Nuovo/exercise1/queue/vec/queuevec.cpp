@@ -1,4 +1,4 @@
-
+#include <stdexcept>
 #include <climits>
 #include <iostream>
 namespace lasd {
@@ -14,7 +14,7 @@ namespace lasd {
 
   // Specific constructor
   template <typename Data>
-  QueueVec<Data>::QueueVec(MappableContainer<Data>& mapCon) : Vector<Data>(mapCon){}
+  QueueVec<Data>::QueueVec(MappableContainer<Data>& mapCon)  : Vector<Data>(mapCon){}
 
   template <typename Data>
   QueueVec<Data>::QueueVec(MutableMappableContainer<Data>&& mutMap) : Vector<Data>(std::move(mutMap)){}
@@ -64,9 +64,6 @@ namespace lasd {
   template <typename Data>
   bool QueueVec<Data>::operator==(const QueueVec<Data>& que) const noexcept{
     if(Size() != que.Size()) return false;
-    // for(ulong i = 0; i < size; i++){
-    //     if(elem[i] != que.elem[i]) return false;
-    // }
     uint i = front;
     uint j = rear;
     uint k = que.front;
@@ -96,59 +93,45 @@ namespace lasd {
 
   template <typename Data>
   Data& QueueVec<Data>::Head(){
-    if(Empty()) throw std::length_error("Struttura vuota!");
+    if(Empty() ) throw std::length_error("Struttura vuota!");
     return elem[front];
   } 
 
   template <typename Data>
   void QueueVec<Data>::Dequeue(){
     if(Empty()) throw std::length_error("Struttura vuota!");
-    // for(ulong i = 0; i < size - 1; i++){
-    //     elem[i] = elem[i+1];
-    // }
-    // elem[size--].~Data();
-    // size--;
-    // ulong tmp = size;
-    // if(size <= capacity / 4)
-    //     Reduce(capacity / 2);
-    // size = tmp;
     front = (front + 1) % size;
-    if(Size() == (size / 4)) Reduce(  );
+    if(Size() == (size / 4) && size > 5) Reduce();
   } 
 
   template <typename Data>
   Data QueueVec<Data>::HeadNDequeue(){
     if(Empty()) throw std::length_error("Struttura vuota!");
-    Data val = Head();
+    Data val = elem[front];
     Dequeue();
     return val;    
   }
 
   template <typename Data>
   void QueueVec<Data>::Enqueue(const Data& dato) {
-    // if(size == capacity) Expand(capacity * 2);
-    // elem[tmp] = dato;
-    // size = ++tmp;
     if( ((rear+2) % size) != front){
     rear = (rear+1) % size;        
     }else{
       Expand();
     }  
     elem[rear] = dato;
+
   }
 
   template <typename Data>
   void QueueVec<Data>::Enqueue(Data&& dato) noexcept {
-    // ulong tmp = size;
-    // if(size == capacity) Expand(capacity * 2);
-    // elem[tmp] = std::move(dato);
-    // size = ++tmp;
     if( ((rear+2) % size) != front){
     rear = (rear+1) % size;        
     }else{
       Expand();
     }  
     elem[rear] = std::move(dato);
+
   }
 
   /* ************************************************************************ */
@@ -162,7 +145,8 @@ namespace lasd {
 
   template <typename Data>
   ulong QueueVec<Data>::Size() const noexcept{
-    return ((rear + size) - front + 1) % size;
+//    return ((rear + size) - front + 1) % size;
+    return rear - front + 1;
   }
 
   /* ************************************************************************ */
