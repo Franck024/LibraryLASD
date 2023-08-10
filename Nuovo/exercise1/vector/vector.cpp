@@ -6,7 +6,7 @@ namespace lasd {
   template<typename Data>
   Vector<Data>::Vector(const ulong n_alloc) {
     size = n_alloc;
-    elem = new Data[n_alloc]{};
+    elem = new Data[n_alloc];
   }
 
   template<typename Data>
@@ -34,7 +34,7 @@ namespace lasd {
 
   // Copy constructor
   template<typename Data>
-  Vector<Data>::Vector(const Vector& vec){
+  Vector<Data>::Vector(const Vector<Data>& vec){
     size = vec.size;
     elem = new Data[vec.size];
     for(ulong i = 0; i < size; i++){
@@ -44,7 +44,7 @@ namespace lasd {
 
   // Move constructor
   template<typename Data>
-  Vector<Data>::Vector(Vector&& vec) noexcept{
+  Vector<Data>::Vector(Vector<Data>&& vec) noexcept{
     std::swap(elem, vec.elem);
     std::swap(size, vec.size);
   }
@@ -59,7 +59,7 @@ namespace lasd {
 
   // Copy assignment
   template<typename Data>
-  Vector<Data>& Vector<Data>::operator=(const Vector& vec){
+  Vector<Data>& Vector<Data>::operator=(const Vector<Data>& vec){
     Vector<Data>* tmp = new Vector<Data>(vec);
     std::swap(*tmp, *this);
     delete tmp;
@@ -68,7 +68,7 @@ namespace lasd {
 
   // Move assignment
   template<typename Data>
-  Vector<Data>& Vector<Data>::operator=(Vector&& vec) noexcept{
+  Vector<Data>& Vector<Data>::operator=(Vector<Data>&& vec) noexcept{
 	std::swap(elem, vec.elem);
 	std::swap(size, vec.size);
 	return *this;
@@ -78,16 +78,30 @@ namespace lasd {
 
   // Comparison operators
   template<typename Data>
-  bool Vector<Data>::operator==(const Vector& vec) const noexcept{
+  bool Vector<Data>::operator==(const Vector<Data>& vec) const noexcept{
     if(size != vec.size) return false;
-    for(ulong i = 0; i < size; i++){
+
+//-----------
+    // std::cout << " \n vec1: " ;
+    // for(uint i = 0; i < size; i++){
+    //   std::cout << " " << elem[i] ;
+    // }
+
+    // std::cout << " \n vec2: " ;
+    //     for(uint i = 0; i < size; i++){
+    //   std::cout << " " << vec.elem[i] ;
+    // }
+    // std::cout << " \n" ;
+//--------------
+    for(uint i = 0; i < size; i++){
         if(elem[i] != vec.elem[i]) return false;
     }
+
     return true;
   }
 
   template<typename Data>
-  bool Vector<Data>::operator!=(const Vector& vec) const noexcept{
+  bool Vector<Data>::operator!=(const Vector<Data>& vec) const noexcept{
     return !(*this == vec);
   }
 

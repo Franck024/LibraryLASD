@@ -27,7 +27,7 @@ protected:
 
   using Vector<Data>::size;
   using Vector<Data>::elem;
-  ulong capacity;
+  ulong capacity = 0;
 
   // ...
 

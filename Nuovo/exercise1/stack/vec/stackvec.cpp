@@ -66,7 +66,7 @@ namespace lasd {
   template <typename Data>
   bool StackVec<Data>::operator==(const StackVec& stk) const noexcept{
     if(capacity != stk.capacity) return false;
-    for(ulong i = 0; i < size; i++){
+    for(ulong i = 0; i < capacity; i++){
         if(elem[i] != stk.elem[i]) return false;
     }
     return true;
@@ -83,13 +83,13 @@ namespace lasd {
 
   template <typename Data>
   Data& StackVec<Data>::Top() const {
-    if (Size() == 0) throw std::length_error("Struttura vuota!");
+    if (Empty()) throw std::length_error("Struttura vuota!"); 
     return elem[capacity -1];
   }
 
   template <typename Data>
   Data& StackVec<Data>::Top() {
-    if (Size() == 0) throw std::length_error("Struttura vuota!");
+    if (Empty()) throw std::length_error("Struttura vuota!");
     return elem[capacity -1];
   }
 

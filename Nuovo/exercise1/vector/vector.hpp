@@ -44,10 +44,10 @@ public:
   /* ************************************************************************ */
 
   // Copy constructor
-  Vector(const Vector&) ;
+  Vector(const Vector<Data>&) ;
 
   // Move constructor
-  Vector(Vector&&) noexcept;
+  Vector(Vector<Data>&&) noexcept;
 
   /* ************************************************************************ */
 
@@ -57,16 +57,16 @@ public:
   /* ************************************************************************ */
 
   // Copy assignment
-  Vector& operator=(const Vector&) ;
+  Vector<Data>& operator=(const Vector<Data>&) ;
 
   // Move assignment
-  Vector& operator=(Vector&&) noexcept;
+  Vector<Data>& operator=(Vector<Data>&&) noexcept;
 
   /* ************************************************************************ */
 
   // Comparison operators
-  bool operator==(const Vector&) const noexcept;
-  bool operator!=(const Vector&) const noexcept;
+  bool operator==(const Vector<Data>&) const noexcept;
+  bool operator!=(const Vector<Data>&) const noexcept;
 
   /* ************************************************************************ */
 

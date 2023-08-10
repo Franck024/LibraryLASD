@@ -72,7 +72,6 @@ namespace lasd {
       i = (i + 1 ) % size;
       k = (k + 1) % que.size;
     }
-
     return true;
   }
 
