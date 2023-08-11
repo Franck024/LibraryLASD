@@ -19,7 +19,10 @@ namespace lasd {
 /* ************************************************************************** */
 
 template <typename Data>
-class BinaryTree {
+class BinaryTree : virtual public PreOrderMappableContainer<Data>,
+                   virtual public PostOrderMappableContainer<Data>,
+                   virtual public InOrderMappableContainer<Data>,
+                   virtual public BreadthMappableContainer<Data>{
                     // Must extend PreOrderMappableContainer<Data>,
                     //             PostOrderMappableContainer<Data>,
                     //             InOrderMappableContainer<Data>,
@@ -31,7 +34,7 @@ private:
 
 protected:
 
-  // ...
+  using InOrderMappableContainer<Data>::size;
 
 public:
 
@@ -40,136 +43,141 @@ public:
   protected:
 
     // Comparison operators
-    // type operator==(argument) specifiers; // Comparison of abstract types is possible, but should not be visible.
-    // type operator!=(argument) specifiers; // Comparison of abstract types is possible, but should not be visible.
+    bool operator==(const Node&) const noexcept; // Comparison of abstract types is possible, but should not be visible.
+    bool operator!=(const Node&) const noexcept; // Comparison of abstract types is possible, but should not be visible.
 
   public:
 
-    // friend class BinaryTree<Data>;
+    friend class BinaryTree<Data>;
 
     /* ********************************************************************** */
 
     // Destructor
-    // ~Node() specifiers
+    virtual ~Node() = default;
 
     /* ********************************************************************** */
 
     // Copy assignment
-    // type operator=(argument); // Copy assignment of abstract types should not be possible.
+    Node& operator=(const Node&) = delete; // Copy assignment of abstract types should not be possible.
 
     // Move assignment
-    // type operator=(argument); // Move assignment of abstract types should not be possible.
+    Node& operator=(Node&&) noexcept = delete; // Move assignment of abstract types should not be possible.
 
     /* ********************************************************************** */
 
     // Specific member functions
 
-    // type Element() specifiers; // Immutable access to the element (concrete function should not throw exceptions)
+    virtual Data& Element() const noexcept = 0; // Immutable access to the element (concrete function should not throw exceptions)
 
-    // type IsLeaf() specifiers; // (concrete function should not throw exceptions)
-    // type HasLeftChild() specifiers; // (concrete function should not throw exceptions)
-    // type HasRightChild() specifiers; // (concrete function should not throw exceptions)
+    virtual inline bool IsLeaf() const noexcept { return !(HasLeftChild() || HasRightChild()); }; // (concrete function should not throw exceptions)
+    virtual bool HasLeftChild() const noexcept = 0; // (concrete function should not throw exceptions)
+    virtual bool HasRightChild() const noexcept = 0; // (concrete function should not throw exceptions)
 
-    // type LeftChild() specifiers; // (concrete function must throw std::out_of_range when not existent)
-    // type RightChild() specifiers; // (concrete function must throw std::out_of_range when not existent)
+    virtual Data& LeftChild() const = 0; // (concrete function must throw std::out_of_range when not existent)
+    virtual Data& RightChild() const = 0; // (concrete function must throw std::out_of_range when not existent)
 
   };
 
   /* ************************************************************************ */
 
   // Destructor
-  // ~BinaryTree() specifiers
+  virtual ~BinaryTree() = default;
 
   /* ************************************************************************ */
 
   // Copy assignment
-  // type operator=(argument); // Copy assignment of abstract types should not be possible.
+  BinaryTree& operator=(const BinaryTree&) = delete; // Copy assignment of abstract types should not be possible.
 
   // Move assignment
-  // type operator=(argument); // Move assignment of abstract types should not be possible.
+  BinaryTree& operator=(BinaryTree&&) noexcept = delete; // Move assignment of abstract types should not be possible.
 
   /* ************************************************************************ */
 
   // Comparison operators
-  // type operator==(argument) specifiers; // Comparison of abstract binary tree is possible.
-  // type operator!=(argument) specifiers; // Comparison of abstract binary tree is possible.
+  bool operator==(const BinaryTree&) const noexcept; // Comparison of abstract binary tree is possible.
+  bool operator!=(const BinaryTree&) const noexcept; // Comparison of abstract binary tree is possible.
 
   /* ************************************************************************ */
 
   // Specific member functions
 
-  // type Root() specifiers; // (concrete function must throw std::length_error when empty)
+  virtual Node& Root() const = 0; // (concrete function must throw std::length_error when empty)
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from FoldableContainer)
 
-  // using typename FoldableContainer<Data>::FoldFunctor;
+  using typename FoldableContainer<Data>::FoldFunctor;
 
-  // type Fold(arguments) specifiers; // Override FoldableContainer member
+  void Fold(const FoldFunctor, void*) const override; // Override FoldableContainer member
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from MappableContainer)
 
-  // using typename MappableContainer<Data>::MapFunctor;
+  using typename MappableContainer<Data>::MapFunctor;
 
-  // type Map(arguments) specifiers; // Override MappableContainer member
+  void Map(const MapFunctor) override; // Override MappableContainer member
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from PreOrderMappableContainer)
 
-  // type PreOrderMap(arguments) specifiers; // Override PreOrderMappableContainer member
+  void PreOrderMap(const MapFunctor) override; // Override PreOrderMappableContainer member
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from PostOrderMappableContainer)
 
-  // type PostOrderMap(arguments) specifiers; // Override PostOrderMappableContainer member
+  void PostOrderMap(const MapFunctor) override; // Override PostOrderMappableContainer member
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from InOrderMappableContainer)
 
-  // type InOrderMap(arguments) specifiers; // Override InOrderMappableContainer member
+  void InOrderMap(const MapFunctor) override; // Override InOrderMappableContainer member
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from BreadthMappableContainer)
 
-  // type BreadthMap(arguments) specifiers; // Override BreadthMappableContainer member
+  void BreadthMap(const MapFunctor) override; // Override BreadthMappableContainer member
 
 protected:
 
   // Auxiliary member function (for PreOrderMappableContainer)
 
-  // type PreOrderMap(arguments) specifiers; // Accessory function executing from one node of the tree
+  void PreOrderMap(const MapFunctor, Node*) ; // Accessory function executing from one node of the tree
 
   /* ************************************************************************ */
 
   // Auxiliary member function (for PostOrderMappableContainer)
 
-  // type PostOrderMap(arguments) specifiers; // Accessory function executing from one node of the tree
+  void PostOrderMap(const MapFunctor, Node*) ; // Accessory function executing from one node of the tree
 
   /* ************************************************************************ */
 
   // Auxiliary member function (for InOrderMappableContainer)
 
-  // type InOrderMap(arguments) specifiers; // Accessory function executing from one node of the tree
+  void InOrderMap(const MapFunctor, Node*) ; // Accessory function executing from one node of the tree
 
   /* ************************************************************************ */
 
   // Auxiliary member function (for BreadthMappableContainer)
 
-  // type BreadthMap(arguments) specifiers; // Accessory function executing from one node of the tree
+  void BreadthMap(const MapFunctor, NOde*) ; // Accessory function executing from one node of the tree
 
 };
 
 /* ************************************************************************** */
 
 template <typename Data>
-class MutableBinaryTree {
+class MutableBinaryTree : virtual public ClearableContainer,
+                          virtual public BinaryTree<Data>,
+                          virtual public MutablePreOrderMappableContainer<Data>,
+                          virtual public MutablePostOrderMappableContainer<Data>,
+                          virtual public MutableInOrderMappableContainer<Data>,
+                          virtual public MutableBreadthMappableContainer<Data>{
                           // Must extend ClearableContainer,
                           //             BinaryTree<Data>,
                           //             MutablePreOrderMappableContainer<Data>,
@@ -183,120 +191,121 @@ private:
 
 protected:
 
-  // ...
+  using BinaryTree<Data>::size;
 
 public:
 
-  struct MutableNode {
+  struct MutableNode : virtual public {
                         // Must extend Node
 
-    // friend class MutableBinaryTree<Data>;
+    friend class MutableBinaryTree<Data>;
 
     /* ********************************************************************** */
 
     // Destructor
-    // ~MutableNode() specifiers
+    virtual ~MutableNode() = default;
 
     /* ********************************************************************** */
 
     // Copy assignment
-    // type operator=(argument); // Copy assignment of abstract types should not be possible.
+    MutableNode& operator=(const MutableNode&) = delete; // Copy assignment of abstract types should not be possible.
 
     // Move assignment
-    // type operator=(argument); // Move assignment of abstract types should not be possible.
+    MutableNode& operator=(MutableNode&&) noexcept = delete; // Move assignment of abstract types should not be possible.
 
     /* ********************************************************************** */
 
     // Specific member functions
 
-    // type Element() specifiers; // Mutable access to the element (concrete function should not throw exceptions)
+    virtual Data& Element() noexcept = 0; // Mutable access to the element (concrete function should not throw exceptions)
 
-    // type LeftChild() specifiers; // (concrete function must throw std::out_of_range when not existent)
-    // type RightChild() specifiers; // (concrete function must throw std::out_of_range when not existent)
+    virtual Node& LeftChild() = 0; // (concrete function must throw std::out_of_range when not existent)
+    virtual Node& RightChild() = 0; // (concrete function must throw std::out_of_range when not existent)
 
   };
 
   /* ************************************************************************ */
 
   // Destructor
-  // ~MutableBinaryTree() specifiers
+  virtual ~MutableBinaryTree() = default;
 
   /* ************************************************************************ */
 
   // Copy assignment
-  // type operator=(argument); // Copy assignment of abstract types should not be possible.
+  MutableBinaryTree& operator=(const MutableBinaryTree&) = delete; // Copy assignment of abstract types should not be possible.
 
   // Move assignment
-  // type operator=(argument); // Move assignment of abstract types should not be possible.
+  MutableBinaryTree& operator=(MutableBinaryTree&&) noexcept = delete; // Move assignment of abstract types should not be possible.
 
   /* ************************************************************************ */
 
   // Specific member functions
 
-  // type Root() specifiers; // (concrete function must throw std::length_error when empty)
+  virtual void Root() = 0; // (concrete function must throw std::length_error when empty)
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from MutableMappableContainer)
 
-  // using typename MutableMappableContainer<Data>::MutableMapFunctor;
+  using typename MutableMappableContainer<Data>::MutableMapFunctor;
 
-  // type Map(arguments) specifiers; // Override MutableMappableContainer member
+  void Map(MutableMapFunctor) override; // Override MutableMappableContainer member
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from MutablePreOrderMappableContainer)
 
-  // type PreOrderMap(arguments) specifiers; // Override MutablePreOrderMappableContainer member
+  void PreOrderMap(MutableMapFunctor) override; // Override MutablePreOrderMappableContainer member
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from MutablePostOrderMappableContainer)
 
-  // type PostOrderMap(arguments) specifiers; // Override MutablePostOrderMappableContainer member
+  void PostOrderMap(MutableMapFunctor) override; // Override MutablePostOrderMappableContainer member
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from MutableInOrderMappableContainer)
 
-  // type InOrderMap(arguments) specifiers; // Override MutableInOrderMappableContainer member
+  void InOrderMap(MutableMapFunctor) override; // Override MutableInOrderMappableContainer member
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from MutableBreadthMappableContainer)
 
-  // type BreadthMap(arguments) specifiers; // Override MutableBreadthMappableContainer member
+  void BreadthMap(MutableMapFunctor) override; // Override MutableBreadthMappableContainer member
 
 protected:
 
   // Auxiliary member function (for MutablePreOrderMappableContainer)
 
-  // type PreOrderMap(arguments) specifiers; // Accessory function executing from one node of the tree
+  void PreOrderMap(MutableMapFunctor, Node*) ; // Accessory function executing from one node of the tree
 
   /* ************************************************************************ */
 
   // Auxiliary member function (for MutablePostOrderMappableContainer)
 
-  // type PostOrderMap(arguments) specifiers; // Accessory function executing from one node of the tree
+  void PostOrderMap(MutableMapFunctor, Node*) ; // Accessory function executing from one node of the tree
 
   /* ************************************************************************ */
 
   // Auxiliary member function (for MutableInOrderMappableContainer)
 
-  // type InOrderMap(arguments) specifiers; // Accessory function executing from one node of the tree
+  void InOrderMap(MutableMapFunctor, Node*) ; // Accessory function executing from one node of the tree
 
   /* ************************************************************************ */
 
   // Auxiliary member function (for MutableBreadthMappableContainer)
 
-  // type BreadthMap(arguments) specifiers; // Accessory function executing from one node of the tree
+  void BreadthMap(MutableMapFunctor, Node*) ; // Accessory function executing from one node of the tree
 
 };
 
 /* ************************************************************************** */
 
 template <typename Data>
-class BTPreOrderIterator {
+class BTPreOrderIterator : virtual public ForwardIterator<Data>,
+                            virtual public ResettableIterator<Data>{
                            // Must extend ForwardIterator<Data>,
                            //             ResettableIterator<Data>
 
@@ -306,59 +315,60 @@ private:
 
 protected:
 
-  // ...
+  struct BinaryTree<Data>::Node* curr = nullptr;
+  StackLst<struct BinaryTree<Data>::Node*> stk;
 
 public:
 
   // Specific constructors
-  // BTPreOrderIterator(argument) specifiers; // An iterator over a given binary tree
+  BTPreOrderIterator(const BinaryTree<Data>&) ; // An iterator over a given binary tree
 
   /* ************************************************************************ */
 
   // Copy constructor
-  // BTPreOrderIterator(argument) specifiers;
+  BTPreOrderIterator(const BTPreOrderIterator&) ;
 
   // Move constructor
-  // BTPreOrderIterator(argument) specifiers;
+  BTPreOrderIterator(BTPreOrderIterator&&) noexcept;
 
   /* ************************************************************************ */
 
   // Destructor
-  // ~BTPreOrderIterator() specifiers;
+  ~BTPreOrderIterator() ;
 
   /* ************************************************************************ */
 
   // Copy assignment
-  // type operator=(argument) specifiers;
+  BTPreOrderIterator& operator=(BTPreOrderIterator&) ;
 
   // Move assignment
-  // type operator=(argument) specifiers;
+  BTPreOrderIterator& operator=(BTPreOrderIterator&&) noexcept;
 
   /* ************************************************************************ */
 
   // Comparison operators
-  // type operator==(argument) specifiers;
-  // type operator!=(argument) specifiers;
+  bool operator==(const BTPreOrderIterator&) const noexcept;
+  bool operator!=(const BTPreOrderIterator&) const noexcept;
 
   /* ************************************************************************ */
 
   // Specific member functions (inherited from Iterator)
 
-  // type operator*() specifiers; // (throw std::out_of_range when terminated)
+  Data& operator*() const override; // (throw std::out_of_range when terminated)
 
-  // type Terminated() specifiers; // (should not throw exceptions)
+  bool Terminated() const noexcept override; // (should not throw exceptions)
 
   /* ************************************************************************ */
 
   // Specific member functions (inherited from ForwardIterator)
 
-  // type operator++() specifiers; // (throw std::out_of_range when terminated)
+  BTPreOrderIterator& operator++() override; // (throw std::out_of_range when terminated)
 
   /* ************************************************************************ */
 
   // Specific member functions (inherited from ResettableIterator)
 
-  // type Reset() specifiers; // (should not throw exceptions)
+  void Reset() noexcept; // (should not throw exceptions)
 
 };
 
@@ -375,52 +385,54 @@ private:
 
 protected:
 
-  // ...
+  struct MutableBinaryTree<Data>::MutableNode* curr = nullptr;
+  StackLst<struct MutableBinaryTree<Data>::MutableNode*> stk;
 
 public:
 
   // Specific constructors
-  // BTPreOrderMutableIterator(argument) specifiers; // An iterator over a given mutable binary tree
+  BTPreOrderMutableIterator(const MutableBinaryTree<Data>&) ; // An iterator over a given mutable binary tree
 
   /* ************************************************************************ */
 
   // Copy constructor
-  // BTPreOrderMutableIterator(argument) specifiers;
+  BTPreOrderMutableIterator(const BTPreOrderMutableIterator&) ;
 
   // Move constructor
-  // BTPreOrderMutableIterator(argument) specifiers;
+  BTPreOrderMutableIterator(BTPreOrderMutableIterator&&) noexcept;
 
   /* ************************************************************************ */
 
   // Destructor
-  // ~BTPreOrderMutableIterator() specifiers;
+  ~BTPreOrderMutableIterator() ;
 
   /* ************************************************************************ */
 
   // Copy assignment
-  // type operator=(argument) specifiers;
+  BTPreOrderMutableIterator& operator=(const BTPreOrderMutableIterator&) ;
 
   // Move assignment
-  // type operator=(argument) specifiers;
+  BTPreOrderMutableIterator& operator=(BTPreOrderMutableIterator&&) noexcept;
 
   /* ************************************************************************ */
 
   // Comparison operators
-  // type operator==(argument) specifiers;
-  // type operator!=(argument) specifiers;
+  bool operator==(const BTPreOrderMutableIterator&) const noexcept;
+  bool operator!=(const BTPreOrderMutableIterator&) const noexcept;
 
   /* ************************************************************************ */
 
   // Specific member functions (inherited from MutableIterator)
 
-  // type operator*() specifiers; // (throw std::out_of_range when terminated)
+  Data& operator*() override; // (throw std::out_of_range when terminated)
 
 };
 
 /* ************************************************************************** */
 
 template <typename Data>
-class BTPostOrderIterator {
+class BTPostOrderIterator : virtual public ResettableIterator<Data>,
+                            virtual public ForwardIterator<Data>{
                             // Must extend ForwardIterator<Data>,
                             //             ResettableIterator<Data>
 
@@ -430,66 +442,69 @@ private:
 
 protected:
 
-  // ...
+  struct BinaryTree<Data>::Node* curr = nullptr;
+  struct BinaryTree<Data>::Node* last = nullptr;
+  StackLst<struct BinaryTree<Data>::Node*> stk;
 
 public:
 
   // Specific constructors
-  // BTPostOrderIterator(argument) specifiers; // An iterator over a given binary tree
+  BTPostOrderIterator(const BinaryTree<Data>&) ; // An iterator over a given binary tree
 
   /* ************************************************************************ */
 
   // Copy constructor
-  // BTPostOrderIterator(argument) specifiers;
+  BTPostOrderIterator(const BTPostOrderIterator&) ;
 
   // Move constructor
-  // BTPostOrderIterator(argument) specifiers;
+  BTPostOrderIterator(BTPostOrderIterator&&) noexcept;
 
   /* ************************************************************************ */
 
   // Destructor
-  // ~BTPostOrderIterator() specifiers;
+  ~BTPostOrderIterator() ;
 
   /* ************************************************************************ */
 
   // Copy assignment
-  // type operator=(argument) specifiers;
+  BTPostOrderIterator& operator=(const BTPostOrderIterator&) ;
 
   // Move assignment
-  // type operator=(argument) specifiers;
+  BTPostOrderIterator& operator=(BTPostOrderIterato&&) noexcept;
 
   /* ************************************************************************ */
 
   // Comparison operators
-  // type operator==(argument) specifiers;
-  // type operator!=(argument) specifiers;
+  bool operator==(const BTPostOrderIterator&) const noexcept;
+  bool operator!=(const BTPostOrderIterator&) const noexcept;
 
   /* ************************************************************************ */
 
   // Specific member functions (inherited from Iterator)
 
-  // type operator*() specifiers; // (throw std::out_of_range when terminated)
+  Data& operator*() const override; // (throw std::out_of_range when terminated)
 
-  // type Terminated() specifiers; // (should not throw exceptions)
+  bool Terminated() const noexcept override; // (should not throw exceptions)
 
   /* ************************************************************************ */
 
   // Specific member functions (inherited from ForwardIterator)
 
-  // type operator++() specifiers; // (throw std::out_of_range when terminated)
+  BTPostOrderIterator& operator++() override; // (throw std::out_of_range when terminated)
 
   /* ************************************************************************ */
 
   // Specific member functions (inherited from ResettableIterator)
 
-  // type Reset() specifiers; // (should not throw exceptions)
+  void Reset() noexcept override; // (should not throw exceptions)
 
 };
 
 /* ************************************************************************** */
 
 template <typename Data>
-class BTPostOrderMutableIterator {
+class BTPostOrderMutableIterator : virtual public MutableIterator<Data>,
+                                    virtual public BTPostOrderIterator<Data>{
                                   // Must extend MutableIterator<Data>,
                                   //             BTPostOrderIterator<Data>
 
@@ -499,45 +514,47 @@ private:
 
 protected:
 
-  // ...
+  struct MutableBinaryTree<Data>::MutableNode* curr = nullptr;
+  struct MutableBinaryTree<Data>::MutableNode* last = nullptr;
+  StackLst<struct MutableBinaryTree<Data>::MutableNode*> stk;
 
 public:
 
   // Specific constructors
-  // BTPostOrderMutableIterator(argument) specifiers; // An iterator over a given mutable binary tree
+  BTPostOrderMutableIterator(const MutableBinaryTree<Data>) ; // An iterator over a given mutable binary tree
 
   /* ************************************************************************ */
 
   // Copy constructor
-  // BTPostOrderMutableIterator(argument) specifiers;
+  BTPostOrderMutableIterator(const BTPostOrderMutableIterator&) ;
 
   // Move constructor
-  // BTPostOrderMutableIterator(argument) specifiers;
+  BTPostOrderMutableIterator(BTPostOrderMutableIterator&&) noexcept;
 
   /* ************************************************************************ */
 
   // Destructor
-  // ~BTPostOrderMutableIterator() specifiers;
+  ~BTPostOrderMutableIterator() ;
 
   /* ************************************************************************ */
 
   // Copy assignment
-  // type operator=(argument) specifiers;
+  BTPostOrderMutableIterator& operator=(const BTPostOrderMutableIterator&) ;
 
   // Move assignment
-  // type operator=(argument) specifiers;
+  BTPostOrderMutableIterator& operator=(BTPostOrderMutableIterator&&) noexcept;
 
   /* ************************************************************************ */
 
   // Comparison operators
-  // type operator==(argument) specifiers;
-  // type operator!=(argument) specifiers;
+  bool operator==(const BTPostOrderMutableIterator&) const noexcept;
+  bool operator!=(const BTPostOrderMutableIterator&) const noexcept;
 
   /* ************************************************************************ */
 
   // Specific member functions (inherited from MutableIterator)
 
-  // type operator*() specifiers; // (throw std::out_of_range when terminated)
+  Data& operator*() override; // (throw std::out_of_range when terminated)
 
 };
 
