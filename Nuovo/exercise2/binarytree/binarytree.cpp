@@ -667,6 +667,383 @@ BinaryTree<Data>::Node* LeftMostLeft(Node* node, std::stack<Node*>& stk) {
   }
 
 //---------------------------------------------
+//-------------------BTInOrderIterator---------
+
+  // Specific constructors
+  template <typename Data>
+  BTInOrderIterator<Data>::BTInOrderIterator(const BinaryTree<Data>& bt){
+    curr = &bt.Root();
+    while(curr->HasLeftChild()){
+      stk.Push(curr);
+      curr = &(curr->LeftChild());
+    }
+  }
+
+  /* ************************************************************************ */
+
+  // Copy constructor
+  template <typename Data>
+  BTInOrderIterator<Data>::BTInOrderIterator(const BTInOrderIterator<Data>& bt){
+    curr = &bt.Root();
+    stk = bt.stk;
+  }
+
+  // Move constructor
+  template <typename Data>
+  BTInOrderIterator<Data>::BTInOrderIterator(BTInOrderIterator<Data>&& bt) noexcept{
+    std::swap(curr, bt.curr);
+    stk = std::move(bt.stk);
+  }
+
+  /* ************************************************************************ */
+
+  // Destructor
+  template <typename Data>
+  BTInOrderIterator<Data>::~BTInOrderIterator(){
+    Reset();
+  }
+
+  /* ************************************************************************ */
+
+  // Copy assignment
+  template <typename Data>
+  BTInOrderIterator<Data>& BTInOrderIterator<Data>::operator=(const BTInOrderIterator<Data>& bt){
+    BTInOrderIterator<Data> *tmp = new BTInOrderIterator<Data>(bt);
+    std::swap(*tmp, *this);
+    delete tmp;
+    return *this;
+  }
+
+  // Move assignment
+  template <typename Data>
+  BTInOrderIterator<Data>& BTInOrderIterator<Data>::operator=(BTInOrderIterator<Data>&& bt) const noexcept{
+    std::swap(curr, bt.curr);
+    stk = std::move(bt.stk);
+    return *this;
+  }
+
+  /* ************************************************************************ */
+
+  // Comparison operators
+  template <typename Data>
+  bool BTInOrderIterator<Data>::operator==(const BTInOrderIterator<Data>& bt) const noexcept{
+    if(curr != bt.curr || stk != bt.stk) return false;
+    return true;
+  }
+
+  template <typename Data>
+  bool BTInOrderIterator<Data>::operator!=(const BTInOrderIterator<Data>& bt) const noexcept{
+    return !(*this == bt);
+  }
+
+  /* ************************************************************************ */
+
+  // Specific member functions (inherited from Iterator)
+  template <typename Data>
+  Data& BTInOrderIterator<Data>::operator*() const{
+    if(Terminated()) throw std::out_of_range("Termine");
+    return curr->Element();
+  }
+
+  template <typename Data>
+  bool BTInOrderIterator<Data>::Terminated() const noexcept{
+    return (curr == nullptr);
+  }
+
+  /* ************************************************************************ */
+
+  // Specific member functions (inherited from ForwardIterator)
+  template <typename Data>
+  BTInOrderIterator& BTInOrderIterator<Data>::operator++(){
+    if(Terminated()) throw std::out_of_range("Terminato");
+    if(curr->HasRightChild()){
+      curr = &(curr->RightChild());
+      while(curr->HasLeftChild()){
+      stk.Push(curr);
+      curr = &(curr->LeftChild());
+      }
+    }
+    else{
+      if(stk.Empty()) curr = nullptr;
+      else curr = stk.TopNPop();
+    }
+    return *this;
+  }
+
+  /* ************************************************************************ */
+
+  // Specific member functions (inherited from ResettableIterator)
+  template <typename Data>
+  void BTInOrderIterator<Data>::Reset() noexcept{
+    stk.Clear();
+    delete curr;
+    curr = nullptr;
+  }
+
+//---------------------------------------------
+//------------------BTInOrderMutableIterator---
+
+  // Specific constructors
+  template <typename Data>
+  BTInOrderMutableIterator<Data>::BTInOrderMutableIterator(const MutableBinaryTree<Data>& bt){
+    curr = &bt.Root();
+    while(curr->HasLeftChild()){
+      stk.Push(curr);
+      curr = &(curr->LeftChild());
+    }
+  }
+
+  /* ************************************************************************ */
+
+  // Copy constructor
+  template <typename Data>
+  BTInOrderMutableIterator<Data>::BTInOrderMutableIterator(const BTInOrderMutableIterator<Data>& bt){
+    curr = bt.curr;
+    stk = bt.stk;
+  }
+
+  // Move constructor
+  template <typename Data>
+  BTInOrderMutableIterator<Data>::BTInOrderMutableIterator(BTInOrderMutableIterator<Data>&& bt) noexcept{
+    std::swap(curr, bt.curr);
+    stk = std::move(bt.stk);
+  }
+
+  /* ************************************************************************ */
+
+  // Destructor
+  template <typename Data>
+  BTInOrderMutableIterator<Data>::~BTInOrderMutableIterator(){
+    delete curr;
+    curr = nullptr;
+    stk.Clear();
+  }
+
+  /* ************************************************************************ */
+
+  // Copy assignment
+  template <typename Data>
+  BTInOrderMutableIterator<Data>& BTInOrderMutableIterator<Data>::operator=(const BTInOrderMutableIterator<Data>& bt){
+    curr = bt.curr;
+    stk = bt.stk;
+    return *this;
+  }
+
+  // Move assignment
+  template <typename Data>
+  BTInOrderMutableIterator<Data>& BTInOrderMutableIterator<Data>::operator=(BTInOrderMutableIterator<Data>&& bt) noexcept{
+    std::swap(curr, bt.curr);
+    stk = std::move(bt.stk);
+    return *this;
+  }
+
+  /* ************************************************************************ */
+
+  // Comparison operators
+  template <typename Data>
+  bool BTInOrderMutableIterator<Data>::operator==(const BTInOrderMutableIterator<Data>& bt) const noexcept{
+    if(curr != bt.curr || stk != bt.stk) return false;
+    return true;
+  }
+  
+  template <typename Data>
+  bool BTInOrderMutableIterator<Data>::operator!=(const BTInOrderMutableIterator<Data>& bt) const noexcept{
+    return !(*this == bt);
+  }
+
+  /* ************************************************************************ */
+
+  // Specific member functions (inherited from MutableIterator)
+  template <typename Data>
+  Data& BTInOrderMutableIterator<Data>::operator*(){
+    if(curr == nullptr) throw std::out_of_range("Terminato");
+    return curr->Element();
+  }
+
+//---------------------------------------------
+//------------BTBreadthIterator----------------
+
+  // Specific constructors
+  template <typename Data>
+  BTBreadthIterator<Data>::BTBreadthIterator(const BinaryTree<Data>& bt){
+    curr = &bt.Root();
+  }
+
+  /* ************************************************************************ */
+
+  // Copy constructor
+  template <typename Data>
+  BTBreadthIterator<Data>::BTBreadthIterator(const BTBreadthIterator<Data>& bt){
+    curr = bt.curr;
+    que = bt.que;
+  }
+
+  // Move constructor
+  template <typename Data>
+  BTBreadthIterator<Data>::BTBreadthIterator(BTBreadthIterator<Data>&& bt) noexcept{
+    std::swap(curr, bt.curr);
+    que = std::move(bt.que);
+  }
+
+  /* ************************************************************************ */
+
+  // Destructor
+  template <typename Data>
+  BTBreadthIterator<Data>::~BTBreadthIterator(){
+    Reset();
+  }
+
+  /* ************************************************************************ */
+
+  // Copy assignment
+  template <typename Data>
+  BTBreadthIterator<Data>& BTBreadthIterator<Data>::operator=(const BTBreadthIterator<Data>& bt){
+    curr = bt.curr;
+    que = bt.que;  
+    return *this;  
+  }
+
+  // Move assignment
+  template <typename Data>
+  BTBreadthIterator<Data>& BTBreadthIterator<Data>::operator=(BTBreadthIterator<Data>&& bt) noexcept{
+    std::swap(curr, bt.curr);
+    que = std::move(bt.que);    
+    return *this;
+  }
+
+  /* ************************************************************************ */
+
+  // Comparison operators
+  template <typename Data>
+  bool BTBreadthIterator<Data>::operator==(const BTBreadthIterator<Data>& bt) const noexcept{
+    if(curr != bt.curr || que != bt.que) return false;
+    return true;
+  }
+  
+  template <typename Data>
+  bool BTBreadthIterator<Data>::operator!=(const BTBreadthIterator<Data>& bt) const noexcept{
+    return !(*this == bt);
+  }
+
+  /* ************************************************************************ */
+
+  // Specific member functions (inherited from Iterator)
+  template <typename Data>
+  Data& BTBreadthIterator<Data>::operator*() const{
+    if(Terminated()) throw std::out_of_range("Terminated");
+
+    return curr->Element();
+  }
+
+  template <typename Data>
+  bool BTBreadthIterator<Data>::Terminated() const noexcept{
+    return (curr == nullptr);
+  }
+
+  /* ************************************************************************ */
+
+  // Specific member functions (inherited from ForwardIterator)
+  template <typename Data>
+  BTBreadthIterator<Data>& BTBreadthIterator<Data>::operator++(){
+    if(Terminated()) throw std::out_of_range("ITerminato");
+    
+    if(curr->HasLeftChild()) que.Enqueue(&(curr->LeftChild()));
+    
+    if(curr->HasRightChild()) que.Enqueue(&(curr->RightChild()));
+    
+    if(que.Empty()) curr = nullptr;
+    else curr = que.HeadNDequeue();
+
+    return (*this);
+  }
+
+  /* ************************************************************************ */
+
+  // Specific member functions (inherited from ResettableIterator)
+  template <typename Data>
+  void BTBreadthIterator<Data>::Reset() noexcept{
+    delete curr;
+    curr = nullptr;
+    que.Clear();
+  }
+
+//---------------------------------------------
+//-----------BTBreadthMutableIterator----------
+
+  // Specific constructors
+  template <typename Data>
+  BTBreadthMutableIterator<Data>::BTBreadthMutableIterator(const MutableBinaryTree<Data>& bt){
+    curr = &bt.Root();
+  }
+
+  /* ************************************************************************ */
+
+  // Copy constructor
+  template <typename Data>
+  BTBreadthMutableIterator<Data>::BTBreadthMutableIterator(const BTBreadthMutableIterator<Data>& bt) {
+    curr = bt.curr;
+    que = bt.que;
+  }
+
+  // Move constructor
+  template <typename Data>
+  BTBreadthMutableIterator<Data>::BTBreadthMutableIterator(BTBreadthMutableIterator<Data>&& bt) noexcept{
+    std::swap(curr, bt.curr);
+    que = std::move(bt.que);
+  }
+
+  /* ************************************************************************ */
+
+  // Destructor
+  template <typename Data>
+  BTBreadthMutableIterator<Data>::~BTBreadthMutableIterator(){
+    delete curr;
+    curr= nullptr;
+    que.Clear();
+  }
+
+  /* ************************************************************************ */
+
+  // Copy assignment
+  template <typename Data>
+  BTBreadthMutableIterator<Data>& BTBreadthMutableIterator<Data>::operator=(const BTBreadthMutableIterator<Data>& bt){
+    curr = bt.curr;
+    que = bt.que;
+    return *this;
+  }
+
+  // Move assignment
+  template <typename Data>
+  BTBreadthMutableIterator<Data>& BTBreadthMutableIterator<Data>::operator=(BTBreadthMutableIterator<Data>&& bt) noexcept{
+    std::swap(curr, bt.curr);
+    que = std::move(bt.que);
+    return *this;
+  }
+
+  /* ************************************************************************ */
+
+  // Comparison operators
+  template <typename Data>
+  bool BTBreadthMutableIterator<Data>::operator==(const BTBreadthMutableIterator<Data>& bt) const noexcept{
+    if(curr != bt.curr || que != bt.que) return false;
+    return true;
+  }
+  
+  template <typename Data>
+  bool BTBreadthMutableIterator<Data>::operator!=(const BTBreadthMutableIterator<Data>& bt) const noexcept{
+    return !(*this == bt);
+  }
+
+  /* ************************************************************************ */
+
+  // Specific member functions (inherited from MutableIterator)
+  template <typename Data>
+  Data& BTBreadthMutableIterator<Data>::operator*(){
+    if(curr == nullptr) throw std::out_of_range("Terminated");
+    return curr->Element();
+}
+
+//----------------------------------------------
 
 /* ************************************************************************** */
 
