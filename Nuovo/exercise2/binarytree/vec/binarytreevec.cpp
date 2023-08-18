@@ -5,44 +5,44 @@ namespace lasd {
 
 //----------NodeVec-----------------------
     template <typename Data>
-    BinaryTreeVec<Data>::NodeVec<Data>::NodeVec(Data& dato, ulong index, Vector<NodeVec>* vec){
+    BinaryTreeVec<Data>::NodeVec::NodeVec(Data& dato, ulong index, Vector<NodeVec*>* vec){
         element = dato;
         indexNode = index;
         vectorPointer = vec;
     }
 
     template <typename Data>
-    struct BinaryTreeVec<Data>::NodeVec& BinaryTreeVec<Data>::NodeVec<Data>::LeftChild() const{
+    struct BinaryTreeVec<Data>::NodeVec& BinaryTreeVec<Data>::NodeVec::LeftChild() const{
         if(!HasLeftChild()) throw std::out_of_range("Nessun figlio trovato");
         return *(vectorPointer->operator[](indexNode * 2 + 1));
     }
 
     template <typename Data>
-    struct BinaryTreeVec<Data>::NodeVec& BinaryTreeVec<Data>::NodeVec<Data>::LeftChild(){
+    struct BinaryTreeVec<Data>::NodeVec& BinaryTreeVec<Data>::NodeVec::LeftChild(){
         if(!HasLeftChild()) throw std::out_of_range("Nessun figlio trovato");
         return *(vectorPointer->operator[](indexNode * 2 + 1));
     }
 
     template <typename Data>
-    struct BinaryTreeVec<Data>::NodeVec& BinaryTreeVec<Data>::NodeVec<Data>::RightChild() const{
+    struct BinaryTreeVec<Data>::NodeVec& BinaryTreeVec<Data>::NodeVec::RightChild() const{
         if(!HasRightChild()) throw std::out_of_range("Nessun figlio trovato");
         return *(vectorPointer->operator[](indexNode * 2 + 2));
     } 
 
     template <typename Data>
-    struct BinaryTreeVec<Data>::NodeVec& BinaryTreeVec<Data>::NodeVec<Data>::RightChild(){
+    struct BinaryTreeVec<Data>::NodeVec& BinaryTreeVec<Data>::NodeVec::RightChild(){
         if(!HasRightChild()) throw std::out_of_range("Nessun figlio trovato");
         return *(vectorPointer->operator[](indexNode * 2 + 2));
     }
 
     template <typename Data>
-    bool BinaryTreeVec<Data>::NodeVec<Data>::HasLeftChild() const noexcept{
+    bool BinaryTreeVec<Data>::NodeVec::HasLeftChild() const noexcept{
         if((indexNode * 2 + 1) <= (vectorPointer->Size() - 1)) return true;
         return false; 
     }
 
     template <typename Data>
-    bool BinaryTreeVec<Data>::NodeVec<Data>::HasRightChild() const noexcept{
+    bool BinaryTreeVec<Data>::NodeVec::HasRightChild() const noexcept{
         if((indexNode * 2 + 2) <= (vectorPointer->Size() - 1)) return true;
         return false; 
     }
@@ -54,11 +54,11 @@ namespace lasd {
   template <typename Data>
   BinaryTreeVec<Data>::BinaryTreeVec(const MappableContainer<Data>& mp){
     treevec = new Vector<NodeVec*>;
-    size = mp.size();
+    size = mp.Size();
 
     if (size > 0) {
         for (ulong i = 0; i < size; ++i) {
-            (*treevec)[i] = new NodeVec(container[i], i, treevec);
+            (*treevec)[i] = new NodeVec(mp[i], i, treevec);
         }
     }
   }
@@ -66,11 +66,11 @@ namespace lasd {
   template <typename Data>
   BinaryTreeVec<Data>::BinaryTreeVec(MutableMappableContainer<Data>&& mp) noexcept{
     treevec = new Vector<NodeVec*>;
-    size = mp.size();
+    size = mp.Size();
 
     if (size > 0) {
         for (ulong i = 0; i < size; ++i) {
-            (*treevec)[i] = new NodeVec(std::move(container[i]), i, treevec);
+            (*treevec)[i] = new NodeVec(std::move(mp[i]), i, treevec);
         }
     }
   }
@@ -136,7 +136,7 @@ namespace lasd {
 
   // Specific member functions (inherited from BinaryTree)
   template <typename Data>
-  NodeVec& BinaryTreeVec<Data>::Root() const{
+  struct BinaryTreeVec<Data>::NodeVec& BinaryTreeVec<Data>::Root() const{
     if(size==0) throw std::length_error("Albero vuoto");
     return *(treevec->operator[](0));
   }
@@ -145,7 +145,7 @@ namespace lasd {
 
   // Specific member function (inherited from MutableBinaryTree)
   template <typename Data>
-  NodeVec& BinaryTreeVec<Data>::Root(){
+  struct BinaryTreeVec<Data>::NodeVec& BinaryTreeVec<Data>::Root(){
     if(size==0) throw std::length_error("Albero vuoto");
     return *(treevec->operator[](0));
   }

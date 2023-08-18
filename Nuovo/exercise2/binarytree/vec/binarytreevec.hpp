@@ -23,7 +23,7 @@ private:
 protected:
 
   using BinaryTree<Data>::size;
-  Vector<NodeVec*> *treevec = nullptr;
+  
 
   struct NodeVec : virtual public MutableBinaryTree<Data>::MutableNode{ // Must extend MutableNode
 
@@ -43,8 +43,8 @@ protected:
 
 
 //------ aggiunti io---------
-    inline NodeVec(){ element nullptr; indexNode = 0; }
-    NodeVec(Data&, ulong, Vector<NodeVec>*);
+    inline NodeVec(){ element = nullptr; indexNode = 0; }
+    NodeVec(Data&, ulong, Vector<NodeVec*>*);
     virtual ~NodeVec() = default;
 
 
@@ -62,6 +62,8 @@ protected:
 
 //-----------------------------
   };
+
+Vector<NodeVec*> *treevec = nullptr;
 
 public:
 
@@ -142,6 +144,15 @@ public:
   using typename MutableMappableContainer<Data>::MutableMapFunctor;
 
   void BreadthMap(MutableMapFunctor) override; // Override MutableBreadthMappableContainer member
+
+
+//-----per non rendere la classe astratta-----------
+
+inline void PreOrderFold(const FoldFunctor, void*) const override{};
+inline void PostOrderFold(const FoldFunctor, void*) const override{};
+inline void InOrderFold(const FoldFunctor, void*) const override{};
+
+//--------------------------------------------------
 
 };
 

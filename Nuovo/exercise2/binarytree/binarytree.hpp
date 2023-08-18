@@ -12,6 +12,9 @@
 #include "../stack/vec/stackvec.hpp"
 #include "../queue/vec/queuevec.hpp"
 
+#include "../queue/lst/queuelst.hpp"
+#include "../stack/lst/stacklst.hpp"
+
 /* ************************************************************************** */
 
 namespace lasd {
@@ -73,8 +76,8 @@ public:
     virtual bool HasLeftChild() const noexcept = 0; // (concrete function should not throw exceptions)
     virtual bool HasRightChild() const noexcept = 0; // (concrete function should not throw exceptions)
 
-    virtual Data& LeftChild() const = 0; // (concrete function must throw std::out_of_range when not existent)
-    virtual Data& RightChild() const = 0; // (concrete function must throw std::out_of_range when not existent)
+    virtual Node& LeftChild() const = 0; // (concrete function must throw std::out_of_range when not existent)
+    virtual Node& RightChild() const = 0; // (concrete function must throw std::out_of_range when not existent)
 
   };
 
@@ -165,7 +168,7 @@ protected:
 
   // Auxiliary member function (for BreadthMappableContainer)
 
-  void BreadthMap(const MapFunctor, NOde*) ; // Accessory function executing from one node of the tree
+  void BreadthMap(const MapFunctor, Node*) ; // Accessory function executing from one node of the tree
 
 };
 
@@ -195,7 +198,7 @@ protected:
 
 public:
 
-  struct MutableNode : virtual public {
+  struct MutableNode : virtual public BinaryTree<Data>::Node{
                         // Must extend Node
 
     friend class MutableBinaryTree<Data>;
@@ -219,8 +222,8 @@ public:
 
     virtual Data& Element() noexcept = 0; // Mutable access to the element (concrete function should not throw exceptions)
 
-    virtual Node& LeftChild() = 0; // (concrete function must throw std::out_of_range when not existent)
-    virtual Node& RightChild() = 0; // (concrete function must throw std::out_of_range when not existent)
+    virtual MutableNode& LeftChild() = 0; // (concrete function must throw std::out_of_range when not existent)
+    virtual MutableNode& RightChild() = 0; // (concrete function must throw std::out_of_range when not existent)
 
   };
 
@@ -241,7 +244,7 @@ public:
 
   // Specific member functions
 
-  virtual void Root() = 0; // (concrete function must throw std::length_error when empty)
+  virtual MutableNode& Root() = 0; // (concrete function must throw std::length_error when empty)
 
   /* ************************************************************************ */
 
@@ -279,25 +282,25 @@ protected:
 
   // Auxiliary member function (for MutablePreOrderMappableContainer)
 
-  void PreOrderMap(MutableMapFunctor, Node*) ; // Accessory function executing from one node of the tree
+  void PreOrderMap(MutableMapFunctor, MutableNode*) ; // Accessory function executing from one node of the tree
 
   /* ************************************************************************ */
 
   // Auxiliary member function (for MutablePostOrderMappableContainer)
 
-  void PostOrderMap(MutableMapFunctor, Node*) ; // Accessory function executing from one node of the tree
+  void PostOrderMap(MutableMapFunctor, MutableNode*) ; // Accessory function executing from one node of the tree
 
   /* ************************************************************************ */
 
   // Auxiliary member function (for MutableInOrderMappableContainer)
 
-  void InOrderMap(MutableMapFunctor, Node*) ; // Accessory function executing from one node of the tree
+  void InOrderMap(MutableMapFunctor, MutableNode*) ; // Accessory function executing from one node of the tree
 
   /* ************************************************************************ */
 
   // Auxiliary member function (for MutableBreadthMappableContainer)
 
-  void BreadthMap(MutableMapFunctor, Node*) ; // Accessory function executing from one node of the tree
+  void BreadthMap(MutableMapFunctor, MutableNode*) ; // Accessory function executing from one node of the tree
 
 };
 
@@ -339,7 +342,7 @@ public:
   /* ************************************************************************ */
 
   // Copy assignment
-  BTPreOrderIterator& operator=(BTPreOrderIterator&) ;
+  BTPreOrderIterator& operator=(const BTPreOrderIterator&) ;
 
   // Move assignment
   BTPreOrderIterator& operator=(BTPreOrderIterator&&) noexcept;
@@ -375,7 +378,8 @@ public:
 /* ************************************************************************** */
 
 template <typename Data>
-class BTPreOrderMutableIterator {
+class BTPreOrderMutableIterator : virtual public MutableIterator<Data>,
+                                  virtual public BTPreOrderIterator<Data>{
                                   // Must extend MutableIterator<Data>,
                                   //             BTPreOrderIterator<Data>
 
@@ -470,7 +474,7 @@ public:
   BTPostOrderIterator& operator=(const BTPostOrderIterator&) ;
 
   // Move assignment
-  BTPostOrderIterator& operator=(BTPostOrderIterato&&) noexcept;
+  BTPostOrderIterator& operator=(BTPostOrderIterator&&) noexcept;
 
   /* ************************************************************************ */
 
@@ -644,7 +648,7 @@ private:
 protected:
 
   struct MutableBinaryTree<Data>::MutableNode* curr = nullptr;
-  StackLst<struct BinaryTree<Data>::MutableNode*> stk;
+  StackLst<struct MutableBinaryTree<Data>::MutableNode*> stk;
 
 public:
 

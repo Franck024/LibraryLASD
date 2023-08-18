@@ -16,11 +16,11 @@ namespace lasd {
 
         if( dx == nDx && sx == nSx){
             if(sx && dx)
-                return ((compareNode.LeftChild() == LeftChild()) && (compareNode.RightChild() == RightChild())); 
-            else if (thisSX)
-                return (compareNode.LeftChild() == LeftChild());
-            else if (thisDX)
-                return (compareNode.RightChild() == RightChild());
+                return ((node.LeftChild() == LeftChild()) && (node.RightChild() == RightChild())); 
+            else if (sx)
+                return (node.LeftChild() == LeftChild());
+            else if (dx)
+                return (node.RightChild() == RightChild());
             else
                 return true;          
         }
@@ -95,8 +95,6 @@ namespace lasd {
   void BinaryTree<Data>::BreadthMap(const MapFunctor fun){
     if(size != 0) BreadthMap(fun, &(Root()));
   }
-
-protected:
 
   // Auxiliary member function (for PreOrderMappableContainer)
   template <typename Data>
@@ -201,11 +199,9 @@ protected:
     if(size != 0) BreadthMap(fun, &(Root()));
   }
 
-protected:
-
   // Auxiliary member function (for MutablePreOrderMappableContainer)
   template <typename Data>
-  void MutableBinaryTree<Data>::PreOrderMap(MutableMapFunctor fun, Node* node){
+  void MutableBinaryTree<Data>::PreOrderMap(MutableMapFunctor fun, MutableNode* node){
     if(node != nullptr){
         fun(node->Element()); 
         if(node->HasLeftChild())
@@ -219,7 +215,7 @@ protected:
 
   // Auxiliary member function (for MutablePostOrderMappableContainer)
   template <typename Data>
-  void MutableBinaryTree<Data>::PostOrderMap(MutableMapFunctor fun, Node* node){
+  void MutableBinaryTree<Data>::PostOrderMap(MutableMapFunctor fun, MutableNode* node){
     if(node != nullptr){
         if(node->HasLeftChild())
             PostOrderMap(fun, &(node->LeftChild()));
@@ -232,7 +228,7 @@ protected:
 
   // Auxiliary member function (for MutableInOrderMappableContainer)
   template <typename Data>
-  void MutableBinaryTree<Data>::InOrderMap(MutableMapFunctor fun, Node* node){
+  void MutableBinaryTree<Data>::InOrderMap(MutableMapFunctor fun, MutableNode* node){
     if(node != nullptr){
     if(node->HasLeftChild())
         InOrderMap(fun, &(node->LeftChild()));
@@ -248,10 +244,10 @@ protected:
 
   // Auxiliary member function (for MutableBreadthMappableContainer)
   template <typename Data>
-  void MutableBinaryTree<Data>::BreadthMap(MutableMapFunctor fun, Node* node){
-    lasd::QueueLst<Node*> coda;
+  void MutableBinaryTree<Data>::BreadthMap(MutableMapFunctor fun, MutableNode* node){
+    lasd::QueueLst<MutableNode*> coda;
     coda.Enqueue(node);
-    Node* tmp;
+    MutableNode* tmp;
 
     while(!(coda.Empty())){
         tmp = coda.HeadNDequeue();
@@ -287,7 +283,7 @@ protected:
   template <typename Data>
   BTPreOrderIterator<Data>::BTPreOrderIterator(BTPreOrderIterator&& bt) noexcept{
     std::swap(curr, bt.curr);
-    stk = std::move(br.stk);
+    stk = std::move(bt.stk);
   }
 
   /* ************************************************************************ */
@@ -302,7 +298,7 @@ protected:
 
   // Copy assignment
   template <typename Data>
-  BTPreOrderIterator& BTPreOrderIterator<Data>::operator=(BTPreOrderIterator& bt){
+  BTPreOrderIterator<Data>& BTPreOrderIterator<Data>::operator=(const BTPreOrderIterator& bt){
     BTPreOrderIterator<Data> *tmp = new BTPreOrderIterator<Data>(bt);
     std::swap(*tmp, *this);
     delete tmp;
@@ -311,7 +307,7 @@ protected:
 
   // Move assignment
   template <typename Data>
-  BTPreOrderIterator& BTPreOrderIterator<Data>::operator=(BTPreOrderIterator&& bt) noexcept{
+  BTPreOrderIterator<Data>& BTPreOrderIterator<Data>::operator=(BTPreOrderIterator&& bt) noexcept{
     BTPreOrderIterator<Data> *tmp = new BTPreOrderIterator<Data>(std::move(bt));
     std::swap(*tmp, *this);
     delete tmp;
@@ -351,7 +347,7 @@ protected:
 
   // Specific member functions (inherited from ForwardIterator)
   template <typename Data>
-  BTPreOrderIterator& BTPreOrderIterator<Data>::operator++(){
+  BTPreOrderIterator<Data>& BTPreOrderIterator<Data>::operator++(){
     if(Terminated()) throw std::out_of_range("Fuori range");
     if(curr->HasRightChild()) stk.Push(&(curr->RightChild()));
     if(curr->HasLeftChild()) stk.Push(&(curr->LeftChild()));
@@ -375,7 +371,7 @@ protected:
   // Specific constructors
   template <typename Data>
   BTPreOrderMutableIterator<Data>::BTPreOrderMutableIterator(const MutableBinaryTree<Data>& bt){
-    curr = &bgt.Root();
+    curr = &bt.Root();
   }
 
   /* ************************************************************************ */
@@ -408,7 +404,7 @@ protected:
 
   // Copy assignment
   template <typename Data>
-  BTPreOrderMutableIterator& BTPreOrderMutableIterator<Data>::operator=(const BTPreOrderMutableIterator& bt){
+  BTPreOrderMutableIterator<Data>& BTPreOrderMutableIterator<Data>::operator=(const BTPreOrderMutableIterator& bt){
     BTPreOrderMutableIterator<Data> *tmp = new BTPreOrderMutableIterator<Data>(bt);
     std::swap(*tmp, *this);
     delete tmp;
@@ -417,9 +413,9 @@ protected:
 
   // Move assignment
   template <typename Data>
-  BTPreOrderMutableIterator& BTPreOrderMutableIterator<Data>::operator=(BTPreOrderMutableIterator&& bt) noexcept{
+  BTPreOrderMutableIterator<Data>& BTPreOrderMutableIterator<Data>::operator=(BTPreOrderMutableIterator&& bt) noexcept{
     std::swap(curr, bt.curr);
-    stk = std::move(br.stk);
+    stk = std::move(bt.stk);
     return *this;
   }
 
@@ -443,7 +439,7 @@ protected:
   template <typename Data>
   Data& BTPreOrderMutableIterator<Data>::operator*(){
     if(curr == nullptr) throw std::out_of_range("Terminated");      
-    return current->Element();
+    return curr->Element();
 }
 
 //---------------------------------------------
@@ -486,7 +482,7 @@ protected:
 
   // Copy assignment
   template <typename Data>
-  BTPostOrderIterator& BTPostOrderIterator<Data>::operator=(const BTPostOrderIterator& bt){
+  BTPostOrderIterator<Data>& BTPostOrderIterator<Data>::operator=(const BTPostOrderIterator& bt){
     curr = bt.curr;
     stk = bt.stk;
     last = bt.last;
@@ -495,7 +491,7 @@ protected:
 
   // Move assignment
   template <typename Data>
-  BTPostOrderIterator& BTPostOrderIterator<Data>::operator=(BTPostOrderIterato&& bt) noexcept{
+  BTPostOrderIterator<Data>& BTPostOrderIterator<Data>::operator=(BTPostOrderIterator&& bt) noexcept{
     BTPostOrderIterator<Data> *tmp = new BTPostOrderIterator<Data>(bt);
     std::swap(*tmp, *this);
     delete tmp;
@@ -535,40 +531,29 @@ protected:
 
   // Specific member functions (inherited from ForwardIterator)
   template <typename Data>
-  BTPostOrderIterator& BTPostOrderIterator<Data>::operator++(){
-    if(stk.Empty()){
-        curr = nullptr;
-        return *this;
-    }
-    else{
-        if((stk.Top()->HasRightChild()) && (&(stk.Top()->RightChild())) != curr){
-            curr = &(stk.Top()->RightChild());
-            curr = LeftMostLeft(curr, stk)
-            return *this;
+  BTPostOrderIterator<Data>& BTPostOrderIterator<Data>::operator++(){
+    if (!stk.Empty()) {
+        // Continua ad estrarre nodi dallo stack finché non si trova un nodo valido
+        while (curr != nullptr || !stk.Empty()) {
+            if (curr != nullptr) {
+                stk.Push(curr);
+                curr = curr->LeftChild();
+            } else {
+                struct BinaryTree<Data>::Node* temp = stk.Top();
+                if (temp->RightChild() != nullptr && temp->RightChild() != last) {
+                    curr = temp->RightChild();
+                } else {
+                    curr = nullptr;
+                    last = temp;
+                    stk.Pop();
+                }
+            }
         }
-        else{
-            curr = stk.TopNPop();
-            return *this;
-        }
     }
+
+    return *this;
   }
 
-template <typename Data> ///////// aggiubnto io di supporto
-BinaryTree<Data>::Node* LeftMostLeft(Node* node, std::stack<Node*>& stk) {
-    while (node) {
-        stk.Push(node);
-        if (node->left)
-            node = node->left;
-        else
-            node = node->right;
-    }
-    if (!stk.Empty()) {
-        Node* leftmost = stk.Top();
-        stk.Pop();
-        return leftmost;
-    }
-    return nullptr;
-}
 
 
   /* ************************************************************************ */
@@ -626,7 +611,7 @@ BinaryTree<Data>::Node* LeftMostLeft(Node* node, std::stack<Node*>& stk) {
 
   // Copy assignment
   template <typename Data>
-  BTPostOrderMutableIterator& BTPostOrderMutableIterator<Data>::operator=(const BTPostOrderMutableIterator& bt) {
+  BTPostOrderMutableIterator<Data>& BTPostOrderMutableIterator<Data>::operator=(const BTPostOrderMutableIterator& bt) {
     curr = bt.curr;
     stk = bt.stk;
     last = bt.last;
@@ -635,7 +620,7 @@ BinaryTree<Data>::Node* LeftMostLeft(Node* node, std::stack<Node*>& stk) {
 
   // Move assignment
   template <typename Data>
-  BTPostOrderMutableIterator& BTPostOrderMutableIterator<Data>::operator=(BTPostOrderMutableIterator&& bt) noexcept{
+  BTPostOrderMutableIterator<Data>& BTPostOrderMutableIterator<Data>::operator=(BTPostOrderMutableIterator&& bt) noexcept{
     BTPostOrderMutableIterator<Data> *tmp = new BTPostOrderMutableIterator<Data>(bt);
     std::swap(*tmp, *this);
     delete tmp;
@@ -754,7 +739,7 @@ BinaryTree<Data>::Node* LeftMostLeft(Node* node, std::stack<Node*>& stk) {
 
   // Specific member functions (inherited from ForwardIterator)
   template <typename Data>
-  BTInOrderIterator& BTInOrderIterator<Data>::operator++(){
+  BTInOrderIterator<Data>& BTInOrderIterator<Data>::operator++(){
     if(Terminated()) throw std::out_of_range("Terminato");
     if(curr->HasRightChild()){
       curr = &(curr->RightChild());

@@ -23,7 +23,7 @@ private:
 protected:
 
   using BinaryTree<Data>::size;
-  NodeLnk* root = nullptr;
+  
   // ...
 
   struct NodeLnk : virtual public MutableBinaryTree<Data>::MutableNode{ // Must extend MutableNode
@@ -59,7 +59,10 @@ protected:
     inline bool HasRightChild() const noexcept override{ return (rc == nullptr); };
 
 //-----------------------------
+  
   };
+
+NodeLnk* root = nullptr;
 
 
 public:
@@ -117,6 +120,17 @@ public:
   // Specific member function (inherited from ClearableContainer)
 
   void Clear() override; // Override ClearableContainer member
+
+
+//-----per non rendere la classe astratta-----------
+
+using typename FoldableContainer<Data>::FoldFunctor;
+inline void PreOrderFold(const FoldFunctor, void*) const override{};
+inline void PostOrderFold(const FoldFunctor, void*) const override{};
+inline void InOrderFold(const FoldFunctor, void*) const override{};
+inline void BreadthFold(const FoldFunctor, void*) const override{};
+
+//--------------------------------------------------
 
 };
 

@@ -256,7 +256,7 @@ public:
 
   // Specific member function (inherited from InOrderFoldableContainer)
 
-  virtual voide InOrderFold(const FoldFunctor, void*) const override = 0; // Override InOrderFoldableContainer member
+  virtual void InOrderFold(const FoldFunctor, void*) const override = 0; // Override InOrderFoldableContainer member
 
 };
 

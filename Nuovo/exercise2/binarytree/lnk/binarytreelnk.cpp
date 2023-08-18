@@ -32,44 +32,44 @@ namespace lasd {
 //--------------------------------
 //-------------BinaryTreeLnk------
 
-template <typename Data>
-typename BinaryTreeLnk<Data>::NodeLnk& InsertAtRoot(const Data& data) {
-    if (root == nullptr) {
-        root = new NodeLnk(data);
-        return *root;
-    } else {
-        NodeLnk* newNode = new NodeLnk(data);
-        newNode->lc = root;
-        root = newNode;
-        return *newNode;
-    }
-}
+// template <typename Data>
+// typename BinaryTreeLnk<Data>::NodeLnk& InsertAtRoot(const Data& data) {
+//     if (root == nullptr) {
+//         root = new NodeLnk(data);
+//         return *root;
+//     } else {
+//         NodeLnk* newNode = new NodeLnk(data);
+//         newNode->lc = root;
+//         root = newNode;
+//         return *newNode;
+//     }
+// }
 
-template <typename Data>
-void CopyNodes(NodeLnk*& destNode, const NodeLnk* sourceNode) {
-    if (sourceNode->HasLeftChild()) {
-        destNode->lc = new NodeLnk(sourceNode->LeftChild().Element());
-        CopyNodes(destNode->lc, &sourceNode->LeftChild());
-    }
-    if (sourceNode->HasRightChild()) {
-        destNode->rc = new NodeLnk(sourceNode->RightChild().Element());
-        CopyNodes(destNode->rc, &sourceNode->RightChild());
-    }
-}
+// template <typename Data>
+// void CopyNodes(NodeLnk*& destNode, const NodeLnk* sourceNode) {
+//     if (sourceNode->HasLeftChild()) {
+//         destNode->lc = new NodeLnk(sourceNode->LeftChild().Element());
+//         CopyNodes(destNode->lc, &sourceNode->LeftChild());
+//     }
+//     if (sourceNode->HasRightChild()) {
+//         destNode->rc = new NodeLnk(sourceNode->RightChild().Element());
+//         CopyNodes(destNode->rc, &sourceNode->RightChild());
+//     }
+// }
 
   // Specific constructors
   template <typename Data>
   BinaryTreeLnk<Data>::BinaryTreeLnk(const MappableContainer<Data>& map){
-    for(const Data& element : map){
-        InsertAtRoot(element);
-    }
+    // for(const Data& element : map){
+    //     InsertAtRoot(element);
+    // }
   }
   
   template <typename Data>
   BinaryTreeLnk<Data>::BinaryTreeLnk(MutableMappableContainer<Data>&& map){
-    for(const Data& element : map){
-        InsertAtRoot(std::move(element));
-    }
+    // for(const Data& element : map){
+    //     InsertAtRoot(std::move(element));
+    // }
   }
 
   /* ************************************************************************ */
@@ -77,12 +77,12 @@ void CopyNodes(NodeLnk*& destNode, const NodeLnk* sourceNode) {
   // Copy constructor
   template <typename Data>
   BinaryTreeLnk<Data>::BinaryTreeLnk(const BinaryTreeLnk<Data>& bt){
-    if (other.root == nullptr) {
+    if (bt.root == nullptr) {
         root = nullptr;
     } else {
         // Recursively copy nodes starting from the root
-        root = new NodeLnk(other.root->Element());
-        CopyNodes(root, other.root);
+        root = new NodeLnk(bt.root->Element());
+        CopyNodes(root, bt.root);
     }
   }
 
@@ -106,12 +106,12 @@ void CopyNodes(NodeLnk*& destNode, const NodeLnk* sourceNode) {
   // Copy assignment
   template <typename Data>
   BinaryTreeLnk<Data>& BinaryTreeLnk<Data>::operator=(const BinaryTreeLnk<Data>& bt){
-    if (other.root == nullptr) {
+    if (bt.root == nullptr) {
         root = nullptr;
     } else {
         // Recursively copy nodes starting from the root
-        root = new NodeLnk(other.root->Element());
-        CopyNodes(root, other.root);
+        root = new NodeLnk(bt.root->Element());
+        CopyNodes(root, bt.root);
     }
     return *this;
   }
