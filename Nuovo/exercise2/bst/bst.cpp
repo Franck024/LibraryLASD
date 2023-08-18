@@ -226,8 +226,8 @@ namespace lasd {
   template <typename Data>
   struct BST<Data>::NodeLnk* BST<Data>::Detach(struct BST<Data>::NodeLnk*& node) noexcept {
     if(node == nullptr) return nullptr;
-    if(node->lc == nullptr) return SkipOnRight(node);
-    else if(node->rc == nullptr) return SkipOnLeft(node);
+    if(node->lc == nullptr) return Skip2Right(node);
+    else if(node->rc == nullptr) return Skip2Left(node);
     else{
         struct BST<Data>::NodeLnk* detach = DetachMax(node->lc);
         node->it = detach->it;
@@ -238,12 +238,12 @@ namespace lasd {
 
   template <typename Data>
   struct BST<Data>::NodeLnk* BST<Data>::DetachMin(struct BST<Data>::NodeLnk*& node) noexcept {
-    return SkipOnRight(FindPointerToMin(node));
+    return Skip2Right(FindPointerToMin(node));
   } 
 
   template <typename Data>
   struct BST<Data>::NodeLnk* BST<Data>::DetachMax(struct BST<Data>::NodeLnk*& node) noexcept {
-    return SkipOnLeft(FindPointerToMax(node));
+    return Skip2Left(FindPointerToMax(node));
   } 
 
   template <typename Data>

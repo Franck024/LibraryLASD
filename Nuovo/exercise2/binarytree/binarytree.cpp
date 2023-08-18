@@ -371,7 +371,7 @@ namespace lasd {
   // Specific constructors
   template <typename Data>
   BTPreOrderMutableIterator<Data>::BTPreOrderMutableIterator(const MutableBinaryTree<Data>& bt){
-    curr = &bt.Root();
+    curr = &(bt.Root());
   }
 
   /* ************************************************************************ */
@@ -537,11 +537,11 @@ namespace lasd {
         while (curr != nullptr || !stk.Empty()) {
             if (curr != nullptr) {
                 stk.Push(curr);
-                curr = curr->LeftChild();
+                curr = &(curr->LeftChild());
             } else {
                 struct BinaryTree<Data>::Node* temp = stk.Top();
-                if (temp->RightChild() != nullptr && temp->RightChild() != last) {
-                    curr = temp->RightChild();
+                if (&(temp->RightChild()) != nullptr && &(temp->RightChild()) != last) {
+                    curr = &(temp->RightChild());
                 } else {
                     curr = nullptr;
                     last = temp;
@@ -958,7 +958,7 @@ namespace lasd {
   // Specific constructors
   template <typename Data>
   BTBreadthMutableIterator<Data>::BTBreadthMutableIterator(const MutableBinaryTree<Data>& bt){
-    curr = &bt.Root();
+    curr = &(bt.Root());
   }
 
   /* ************************************************************************ */

@@ -45,17 +45,17 @@ namespace lasd {
 //     }
 // }
 
-// template <typename Data>
-// void CopyNodes(NodeLnk*& destNode, const NodeLnk* sourceNode) {
-//     if (sourceNode->HasLeftChild()) {
-//         destNode->lc = new NodeLnk(sourceNode->LeftChild().Element());
-//         CopyNodes(destNode->lc, &sourceNode->LeftChild());
-//     }
-//     if (sourceNode->HasRightChild()) {
-//         destNode->rc = new NodeLnk(sourceNode->RightChild().Element());
-//         CopyNodes(destNode->rc, &sourceNode->RightChild());
-//     }
-// }
+template <typename Data>
+void BinaryTreeLnk<Data>::CopyNodes(NodeLnk*& destNode, const NodeLnk* sourceNode) {
+    if (sourceNode->HasLeftChild()) {
+        destNode->lc = new NodeLnk(sourceNode->LeftChild().Element());
+        CopyNodes(destNode->lc, &sourceNode->LeftChild());
+    }
+    if (sourceNode->HasRightChild()) {
+        destNode->rc = new NodeLnk(sourceNode->RightChild().Element());
+        CopyNodes(destNode->rc, &sourceNode->RightChild());
+    }
+}
 
   // Specific constructors
   template <typename Data>

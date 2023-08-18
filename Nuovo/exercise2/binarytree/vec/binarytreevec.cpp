@@ -53,14 +53,14 @@ namespace lasd {
   // Specific constructors
   template <typename Data>
   BinaryTreeVec<Data>::BinaryTreeVec(const MappableContainer<Data>& mp){
-    treevec = new Vector<NodeVec*>;
-    size = mp.Size();
+    // treevec = new Vector<NodeVec*>;
+    // size = mp.Size();
 
-    if (size > 0) {
-        for (ulong i = 0; i < size; ++i) {
-            (*treevec)[i] = new NodeVec(mp[i], i, treevec);
-        }
-    }
+    // if (size > 0) {
+    //     for (ulong i = 0; i < size; ++i) {
+    //         (*treevec)[i] = new NodeVec(mp[i], i, treevec);
+    //     }
+    // }
   }
 
   template <typename Data>
@@ -155,7 +155,7 @@ namespace lasd {
   // Specific member function (inherited from ClearableContainer)
   template <typename Data>
   void BinaryTreeVec<Data>::Clear(){
-    treevec.Clear();
+    treevec->Clear();
     treevec = nullptr;
     size = 0;
   }

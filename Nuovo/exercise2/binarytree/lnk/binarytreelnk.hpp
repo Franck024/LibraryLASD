@@ -30,15 +30,17 @@ protected:
 
   private:
 
-    Data it;
-    NodeLnk* rc; // nodo destro
-    NodeLnk* lc; // nodo sx
+
 
   protected:
 
-    // ...
+
 
   public:
+
+    Data it;
+    NodeLnk* rc; // nodo destro
+    NodeLnk* lc; // nodo sx
 
 //------ aggiunti io---------
     inline NodeLnk(){ rc = lc = nullptr; }
@@ -46,7 +48,7 @@ protected:
     inline ~NodeLnk(){ delete rc; delete lc; };
 
 
-    inline Data& Element() const noexcept override{ return it; }
+    inline const Data& Element() const noexcept override{ return it; }
     inline Data& Element() noexcept override{ return it; }
 
     NodeLnk& LeftChild() const override;
@@ -64,6 +66,7 @@ protected:
 
 NodeLnk* root = nullptr;
 
+void CopyNodes(NodeLnk*& , const NodeLnk* );
 
 public:
 

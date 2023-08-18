@@ -70,7 +70,7 @@ public:
 
     // Specific member functions
 
-    virtual Data& Element() const noexcept = 0; // Immutable access to the element (concrete function should not throw exceptions)
+    virtual const Data& Element() const noexcept = 0; // Immutable access to the element (concrete function should not throw exceptions)
 
     virtual inline bool IsLeaf() const noexcept { return !(HasLeftChild() || HasRightChild()); }; // (concrete function should not throw exceptions)
     virtual bool HasLeftChild() const noexcept = 0; // (concrete function should not throw exceptions)

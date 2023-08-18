@@ -48,7 +48,7 @@ protected:
     virtual ~NodeVec() = default;
 
 
-    inline Data& Element() const noexcept override{ return element; }
+    inline const Data& Element() const noexcept override{ return element; }
     inline Data& Element() noexcept override{ return element; }
 
     NodeVec& LeftChild() const override;
