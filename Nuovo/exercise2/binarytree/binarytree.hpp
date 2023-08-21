@@ -322,6 +322,7 @@ protected:
   StackLst<struct BinaryTree<Data>::Node*> stk;
 
 public:
+BTPreOrderIterator() = default; // aggiunto io
 
   // Specific constructors
   BTPreOrderIterator(const BinaryTree<Data>&) ; // An iterator over a given binary tree
@@ -337,7 +338,7 @@ public:
   /* ************************************************************************ */
 
   // Destructor
-  ~BTPreOrderIterator() ;
+  virtual ~BTPreOrderIterator() ;
 
   /* ************************************************************************ */
 
@@ -357,7 +358,7 @@ public:
 
   // Specific member functions (inherited from Iterator)
 
-  Data& operator*() const override; // (throw std::out_of_range when terminated)
+  const Data& operator*() const override; // (throw std::out_of_range when terminated)
 
   bool Terminated() const noexcept override; // (should not throw exceptions)
 
@@ -408,7 +409,7 @@ public:
   /* ************************************************************************ */
 
   // Destructor
-  ~BTPreOrderMutableIterator() ;
+  virtual ~BTPreOrderMutableIterator() ;
 
   /* ************************************************************************ */
 
@@ -451,6 +452,7 @@ protected:
   StackLst<struct BinaryTree<Data>::Node*> stk;
 
 public:
+BTPostOrderIterator() = default; // aggiunto io
 
   // Specific constructors
   BTPostOrderIterator(const BinaryTree<Data>&) ; // An iterator over a given binary tree
@@ -486,7 +488,7 @@ public:
 
   // Specific member functions (inherited from Iterator)
 
-  Data& operator*() const override; // (throw std::out_of_range when terminated)
+  const Data& operator*() const override; // (throw std::out_of_range when terminated)
 
   bool Terminated() const noexcept override; // (should not throw exceptions)
 
@@ -525,7 +527,7 @@ protected:
 public:
 
   // Specific constructors
-  BTPostOrderMutableIterator(const MutableBinaryTree<Data>) ; // An iterator over a given mutable binary tree
+  BTPostOrderMutableIterator(MutableBinaryTree<Data>&&) ; // An iterator over a given mutable binary tree
 
   /* ************************************************************************ */
 
@@ -580,6 +582,8 @@ protected:
   StackLst<struct BinaryTree<Data>::Node*> stk;
 
 public:
+BTInOrderIterator() = default; // aggiunto io
+
 
   // Specific constructors
   BTInOrderIterator(const BinaryTree<Data>&) ; // An iterator over a given binary tree
@@ -615,7 +619,7 @@ public:
 
   // Specific member functions (inherited from Iterator)
 
-  Data& operator*() const override; // (throw std::out_of_range when terminated)
+  const Data& operator*() const override; // (throw std::out_of_range when terminated)
 
   bool Terminated() const noexcept override; // (should not throw exceptions)
 
@@ -653,7 +657,7 @@ protected:
 public:
 
   // Specific constructors
-  BTInOrderMutableIterator(const MutableBinaryTree<Data>&) ; // An iterator over a given mutable binary tree
+  BTInOrderMutableIterator(MutableBinaryTree<Data>&&) ; // An iterator over a given mutable binary tree
 
   /* ************************************************************************ */
 
@@ -708,6 +712,8 @@ protected:
   QueueLst<struct BinaryTree<Data>::Node*> que;
 
 public:
+BTBreadthIterator() = default; // aggiunto io
+
 
   // Specific constructors
   BTBreadthIterator(const BinaryTree<Data>&) ; // An iterator over a given binary tree
@@ -743,7 +749,7 @@ public:
 
   // Specific member functions (inherited from Iterator)
 
-  Data& operator*() const override; // (throw std::out_of_range when terminated)
+  const Data& operator*() const override; // (throw std::out_of_range when terminated)
 
   bool Terminated() const noexcept override; // (should not throw exceptions)
 
@@ -781,7 +787,7 @@ protected:
 public:
 
   // Specific constructors
-  BTBreadthMutableIterator(const MutableBinaryTree<Data>&) ; // An iterator over a given mutable binary tree
+  BTBreadthMutableIterator(MutableBinaryTree<Data>&&) ; // An iterator over a given mutable binary tree
 
   /* ************************************************************************ */
 

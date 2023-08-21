@@ -267,7 +267,10 @@ namespace lasd {
   // Specific constructors
   template <typename Data>
   BTPreOrderIterator<Data>::BTPreOrderIterator(const BinaryTree<Data>& bt){
-    curr = &bt.Root();
+    // curr = &bt.Root();
+
+    stk.Push(&bt.Root());
+    curr = stk.Top();
   }
 
   /* ************************************************************************ */
@@ -275,15 +278,21 @@ namespace lasd {
   // Copy constructor
   template <typename Data>
   BTPreOrderIterator<Data>::BTPreOrderIterator(const BTPreOrderIterator& bt){
-    curr = bt.curr;
-    stk = bt.stk;
+    // curr = bt.curr;
+    // stk = bt.stk;
+
+    curr(bt.curr);
+    stk(bt.stk);
   }
 
   // Move constructor
   template <typename Data>
   BTPreOrderIterator<Data>::BTPreOrderIterator(BTPreOrderIterator&& bt) noexcept{
-    std::swap(curr, bt.curr);
-    stk = std::move(bt.stk);
+    // std::swap(curr, bt.curr);
+    // stk = std::move(bt.stk);
+
+    curr(bt.curr);
+    stk(std::move(bt.stk));
   }
 
   /* ************************************************************************ */
@@ -299,19 +308,27 @@ namespace lasd {
   // Copy assignment
   template <typename Data>
   BTPreOrderIterator<Data>& BTPreOrderIterator<Data>::operator=(const BTPreOrderIterator& bt){
-    BTPreOrderIterator<Data> *tmp = new BTPreOrderIterator<Data>(bt);
-    std::swap(*tmp, *this);
-    delete tmp;
+    // BTPreOrderIterator<Data> *tmp = new BTPreOrderIterator<Data>(bt);
+    // std::swap(*tmp, *this);
+    // delete tmp;
+    // return *this;
+
+    curr = bt.curr;
+    stk = bt.stk;
     return *this;
   }
 
   // Move assignment
   template <typename Data>
   BTPreOrderIterator<Data>& BTPreOrderIterator<Data>::operator=(BTPreOrderIterator&& bt) noexcept{
-    BTPreOrderIterator<Data> *tmp = new BTPreOrderIterator<Data>(std::move(bt));
-    std::swap(*tmp, *this);
-    delete tmp;
-    return *this;    
+    // BTPreOrderIterator<Data> *tmp = new BTPreOrderIterator<Data>(std::move(bt));
+    // std::swap(*tmp, *this);
+    // delete tmp;
+    // return *this;    
+
+    curr = bt.curr;
+    stk = std::move(bt.stk);
+    return *this;
   }
 
   /* ************************************************************************ */
@@ -333,7 +350,7 @@ namespace lasd {
 
   // Specific member functions (inherited from Iterator)
   template <typename Data>
-  Data& BTPreOrderIterator<Data>::operator*() const{
+  const Data& BTPreOrderIterator<Data>::operator*() const{
     if(Terminated()) throw std::out_of_range("Fuori range!");
     return curr->Element();
   }
@@ -370,22 +387,20 @@ namespace lasd {
 
   // Specific constructors
   template <typename Data>
-  BTPreOrderMutableIterator<Data>::BTPreOrderMutableIterator(const MutableBinaryTree<Data>& bt){
-    curr = &(bt.Root());
-  }
+  BTPreOrderMutableIterator<Data>::BTPreOrderMutableIterator(const MutableBinaryTree<Data>& bt) : BTPreOrderIterator<Data>(bt){}
 
   /* ************************************************************************ */
 
   // Copy constructor
   template <typename Data>
-  BTPreOrderMutableIterator<Data>::BTPreOrderMutableIterator(const BTPreOrderMutableIterator& bt){
-    stk = bt.stk;
-    curr = bt.curr;
+  BTPreOrderMutableIterator<Data>::BTPreOrderMutableIterator(const BTPreOrderMutableIterator<Data>& bt) : BTPreOrderIterator<Data>(bt){
+    // stk = bt.stk;
+    // curr = bt.curr;
   }
 
   // Move constructor
   template <typename Data>
-  BTPreOrderMutableIterator<Data>::BTPreOrderMutableIterator(BTPreOrderMutableIterator&& bt) noexcept{
+  BTPreOrderMutableIterator<Data>::BTPreOrderMutableIterator(BTPreOrderMutableIterator<Data>&& bt) noexcept{
     std::swap(curr, bt.curr);
     stk = std::move(bt.stk);
   }
@@ -404,7 +419,7 @@ namespace lasd {
 
   // Copy assignment
   template <typename Data>
-  BTPreOrderMutableIterator<Data>& BTPreOrderMutableIterator<Data>::operator=(const BTPreOrderMutableIterator& bt){
+  BTPreOrderMutableIterator<Data>& BTPreOrderMutableIterator<Data>::operator=(const BTPreOrderMutableIterator<Data>& bt){
     BTPreOrderMutableIterator<Data> *tmp = new BTPreOrderMutableIterator<Data>(bt);
     std::swap(*tmp, *this);
     delete tmp;
@@ -413,7 +428,7 @@ namespace lasd {
 
   // Move assignment
   template <typename Data>
-  BTPreOrderMutableIterator<Data>& BTPreOrderMutableIterator<Data>::operator=(BTPreOrderMutableIterator&& bt) noexcept{
+  BTPreOrderMutableIterator<Data>& BTPreOrderMutableIterator<Data>::operator=(BTPreOrderMutableIterator<Data>&& bt) noexcept{
     std::swap(curr, bt.curr);
     stk = std::move(bt.stk);
     return *this;
@@ -423,13 +438,13 @@ namespace lasd {
 
   // Comparison operators
   template <typename Data>
-  bool BTPreOrderMutableIterator<Data>::operator==(const BTPreOrderMutableIterator& bt) const noexcept{
+  bool BTPreOrderMutableIterator<Data>::operator==(const BTPreOrderMutableIterator<Data>& bt) const noexcept{
     if(curr != bt.curr || stk != bt.stk) return false;
     return true;
   }
 
   template <typename Data>
-  bool BTPreOrderMutableIterator<Data>::operator!=(const BTPreOrderMutableIterator& bt) const noexcept{
+  bool BTPreOrderMutableIterator<Data>::operator!=(const BTPreOrderMutableIterator<Data>& bt) const noexcept{
     return !(*this == bt);
   }
 
@@ -517,7 +532,7 @@ namespace lasd {
 
   // Specific member functions (inherited from Iterator)
   template <typename Data>
-  Data& BTPostOrderIterator<Data>::operator*() const{
+  const Data& BTPostOrderIterator<Data>::operator*() const{
     if(Terminated()) throw std::out_of_range("Fuori range");
     return curr->Element();    
   }
@@ -573,7 +588,7 @@ namespace lasd {
 
   // Specific constructors
   template <typename Data>
-  BTPostOrderMutableIterator<Data>::BTPostOrderMutableIterator(const MutableBinaryTree<Data> bt) {
+  BTPostOrderMutableIterator<Data>::BTPostOrderMutableIterator(MutableBinaryTree<Data>&& bt) {
     curr = &bt.Root();
   }
 
@@ -725,7 +740,7 @@ namespace lasd {
 
   // Specific member functions (inherited from Iterator)
   template <typename Data>
-  Data& BTInOrderIterator<Data>::operator*() const{
+  const Data& BTInOrderIterator<Data>::operator*() const{
     if(Terminated()) throw std::out_of_range("Termine");
     return curr->Element();
   }
@@ -770,7 +785,7 @@ namespace lasd {
 
   // Specific constructors
   template <typename Data>
-  BTInOrderMutableIterator<Data>::BTInOrderMutableIterator(const MutableBinaryTree<Data>& bt){
+  BTInOrderMutableIterator<Data>::BTInOrderMutableIterator(MutableBinaryTree<Data>&& bt){
     curr = &bt.Root();
     while(curr->HasLeftChild()){
       stk.Push(curr);
@@ -914,7 +929,7 @@ namespace lasd {
 
   // Specific member functions (inherited from Iterator)
   template <typename Data>
-  Data& BTBreadthIterator<Data>::operator*() const{
+  const Data& BTBreadthIterator<Data>::operator*() const{
     if(Terminated()) throw std::out_of_range("Terminated");
 
     return curr->Element();
@@ -957,7 +972,7 @@ namespace lasd {
 
   // Specific constructors
   template <typename Data>
-  BTBreadthMutableIterator<Data>::BTBreadthMutableIterator(const MutableBinaryTree<Data>& bt){
+  BTBreadthMutableIterator<Data>::BTBreadthMutableIterator(MutableBinaryTree<Data>&& bt){
     curr = &(bt.Root());
   }
 

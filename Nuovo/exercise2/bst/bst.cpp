@@ -6,37 +6,33 @@ namespace lasd {
   // Specific constructors
   template <typename Data>
   BST<Data>::BST(const MutableContainer<Data>& mp) {
-    for(ulong i = 0; i < mp.Size(); i++){
-        Insert(mp[i]);
-    }
+    // for(ulong i = 0; i < mp.Size(); i++){
+    //     Insert(mp[i]);
+    //}
   } 
 
   template <typename Data>
-  BST<Data>::BST(MappableMutableContainer<Data>&& mp)  {
-    for(ulong i = 0; i < mp.Size(); i++){
-        Insert(std::move(mp[i]));
-    }
+  BST<Data>::BST(MutableMappableContainer<Data>&& mp)  {
+    // for(ulong i = 0; i < mp.Size(); i++){
+    //     Insert(std::move(mp[i]));
+    //}
   } 
 
   /* ************************************************************************ */
 
   // Copy constructor
   template <typename Data>
-  BST<Data>::BST(const BST<Data>& bt)  {
-    BinaryTreeLnk<Data>::BinaryTreeLnk<Data>( bt);
-  } 
+  BST<Data>::BST(const BST<Data>& bst) :  BinaryTreeLnk<Data>(bst){} 
 
   // Move constructor
   template <typename Data>
-  BST<Data>::BST(BST<Data>&& bt) noexcept {
-    BinaryTreeLnk<Data>::BinaryTreeLnk<Data>(std::move(bt));
-  } 
+  BST<Data>::BST(BST<Data>&& bt) noexcept : BinaryTreeLnk<Data>(std::move(bt)) {} 
 
   /* ************************************************************************ */
 
   // Copy assignment
   template <typename Data>
-  BST<Data>& operator=(const BST<Data>& bt)  {
+  BST<Data>& BST<Data>::operator=(const BST<Data>& bt)  {
     BinaryTreeLnk<Data>::operator=(bt);
     return *this;
   } 
@@ -59,8 +55,8 @@ namespace lasd {
         while (!iterThis.Terminated() && !iterOther.Terminated()){
             if(*iterThis != *iterOther)
                 return false;
-            iterThis++;
-            iterOther++;
+            ++iterThis;
+            ++iterOther;
         }
         if(iterThis.Terminated() && iterOther.Terminated()) return true;
     }
@@ -118,45 +114,45 @@ namespace lasd {
   } 
 
   template <typename Data>
-  Data& BST<Data>::Predecessor(const Data&)  {
+  Data& BST<Data>::Predecessor(const Data& value)  {
     if(root == nullptr)
         throw std::length_error("Vuoto");
     return (FindPointerToPredecessor(value, root))->it;
   }  
 
   template <typename Data>
-  Data BST<Data>::PredecessorNRemove(const Data&)  {
+  Data BST<Data>::PredecessorNRemove(const Data& value)  {
     if(root == nullptr)
         throw std::length_error("Vuoto");
-    return DataNDelete(Detach((FindPointerToPredecessor(value, root))->it));
+    return DataNDelete(Detach(FindPointerToPredecessor(value, root)));
   }  
 
   template <typename Data>
-  void BST<Data>::RemovePredecessor(const Data&)  {
+  void BST<Data>::RemovePredecessor(const Data& value)  {
     if(root == nullptr)
         throw std::length_error("Vuoto");
-    return Detach(FindPointerToPredecessor(value, root)->it);
+    Detach(FindPointerToPredecessor(value, root));
   }  
 
   template <typename Data>
-  Data& BST<Data>::Successor(const Data&)  {
+  Data& BST<Data>::Successor(const Data& value)  {
     if(root == nullptr)
         throw std::length_error("Vuoto");
     return FindPointerToSuccessor(value, root)->it;
   }  
 
   template <typename Data>
-  Data BST<Data>::SuccessorNRemove(const Data&)  {
+  Data BST<Data>::SuccessorNRemove(const Data& value)  {
     if(root == nullptr)
         throw std::length_error("Vuoto");
-    return DataNRemove(Detach(FindPointerToSuccessor(value, root)->it));
+    return DataNDelete(Detach(FindPointerToSuccessor(value, root)));
   } 
 
   template <typename Data>
-  void BST<Data>::RemoveSuccessor(const Data&)  {
+  void BST<Data>::RemoveSuccessor(const Data& value)  {
     if(root == nullptr)
         throw std::length_error("Vuoto");
-    return Detach(FindPointerToSuccessor(value, root)->it);
+    Detach(FindPointerToSuccessor(value, root)->it);
   } 
 
   /* ************************************************************************ */
@@ -204,7 +200,7 @@ namespace lasd {
   } 
 
   template <typename Data>
-  void BST<Data>::ClearNodes(NodeLnk*& node) {
+  void BST<Data>::ClearNodes(struct BST<Data>::NodeLnk*& node) {
     if (node != nullptr) {
         ClearNodes(node->lc);
         ClearNodes(node->rc); 
@@ -216,7 +212,7 @@ namespace lasd {
 
   // Auxiliary member functions
   template <typename Data>
-  Data BST<Data>::DataNDelete(struct BST<Data>::NodeLnk*& node)  {
+  Data BST<Data>::DataNDelete(struct BST<Data>::NodeLnk* node)  {
     Data val;
     val = node->it;
     delete node;
@@ -250,7 +246,8 @@ namespace lasd {
   struct BST<Data>::NodeLnk* BST<Data>::Skip2Left(struct BST<Data>::NodeLnk*& node) noexcept {
     struct BST<Data>::NodeLnk* skipLeft = nullptr;
     if(node != nullptr){
-        node->lc = skipLeft;
+        skipLeft = node->lc;
+        delete node;
         node = skipLeft;
         size--;
     }
@@ -261,7 +258,8 @@ namespace lasd {
   struct BST<Data>::NodeLnk* BST<Data>::Skip2Right(struct BST<Data>::NodeLnk*& node) noexcept {
     struct BST<Data>::NodeLnk* skipRight = nullptr;
     if(node != nullptr){
-        node->rc = skipRight;
+        skipRight = node->rc;
+        delete node;
         node = skipRight;
         size--;
     }
@@ -269,9 +267,9 @@ namespace lasd {
   } 
 
   template <typename Data>
-  struct BST<Data>::NodeLnk* BST<Data>::FindPointerToMin(struct BST<Data>::NodeLnk* const& node) const noexcept {
-    BST<Data>::NodeLnk* const*ptr = &node;
-    while((ptr)->lc != nullptr){
+  struct BST<Data>::NodeLnk* const& BST<Data>::FindPointerToMin(struct BST<Data>::NodeLnk* const& node) const noexcept {
+    struct BST<Data>::NodeLnk* const* ptr = &node;
+    while((*ptr)->lc != nullptr){
         ptr = &((*ptr) -> lc);
     }
     return *ptr;
@@ -279,17 +277,17 @@ namespace lasd {
 
   template <typename Data>
   struct BST<Data>::NodeLnk*& BST<Data>::FindPointerToMin(struct BST<Data>::NodeLnk*& node)  noexcept {
-    BST<Data>::NodeLnk* *ptr = &node;
-    while((ptr)->lc != nullptr){
+    struct BST<Data>::NodeLnk** ptr = &node;
+    while((*ptr)->lc != nullptr){
         ptr = &((*ptr) -> lc);
     }
     return *ptr;
   } 
 
   template <typename Data>
-  struct BST<Data>::NodeLnk* BST<Data>::FindPointerToMax(struct BST<Data>::NodeLnk* const& node) const noexcept {
-    BST<Data>::NodeLnk* const*ptr = &node;
-    while((ptr)->rc != nullptr){
+  struct BST<Data>::NodeLnk* const& BST<Data>::FindPointerToMax(struct BST<Data>::NodeLnk* const& node) const noexcept {
+    struct BST<Data>::NodeLnk* const* ptr = &node;
+    while((*ptr)->rc != nullptr){
         ptr = &((*ptr) -> rc);
     }
     return *ptr;
@@ -297,16 +295,16 @@ namespace lasd {
 
   template <typename Data>
   struct BST<Data>::NodeLnk*& BST<Data>::FindPointerToMax(struct BST<Data>::NodeLnk*& node)  noexcept {
-    BST<Data>::NodeLnk* *ptr = &node;
-    while((ptr)->rc != nullptr){
+    struct BST<Data>::NodeLnk** ptr = &node;
+    while((*ptr)->rc != nullptr){
         ptr = &((*ptr) -> rc);
     }
     return *ptr;
   }  
 
   template <typename Data>
-  struct BST<Data>::NodeLnk* BST<Data>::FindPointerTo(const Data& dato, struct BST<Data>::NodeLnk* const& node) const noexcept {
-    BST<Data>::NodeLnk* const *ptr = &node;
+  struct BST<Data>::NodeLnk* const& BST<Data>::FindPointerTo(const Data& dato, struct BST<Data>::NodeLnk* const& node) const noexcept {
+    struct BST<Data>::NodeLnk* const* ptr = &node;
     if(*ptr != nullptr){
         if(node->it == dato) return *ptr;
         else if(node->it > dato) ptr = &(FindPointerTo(dato, node->lc));
@@ -317,7 +315,7 @@ namespace lasd {
 
   template <typename Data>
   struct BST<Data>::NodeLnk*& BST<Data>::FindPointerTo(const Data& dato, struct BST<Data>::NodeLnk*& node) noexcept {
-    BST<Data>::NodeLnk*  *ptr = &node;
+    struct BST<Data>::NodeLnk** ptr = &node;
     if(*ptr != nullptr){
         if(node->it == dato) return *ptr;
         else if(node->it > dato) ptr = &(FindPointerTo(dato, node->lc));
@@ -327,9 +325,9 @@ namespace lasd {
   }  
  
   template <typename Data>
-  struct BST<Data>::NodeLnk* BST<Data>::FindPointerToPredecessor(const Data& dato, struct BST<Data>::NodeLnk* const& node) const noexcept {
-    BST<Data>::NodeLnk* const* current = &node;
-    BST<Data>::NodeLnk* const* estimate = nullptr;
+  struct BST<Data>::NodeLnk* const& BST<Data>::FindPointerToPredecessor(const Data& dato, struct BST<Data>::NodeLnk* const& node) const noexcept {
+    struct BST<Data>::NodeLnk* const* current = &node;
+    struct BST<Data>::NodeLnk* const* estimate = nullptr;
     while(*current != nullptr && (*current)->it != dato){
         if((*current)->it < dato) current = &((*current)->rc);
         else{
@@ -343,8 +341,8 @@ namespace lasd {
 
   template <typename Data>
   struct BST<Data>::NodeLnk*& BST<Data>::FindPointerToPredecessor(const Data& dato, struct BST<Data>::NodeLnk*& node) noexcept {
-    BST<Data>::NodeLnk* * current = &node;
-    BST<Data>::NodeLnk* * estimate = nullptr;
+    struct BST<Data>::NodeLnk* * current = &node;
+    struct BST<Data>::NodeLnk* * estimate = nullptr;
     while(*current != nullptr && (*current)->it != dato){
         if((*current)->it < dato) current = &((*current)->rc);
         else{
@@ -357,9 +355,9 @@ namespace lasd {
   } 
 
   template <typename Data>
-  struct BST<Data>::NodeLnk* BST<Data>::FindPointerToSuccessor(const Data& dato, struct BST<Data>::NodeLnk* const& node) const noexcept {
-    BST<Data>::NodeLnk* const* current = &node;
-    BST<Data>::NodeLnk* const* estimate = nullptr;
+  struct BST<Data>::NodeLnk* const& BST<Data>::FindPointerToSuccessor(const Data& dato, struct BST<Data>::NodeLnk* const& node) const noexcept {
+    struct BST<Data>::NodeLnk* const* current = &node;
+    struct BST<Data>::NodeLnk* const* estimate = nullptr;
     while(*current != nullptr && (*current)->it != dato){
         if((*current)->it < dato) current = &((*current)->lc);
         else{
@@ -373,8 +371,8 @@ namespace lasd {
 
   template <typename Data>
   struct BST<Data>::NodeLnk*& BST<Data>::FindPointerToSuccessor(const Data& dato, struct BST<Data>::NodeLnk*& node) noexcept {
-    BST<Data>::NodeLnk* * current = &node;
-    BST<Data>::NodeLnk* * estimate = nullptr;
+    struct BST<Data>::NodeLnk* * current = &node;
+    struct BST<Data>::NodeLnk* * estimate = nullptr;
     while(*current != nullptr && (*current)->it != dato){
         if((*current)->it < dato) current = &((*current)->lc);
         else{

@@ -32,7 +32,10 @@ protected:
   using BinaryTreeLnk<Data>::root;
   // ...
 
+
 public:
+
+  void ClearNodes(struct BST<Data>::NodeLnk*& ) ;
 
   // Default constructor
   BST() = default;
@@ -41,7 +44,7 @@ public:
 
   // Specific constructors
   BST(const MutableContainer<Data>&) ; // A bst obtained from a MutableContainer
-  BST(MappableMutableContainer<Data>&&) ; // A bst obtained from a MappableMutableContainer
+  BST(MutableMappableContainer<Data>&&) ; // A bst obtained from a MappableMutableContainer
 
   /* ************************************************************************ */
 
@@ -110,11 +113,22 @@ public:
 
   void Clear() override; // Override ClearableContainer member
 
+
+//-----per non rendere la classe astratta-----------
+
+inline bool InsertAll(const MappableContainer<Data>&) override{return false;};
+inline bool InsertAll(MappableContainer<Data>&&) noexcept override{return false;};
+inline bool RemoveAll(const MappableContainer<Data>&) override{return false;};
+inline bool InsertSome(const MappableContainer<Data>&) override{return false;};
+inline bool InsertSome(MappableContainer<Data>&&) noexcept override{return false;};
+inline bool RemoveSome(const MappableContainer<Data>&) override{return false;};
+
+
 protected:
 
   // Auxiliary member functions
 
-  Data DataNDelete(struct BST<Data>::NodeLnk*&) ;
+  Data DataNDelete(struct BST<Data>::NodeLnk*) ;
 
   struct BST<Data>::NodeLnk* Detach(struct BST<Data>::NodeLnk*&) noexcept;
 
@@ -124,17 +138,17 @@ protected:
   struct BST<Data>::NodeLnk* Skip2Left(struct BST<Data>::NodeLnk*&) noexcept;
   struct BST<Data>::NodeLnk* Skip2Right(struct BST<Data>::NodeLnk*&) noexcept;
 
-  struct BST<Data>::NodeLnk* FindPointerToMin(struct BST<Data>::NodeLnk* const&) const noexcept; // Both mutable & unmutable versions
+  struct BST<Data>::NodeLnk* const& FindPointerToMin(struct BST<Data>::NodeLnk* const&) const noexcept; // Both mutable & unmutable versions
   struct BST<Data>::NodeLnk*& FindPointerToMin(struct BST<Data>::NodeLnk*&)  noexcept; // Both mutable & unmutable versions
-  struct BST<Data>::NodeLnk* FindPointerToMax(struct BST<Data>::NodeLnk* const&) const noexcept; // Both mutable & unmutable versions
+  struct BST<Data>::NodeLnk* const& FindPointerToMax(struct BST<Data>::NodeLnk* const&) const noexcept; // Both mutable & unmutable versions
   struct BST<Data>::NodeLnk*& FindPointerToMax(struct BST<Data>::NodeLnk*&)  noexcept; // Both mutable & unmutable versions
 
-  struct BST<Data>::NodeLnk* FindPointerTo(const Data&, struct BST<Data>::NodeLnk* const&) const noexcept; // Both mutable & unmutable versions
+  struct BST<Data>::NodeLnk* const& FindPointerTo(const Data&, struct BST<Data>::NodeLnk* const&) const noexcept; // Both mutable & unmutable versions
   struct BST<Data>::NodeLnk*& FindPointerTo(const Data&, struct BST<Data>::NodeLnk*&) noexcept; // Both mutable & unmutable versions
 
-  struct BST<Data>::NodeLnk* FindPointerToPredecessor(const Data&, struct BST<Data>::NodeLnk* const&) const noexcept; // Both mutable & unmutable versions
+  struct BST<Data>::NodeLnk* const& FindPointerToPredecessor(const Data&, struct BST<Data>::NodeLnk* const&) const noexcept; // Both mutable & unmutable versions
   struct BST<Data>::NodeLnk*& FindPointerToPredecessor(const Data&, struct BST<Data>::NodeLnk*&) noexcept; // Both mutable & unmutable versions
-  struct BST<Data>::NodeLnk* FindPointerToSuccessor(const Data&, struct BST<Data>::NodeLnk* const&) const noexcept; // Both mutable & unmutable versions
+  struct BST<Data>::NodeLnk* const& FindPointerToSuccessor(const Data&, struct BST<Data>::NodeLnk* const&) const noexcept; // Both mutable & unmutable versions
   struct BST<Data>::NodeLnk*& FindPointerToSuccessor(const Data&, struct BST<Data>::NodeLnk*&) noexcept; // Both mutable & unmutable versions
 
 };
