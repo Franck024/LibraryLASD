@@ -6,16 +6,16 @@ namespace lasd {
   // Specific constructors
   template <typename Data>
   BST<Data>::BST(const LinearContainer<Data>& mp) {
-    // for(ulong i = 0; i < mp.Size(); i++){
-    //     Insert(mp[i]);
-    //}
+    for(ulong i = 0; i < mp.Size(); i++){
+        Insert(mp[i]);
+    }
   } 
 
   template <typename Data>
   BST<Data>::BST(MutableMappableContainer<Data>&& mp)  {
-    // for(ulong i = 0; i < mp.Size(); i++){
-    //     Insert(std::move(mp[i]));
-    //}
+    mp.Map([&](Data&& item) {
+        Insert(std::move(item));
+    });
   } 
 
   /* ************************************************************************ */

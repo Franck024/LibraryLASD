@@ -53,15 +53,15 @@ namespace lasd {
   // Specific constructors
   template <typename Data>
   BinaryTreeVec<Data>::BinaryTreeVec(const MappableContainer<Data>& mp){
-    // treevec = new Vector<NodeVec*>;
-    // size = mp.Size();
+    treevec = new Vector<NodeVec*>(); // Create a new vector to store nodes
 
-    // if (size > 0) {
-    //     for (ulong i = 0; i < size; ++i) {
-    //         (*treevec)[i] = new NodeVec(mp[i], i, treevec);
-    //     }
-    // }
-  }
+    // Create nodes based on the container's data and populate the vector
+    mp.Map([&](const Data& item) {
+        NodeVec* newNode = new NodeVec(const_cast<Data&>(item), treevec->Size(), treevec);
+        (*treevec)[treevec->Size()] = newNode; // Using operator[]
+        treevec->Resize(treevec->Size() + 1);  // Increase the size of the vector
+    });
+  } 
 
   template <typename Data>
   BinaryTreeVec<Data>::BinaryTreeVec(MutableMappableContainer<Data>&& mp) noexcept{

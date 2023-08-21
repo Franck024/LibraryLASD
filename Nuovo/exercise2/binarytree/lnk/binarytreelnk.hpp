@@ -67,6 +67,7 @@ protected:
 NodeLnk* root = nullptr;
 
 void CopyNodes(NodeLnk*& , const NodeLnk* );
+NodeLnk& InsertAtRoot(const Data& , NodeLnk*& );
 
 public:
 

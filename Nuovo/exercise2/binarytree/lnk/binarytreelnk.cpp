@@ -31,19 +31,18 @@ namespace lasd {
 
 //--------------------------------
 //-------------BinaryTreeLnk------
-
-// template <typename Data>
-// typename BinaryTreeLnk<Data>::NodeLnk& InsertAtRoot(const Data& data) {
-//     if (root == nullptr) {
-//         root = new NodeLnk(data);
-//         return *root;
-//     } else {
-//         NodeLnk* newNode = new NodeLnk(data);
-//         newNode->lc = root;
-//         root = newNode;
-//         return *newNode;
-//     }
-// }
+template <typename Data>
+typename BinaryTreeLnk<Data>::NodeLnk& BinaryTreeLnk<Data>::InsertAtRoot(const Data& data, NodeLnk*& node) {
+    if (node == nullptr) {
+        node = new NodeLnk(data); // Create a new node and make it the root
+        return *node;
+    } else {
+        NodeLnk* newNode = new NodeLnk(data); // Create a new node for the data
+        newNode->lc = node; // Set the current root as the left child of the new node
+        node = newNode; // Update the root to be the new node
+        return *newNode;
+    }
+}
 
 template <typename Data>
 void BinaryTreeLnk<Data>::CopyNodes(NodeLnk*& destNode, const NodeLnk* sourceNode) {
@@ -60,16 +59,19 @@ void BinaryTreeLnk<Data>::CopyNodes(NodeLnk*& destNode, const NodeLnk* sourceNod
   // Specific constructors
   template <typename Data>
   BinaryTreeLnk<Data>::BinaryTreeLnk(const MappableContainer<Data>& map){
-    // for(const Data& element : map){
-    //     InsertAtRoot(element);
-    // }
+    root = nullptr; // Initialize the root as nullptr
+
+    map.Map([&](const Data& item){
+        InsertAtRoot(item, root);
+    });
   }
   
   template <typename Data>
   BinaryTreeLnk<Data>::BinaryTreeLnk(MutableMappableContainer<Data>&& map){
-    // for(const Data& element : map){
-    //     InsertAtRoot(std::move(element));
-    // }
+    root = nullptr;
+    map.Map([&](const Data& item){
+        InsertAtRoot(std::move(item), root);
+    });
   }
 
   /* ************************************************************************ */

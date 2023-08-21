@@ -149,6 +149,7 @@ public:
 protected:
 
   // Auxiliary member function (for PreOrderMappableContainer)
+  void Fold(const FoldFunctor , void* , Node*  ) const; // aggiunto io!!!
 
   void PreOrderMap( MapFunctor, Node*)const ; // Accessory function executing from one node of the tree
 

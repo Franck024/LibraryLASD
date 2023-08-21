@@ -53,7 +53,7 @@ namespace lasd {
   // Specific member function (inherited from FoldableContainer)
   template <typename Data>
   void BinaryTree<Data>::Fold(const FoldFunctor fun, void* acc) const{
-    // --------- IDK ------- ??????
+    Fold(fun, acc, &Root());
   }
 
   /* ************************************************************************ */
@@ -111,6 +111,15 @@ namespace lasd {
   /* ************************************************************************ */
 
   // Auxiliary member function (for PostOrderMappableContainer)
+  template <typename Data>
+  void BinaryTree<Data>::Fold(const FoldFunctor fun, void* acc, Node* node ) const{
+    if (node != nullptr) {
+        fun(node->Element(), acc);
+        Fold(fun, acc, &node->LeftChild());
+        Fold(fun, acc, &node->RightChild()); 
+    }
+  }
+
   template <typename Data>
   void BinaryTree<Data>::PostOrderMap( MapFunctor fun , Node* node) const{
     if(node != nullptr){
