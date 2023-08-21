@@ -173,7 +173,7 @@ namespace lasd {
 
   // Specific member functions (inherited from BreadthMappableContainer)
   template <typename Data>
-  void BinaryTreeVec<Data>::BreadthMap(const MapFunctor fun){
+  void BinaryTreeVec<Data>::BreadthMap( MapFunctor fun)const{
     for(uint i = 0; i < size; i++) 
         fun(treevec->operator[](i)->Element());
   }

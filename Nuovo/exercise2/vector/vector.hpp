@@ -115,13 +115,13 @@ protected:
   /* ************************************************************************ */
   // Specific member function (inherited from MappableContainer)
   using typename MappableContainer<Data>::MapFunctor;
-  inline void Map(const MapFunctor) override ; // Override MappableContainer member
+  inline void Map( MapFunctor)const override ; // Override MappableContainer member
   /* ************************************************************************ */
   // Specific member function (inherited from PreOrderMappableContainer)
-  inline void PreOrderMap(const MapFunctor) override ; // Override PreOrderMappableContainer member
+  inline void PreOrderMap( MapFunctor)const override ; // Override PreOrderMappableContainer member
   /* ************************************************************************ */
   // Specific member function (inherited from PostOrderMappableContainer)
-  inline void PostOrderMap(const MapFunctor) override ; // Override PostOrderMappableContainer member
+  inline void PostOrderMap( MapFunctor)const override ; // Override PostOrderMappableContainer member
   /* ************************************************************************ */
   // Specific member function (inherited from MutableMappableContainer)
   using typename MutableMappableContainer<Data>::MutableMapFunctor;

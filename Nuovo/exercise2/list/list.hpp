@@ -183,19 +183,19 @@ public:
 
   using typename MappableContainer<Data>::MapFunctor;
 
-  void Map(const MapFunctor) override; // Override MappableContainer member
+  void Map( MapFunctor)const override; // Override MappableContainer member
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from PreOrderMappableContainer)
 
-  void PreOrderMap(const MapFunctor) override; // Override PreOrderMappableContainer member
+  void PreOrderMap( MapFunctor)const override; // Override PreOrderMappableContainer member
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from PostOrderMappableContainer)
 
-  void PostOrderMap(const MapFunctor)  override; // Override PostOrderMappableContainer member
+  void PostOrderMap( MapFunctor)const  override; // Override PostOrderMappableContainer member
 
   /* ************************************************************************ */
 
@@ -228,8 +228,8 @@ protected:
 
   // Auxiliary member functions (for PreOrderMappableContainer & PostOrderMappableContainer)
 
-  void PreOrderMap(const MapFunctor, Node*) ; // Accessory function executing from one point of the list onwards
-  void PostOrderMap(const MapFunctor, Node*) ; // Accessory function executing from one point of the list onward
+  void PreOrderMap( MapFunctor, Node*)const ; // Accessory function executing from one point of the list onwards
+  void PostOrderMap( MapFunctor, Node*)const ; // Accessory function executing from one point of the list onward
 
   /* ************************************************************************ */
 

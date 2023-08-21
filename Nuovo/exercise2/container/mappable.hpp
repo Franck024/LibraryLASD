@@ -53,7 +53,7 @@ public:
 
   using MapFunctor = std::function<void(const Data &)>;
 
-  virtual void Map(const MapFunctor) = 0;
+  virtual void Map( MapFunctor)const = 0;
 
   /* ************************************************************************ */
 
@@ -106,13 +106,13 @@ public:
 
   using typename MappableContainer<Data>::MapFunctor;
 
-  virtual void PreOrderMap(const MapFunctor) = 0;
+  virtual void PreOrderMap( MapFunctor) const= 0;
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from MappableContainer)
 
-  virtual void Map(const MapFunctor) override = 0; // Override MappableContainer member
+  virtual void Map( MapFunctor)const override = 0; // Override MappableContainer member
 
   /* ************************************************************************ */
 
@@ -171,13 +171,13 @@ public:
 
   using typename MappableContainer<Data>::MapFunctor;
 
-  virtual void PostOrderMap(const MapFunctor) = 0;
+  virtual void PostOrderMap( MapFunctor)const = 0;
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from MappableContainer)
 
-  virtual void Map(const MapFunctor) override = 0; // Override MappableContainer member
+  virtual void Map( MapFunctor)const override = 0; // Override MappableContainer member
 
   /* ************************************************************************ */
 
@@ -236,13 +236,13 @@ public:
 
   using typename MappableContainer<Data>::MapFunctor;
 
-  virtual void InOrderMap(const MapFunctor) = 0;
+  virtual void InOrderMap( MapFunctor)const = 0;
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from MappableContainer)
 
-  virtual void Map(const MapFunctor) override = 0; // Override MappableContainer member
+  virtual void Map( MapFunctor)const override = 0; // Override MappableContainer member
 
   /* ************************************************************************ */
 
@@ -301,13 +301,13 @@ public:
 
   using typename MappableContainer<Data>::MapFunctor;
 
-  virtual void BreadthMap(const MapFunctor) = 0;
+  virtual void BreadthMap( MapFunctor)const = 0;
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from MappableContainer)
 
-  virtual void Map(const MapFunctor) override = 0; // Override MappableContainer member
+  virtual void Map( MapFunctor)const override = 0; // Override MappableContainer member
 
   /* ************************************************************************ */
 
@@ -540,7 +540,7 @@ protected:
 public:
 
   // Destructor
-  virtual ~MutableBreadthMappableContainer() = 0;
+  virtual ~MutableBreadthMappableContainer() = default;
 
   /* ************************************************************************ */
 

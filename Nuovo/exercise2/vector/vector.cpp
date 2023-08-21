@@ -217,7 +217,7 @@ void Vector<Data>::PostOrderFold(const FoldFunctor function, void* parametro) co
 
 /* ************************************************************************** */
 template <typename Data>
-void Vector<Data>::Map(const MapFunctor fun) {
+void Vector<Data>::Map( MapFunctor fun)const {
     for(ulong i = 0; i < size; i++){
         fun(elem[i]);
     }
@@ -225,7 +225,7 @@ void Vector<Data>::Map(const MapFunctor fun) {
 
 //Vector MapPreOrder
 template<typename Data>
-void Vector<Data>::PreOrderMap(MapFunctor function) {
+void Vector<Data>::PreOrderMap(MapFunctor function) const {
 	for (ulong i = 0; i < size; i++) {
 		function(elem[i]);
 	}
@@ -233,7 +233,7 @@ void Vector<Data>::PreOrderMap(MapFunctor function) {
 
 //Vector MapPostOrder
 template<typename Data>
-void Vector<Data>::PostOrderMap(MapFunctor function) {
+void Vector<Data>::PostOrderMap(MapFunctor function) const{
 	ulong index = size;
 	while (index > 0) {
 		function(elem[--index]);

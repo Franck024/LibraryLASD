@@ -360,7 +360,7 @@ void List<Data>::PostOrderFold(const FoldFunctor fun, void* acc, Node* nodo) con
 
 // Specific member function (inherited from MappableContainer)
 template <typename Data>
-void List<Data>::Map(const MapFunctor mapFun){
+void List<Data>::Map( MapFunctor mapFun)const{
     Node* tmp = head;
     while(tmp != nullptr){
         mapFun(tmp->valore);
@@ -372,7 +372,7 @@ void List<Data>::Map(const MapFunctor mapFun){
 
 // Specific member function (inherited from PreOrderMappableContainer)
 template <typename Data>
-void List<Data>::PreOrderMap(const MapFunctor mapFun){
+void List<Data>::PreOrderMap( MapFunctor mapFun)const{
     PreOrderMap(mapFun, head);
 }
 
@@ -380,13 +380,13 @@ void List<Data>::PreOrderMap(const MapFunctor mapFun){
 
 // Specific member function (inherited from PostOrderMappableContainer)
 template <typename Data>
-void List<Data>::PostOrderMap(const MapFunctor mapFun){
+void List<Data>::PostOrderMap( MapFunctor mapFun)const{
     PostOrderMap(mapFun, head);
 }
 
 // Auxiliary member functions (for PreOrderMappableContainer & PostOrderMappableContainer)
 template <typename Data>
-void List<Data>::PreOrderMap(const MapFunctor mapFun, Node* nodo){
+void List<Data>::PreOrderMap( MapFunctor mapFun, Node* nodo)const{
     Node* tmp = nodo;
     while( tmp != nullptr){
         mapFun(tmp->valore);
@@ -396,7 +396,7 @@ void List<Data>::PreOrderMap(const MapFunctor mapFun, Node* nodo){
 }
 
 template <typename Data>
-void List<Data>::PostOrderMap(const MapFunctor mapFun, Node* nodo){
+void List<Data>::PostOrderMap( MapFunctor mapFun, Node* nodo)const{
     if (nodo == nullptr) return;
     PostOrderMap(mapFun, nodo->next);
     mapFun(nodo->valore);

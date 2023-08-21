@@ -60,7 +60,7 @@ namespace lasd {
 
   // Specific member function (inherited from MappableContainer)
   template <typename Data>
-  void BinaryTree<Data>::Map(const MapFunctor fun){
+  void BinaryTree<Data>::Map( MapFunctor fun)const{
     PreOrderMap(fun);
   }
 
@@ -68,7 +68,7 @@ namespace lasd {
 
   // Specific member function (inherited from PreOrderMappableContainer)
   template <typename Data>
-  void BinaryTree<Data>::PreOrderMap(const MapFunctor fun){
+  void BinaryTree<Data>::PreOrderMap( MapFunctor fun)const{
     if(size != 0) PreOrderMap(fun, &(Root()));
   }
 
@@ -76,7 +76,7 @@ namespace lasd {
 
   // Specific member function (inherited from PostOrderMappableContainer)
   template <typename Data>
-  void BinaryTree<Data>::PostOrderMap(const MapFunctor fun){
+  void BinaryTree<Data>::PostOrderMap( MapFunctor fun)const{
     if(size != 0) PostOrderMap(fun, &(Root()));
   }
 
@@ -84,7 +84,7 @@ namespace lasd {
 
   // Specific member function (inherited from InOrderMappableContainer)
   template <typename Data>
-  void BinaryTree<Data>::InOrderMap(const MapFunctor fun){
+  void BinaryTree<Data>::InOrderMap( MapFunctor fun)const{
     if(size != 0) InOrderMap(fun, &(Root()));
   }
 
@@ -92,13 +92,13 @@ namespace lasd {
 
   // Specific member function (inherited from BreadthMappableContainer)
   template <typename Data>
-  void BinaryTree<Data>::BreadthMap(const MapFunctor fun){
+  void BinaryTree<Data>::BreadthMap( MapFunctor fun)const{
     if(size != 0) BreadthMap(fun, &(Root()));
   }
 
   // Auxiliary member function (for PreOrderMappableContainer)
   template <typename Data>
-  void BinaryTree<Data>::PreOrderMap(const MapFunctor fun, Node* node){
+  void BinaryTree<Data>::PreOrderMap( MapFunctor fun, Node* node)const{
     if(node != nullptr){
         fun(node->Element()); 
         if(node->HasLeftChild())
@@ -112,7 +112,7 @@ namespace lasd {
 
   // Auxiliary member function (for PostOrderMappableContainer)
   template <typename Data>
-  void BinaryTree<Data>::PostOrderMap(const MapFunctor fun , Node* node) {
+  void BinaryTree<Data>::PostOrderMap( MapFunctor fun , Node* node) const{
     if(node != nullptr){
         if(node->HasLeftChild())
             PostOrderMap(fun, &(node->LeftChild()));
@@ -125,7 +125,7 @@ namespace lasd {
 
   // Auxiliary member function (for InOrderMappableContainer)
   template <typename Data>
-  void BinaryTree<Data>::InOrderMap(const MapFunctor fun, Node* node){
+  void BinaryTree<Data>::InOrderMap( MapFunctor fun, Node* node)const{
     if(node != nullptr){
     if(node->HasLeftChild())
         InOrderMap(fun, &(node->LeftChild()));
@@ -141,7 +141,7 @@ namespace lasd {
 
   // Auxiliary member function (for BreadthMappableContainer)
   template <typename Data>
-  void BinaryTree<Data>::BreadthMap(const MapFunctor fun, Node* node){
+  void BinaryTree<Data>::BreadthMap( MapFunctor fun, Node* node)const{
     lasd::QueueLst<Node*> coda;
     coda.Enqueue(node);
     Node* tmp;
@@ -588,8 +588,8 @@ namespace lasd {
 
   // Specific constructors
   template <typename Data>
-  BTPostOrderMutableIterator<Data>::BTPostOrderMutableIterator(MutableBinaryTree<Data>&& bt) {
-    curr = &bt.Root();
+  BTPostOrderMutableIterator<Data>::BTPostOrderMutableIterator(const MutableBinaryTree<Data>& bt) : BTPostOrderIterator<Data>(bt){
+    curr = nullptr;
   }
 
   /* ************************************************************************ */
@@ -785,12 +785,8 @@ namespace lasd {
 
   // Specific constructors
   template <typename Data>
-  BTInOrderMutableIterator<Data>::BTInOrderMutableIterator(MutableBinaryTree<Data>&& bt){
-    curr = &bt.Root();
-    while(curr->HasLeftChild()){
-      stk.Push(curr);
-      curr = &(curr->LeftChild());
-    }
+  BTInOrderMutableIterator<Data>::BTInOrderMutableIterator(const MutableBinaryTree<Data>& bt) : BTInOrderIterator<Data>(bt){
+    curr = nullptr;
   }
 
   /* ************************************************************************ */
@@ -972,8 +968,8 @@ namespace lasd {
 
   // Specific constructors
   template <typename Data>
-  BTBreadthMutableIterator<Data>::BTBreadthMutableIterator(MutableBinaryTree<Data>&& bt){
-    curr = &(bt.Root());
+  BTBreadthMutableIterator<Data>::BTBreadthMutableIterator(const MutableBinaryTree<Data>& bt) : BTBreadthIterator<Data>(bt){
+    curr = nullptr;
   }
 
   /* ************************************************************************ */

@@ -43,7 +43,7 @@ public:
   /* ************************************************************************ */
 
   // Specific constructors
-  BST(const MutableContainer<Data>&) ; // A bst obtained from a MutableContainer
+  BST(const LinearContainer<Data>&) ; // A bst obtained from a MutableContainer
   BST(MutableMappableContainer<Data>&&) ; // A bst obtained from a MappableMutableContainer
 
   /* ************************************************************************ */

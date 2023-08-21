@@ -135,7 +135,7 @@ public:
 
   using typename MappableContainer<Data>::MapFunctor;
 
-  void BreadthMap(const MapFunctor) override; // Override BreadthMappableContainer member
+  void BreadthMap( MapFunctor) const override; // Override BreadthMappableContainer member
 
   /* ************************************************************************ */
 

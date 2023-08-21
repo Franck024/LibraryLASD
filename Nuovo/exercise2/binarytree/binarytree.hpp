@@ -120,55 +120,55 @@ public:
 
   using typename MappableContainer<Data>::MapFunctor;
 
-  void Map(const MapFunctor) override; // Override MappableContainer member
+  void Map( MapFunctor)const override; // Override MappableContainer member
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from PreOrderMappableContainer)
 
-  void PreOrderMap(const MapFunctor) override; // Override PreOrderMappableContainer member
+  void PreOrderMap( MapFunctor)const override; // Override PreOrderMappableContainer member
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from PostOrderMappableContainer)
 
-  void PostOrderMap(const MapFunctor) override; // Override PostOrderMappableContainer member
+  void PostOrderMap( MapFunctor)const override; // Override PostOrderMappableContainer member
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from InOrderMappableContainer)
 
-  void InOrderMap(const MapFunctor) override; // Override InOrderMappableContainer member
+  void InOrderMap( MapFunctor) const override; // Override InOrderMappableContainer member
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from BreadthMappableContainer)
 
-  void BreadthMap(const MapFunctor) override; // Override BreadthMappableContainer member
+  void BreadthMap( MapFunctor)const override; // Override BreadthMappableContainer member
 
 protected:
 
   // Auxiliary member function (for PreOrderMappableContainer)
 
-  void PreOrderMap(const MapFunctor, Node*) ; // Accessory function executing from one node of the tree
+  void PreOrderMap( MapFunctor, Node*)const ; // Accessory function executing from one node of the tree
 
   /* ************************************************************************ */
 
   // Auxiliary member function (for PostOrderMappableContainer)
 
-  void PostOrderMap(const MapFunctor, Node*) ; // Accessory function executing from one node of the tree
+  void PostOrderMap( MapFunctor, Node*) const; // Accessory function executing from one node of the tree
 
   /* ************************************************************************ */
 
   // Auxiliary member function (for InOrderMappableContainer)
 
-  void InOrderMap(const MapFunctor, Node*) ; // Accessory function executing from one node of the tree
+  void InOrderMap( MapFunctor, Node*) const; // Accessory function executing from one node of the tree
 
   /* ************************************************************************ */
 
   // Auxiliary member function (for BreadthMappableContainer)
 
-  void BreadthMap(const MapFunctor, Node*) ; // Accessory function executing from one node of the tree
+  void BreadthMap( MapFunctor, Node*)const ; // Accessory function executing from one node of the tree
 
 };
 
@@ -527,7 +527,7 @@ protected:
 public:
 
   // Specific constructors
-  BTPostOrderMutableIterator(MutableBinaryTree<Data>&&) ; // An iterator over a given mutable binary tree
+  BTPostOrderMutableIterator(const MutableBinaryTree<Data>&) ; // An iterator over a given mutable binary tree
 
   /* ************************************************************************ */
 
@@ -657,7 +657,7 @@ protected:
 public:
 
   // Specific constructors
-  BTInOrderMutableIterator(MutableBinaryTree<Data>&&) ; // An iterator over a given mutable binary tree
+  BTInOrderMutableIterator(const MutableBinaryTree<Data>&) ; // An iterator over a given mutable binary tree
 
   /* ************************************************************************ */
 
@@ -787,7 +787,7 @@ protected:
 public:
 
   // Specific constructors
-  BTBreadthMutableIterator(MutableBinaryTree<Data>&&) ; // An iterator over a given mutable binary tree
+  BTBreadthMutableIterator(const MutableBinaryTree<Data>&) ; // An iterator over a given mutable binary tree
 
   /* ************************************************************************ */
 

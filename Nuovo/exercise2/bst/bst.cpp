@@ -5,7 +5,7 @@ namespace lasd {
 
   // Specific constructors
   template <typename Data>
-  BST<Data>::BST(const MutableContainer<Data>& mp) {
+  BST<Data>::BST(const LinearContainer<Data>& mp) {
     // for(ulong i = 0; i < mp.Size(); i++){
     //     Insert(mp[i]);
     //}
@@ -164,7 +164,9 @@ namespace lasd {
     if(pointer==nullptr){
         pointer = new struct BST<Data>::NodeLnk(dato);
         size++;
+        return true;
     }
+    return false;
   }  
 
   template <typename Data>
@@ -173,12 +175,14 @@ namespace lasd {
     if(pointer==nullptr){
         pointer = new struct BST<Data>::NodeLnk(dato);
         size++;
+        return true;
     }
+    return false;
   } 
 
   template <typename Data>
   bool BST<Data>::Remove(const Data& dato)  {
-    delete Detach(FindPointerTo(dato, root));
+    return Detach(FindPointerTo(dato, root));
   }  
 
   /* ************************************************************************ */
