@@ -148,9 +148,14 @@ public:
 
 //-----per non rendere la classe astratta-----------
 
-inline void PreOrderFold(const FoldFunctor, void*) const override{};
-inline void PostOrderFold(const FoldFunctor, void*) const override{};
-inline void InOrderFold(const FoldFunctor, void*) const override{};
+void PreOrderFold(const FoldFunctor, void*) const override;
+void PreOrderFold(const FoldFunctor, void*, NodeVec*) const ;
+
+void PostOrderFold(const FoldFunctor, void*) const override;
+void PostOrderFold(const FoldFunctor, void*, NodeVec*) const ;
+
+void InOrderFold(const FoldFunctor, void*) const override;
+void InOrderFold(const FoldFunctor, void*, NodeVec*) const ;
 
 //--------------------------------------------------
 

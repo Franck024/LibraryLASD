@@ -47,27 +47,30 @@ namespace lasd {
         return false; 
     }
 
+
 //---------------------------------------
 //------------BinaryTreeVec--------------
 
   // Specific constructors
   template <typename Data>
-  BinaryTreeVec<Data>::BinaryTreeVec(const MappableContainer<Data>& mp){
-    treevec = new Vector<NodeVec*>(); // Create a new vector to store nodes
+  BinaryTreeVec<Data>::BinaryTreeVec(const MappableContainer<Data>& mp){  
 
-    // Create nodes based on the container's data and populate the vector
-    mp.Map([&](const Data& item) {
-        NodeVec* newNode = new NodeVec(const_cast<Data&>(item), treevec->Size(), treevec);
-        (*treevec)[treevec->Size()] = newNode; // Using operator[]
-        treevec->Resize(treevec->Size() + 1);  // Increase the size of the vector
-    });
+    if(mp.Size()){
+      size = mp.Size();
+      treevec = new Vector<NodeVec*>(size); 
+      uint i = 0;
+      mp.Map([&](const Data& item){  
+        NodeVec* newNode = new NodeVec(const_cast<Data&>(item), i, treevec);    
+        treevec->operator[](i) = newNode;
+        i++;
+      });   
+    }
   } 
 
   template <typename Data>
   BinaryTreeVec<Data>::BinaryTreeVec(MutableMappableContainer<Data>&& mp) noexcept{
     treevec = new Vector<NodeVec*>;
     size = mp.Size();
-
     if (size > 0) {
         for (ulong i = 0; i < size; ++i) {
             (*treevec)[i] = new NodeVec(std::move(mp[i]), i, treevec);
@@ -188,6 +191,62 @@ namespace lasd {
   }
 
 //----------------------------------------
+//-----per non rendere la classe astratta-----------
+template <typename Data>
+void BinaryTreeVec<Data>::PreOrderFold(const FoldFunctor fun, void* acc) const{
+  if (size != 0) PreOrderFold(fun, acc, &(Root()));
+}
+
+template <typename Data>
+void BinaryTreeVec<Data>::PreOrderFold(const FoldFunctor fun, void* acc, NodeVec* node) const {
+    if(node != nullptr){
+        fun(node->Element(), acc);
+
+        if(node->HasLeftChild())
+            PreOrderFold(fun, acc, &(node->LeftChild()));
+
+        if(node->HasRightChild())
+            PreOrderFold(fun, acc, &(node->RightChild()));
+    }
+}
+
+template <typename Data>
+void BinaryTreeVec<Data>::PostOrderFold(const FoldFunctor fun, void* acc) const {
+  if (size != 0) PostOrderFold(fun, acc, &(Root()));
+}
+
+template <typename Data>
+void BinaryTreeVec<Data>::PostOrderFold(const FoldFunctor fun, void* acc, NodeVec* node) const {
+    if(node != nullptr){
+        if(node->HasLeftChild())
+            PostOrderFold(fun, acc, &(node->LeftChild()));
+
+        if(node->HasRightChild())
+            PostOrderFold(fun, acc, &(node->RightChild()));
+
+        fun(node->Element(), acc);
+    }
+}
+
+template <typename Data>
+void BinaryTreeVec<Data>::InOrderFold(const FoldFunctor fun, void* acc) const {
+  if (size != 0) InOrderFold(fun, acc, &(Root()));
+}
+
+template <typename Data>
+void BinaryTreeVec<Data>::InOrderFold(const FoldFunctor fun, void* acc, NodeVec* node) const {
+    if(node != nullptr){
+        if(node->HasLeftChild())
+            InOrderFold(fun, acc, &(node->LeftChild()));
+
+        fun(node->Element(), acc);
+
+        if(node->HasRightChild())
+            InOrderFold(fun, acc, &(node->RightChild()));
+    } 
+}
+
+//--------------------------------------------------
 
 /* ************************************************************************** */
 
