@@ -1,4 +1,4 @@
-
+#include <queue>
 namespace lasd {
 
 /* ************************************************************************** */
@@ -31,17 +31,20 @@ namespace lasd {
 
 //--------------------------------
 //-------------BinaryTreeLnk------
+
+//Funzioni accessorie
 template <typename Data>
-typename BinaryTreeLnk<Data>::NodeLnk& BinaryTreeLnk<Data>::InsertAtRoot(const Data& data, NodeLnk*& node) {
-    if (node == nullptr) {
-        node = new NodeLnk(data); // Create a new node and make it the root
-        return *node;
-    } else {
-        NodeLnk* newNode = new NodeLnk(data); // Create a new node for the data
-        newNode->lc = node; // Set the current root as the left child of the new node
-        node = newNode; // Update the root to be the new node
-        return *newNode;
-    }
+void BinaryTreeLnk<Data>::funzioneCostruzione(const Data& value, NodeLnk*& node) {
+  if(node == nullptr) node = new NodeLnk(value);
+  else if(value < node ->Element()) funzioneCostruzione(value, node->lc);
+  else funzioneCostruzione(value, node->rc);
+}
+
+template <typename Data>
+void BinaryTreeLnk<Data>::funzioneCostruzione( Data&& value, NodeLnk*& node) {
+  if(node == nullptr) node = new NodeLnk(std::move(value));
+  else if(std::move(value) < node ->Element()) funzioneCostruzione(std::move(value), node->lc);
+  else funzioneCostruzione(std::move(value), node->rc);
 }
 
 template <typename Data>
@@ -59,20 +62,23 @@ void BinaryTreeLnk<Data>::CopyNodes(NodeLnk*& destNode, const NodeLnk* sourceNod
   // Specific constructors
   template <typename Data>
   BinaryTreeLnk<Data>::BinaryTreeLnk(const MappableContainer<Data>& map){
-    root = nullptr; // Initialize the root as nullptr
-
-    map.Map([&](const Data& item){
-        InsertAtRoot(item, root);
-    });
-  }
-  
-  template <typename Data>
-  BinaryTreeLnk<Data>::BinaryTreeLnk(MutableMappableContainer<Data>&& map){
+    size = map.Size();
     root = nullptr;
     map.Map([&](const Data& item){
-        InsertAtRoot(std::move(item), root);
+      funzioneCostruzione(item, root);
     });
   }
+
+
+  template <typename Data>
+  BinaryTreeLnk<Data>::BinaryTreeLnk(MutableMappableContainer<Data>&& map){
+    size = map.Size();
+    root = nullptr;
+    map.Map([&](const Data& item){
+      funzioneCostruzione(std::move(item), root);
+    });
+  }
+
 
   /* ************************************************************************ */
 
@@ -168,7 +174,119 @@ void BinaryTreeLnk<Data>::CopyNodes(NodeLnk*& destNode, const NodeLnk* sourceNod
   }
 
 //--------------------------------
+//-----per non rendere la classe astratta-----------
+template <typename Data>
+void BinaryTreeLnk<Data>::PreOrderFold(const FoldFunctor fun, void* acc) const{
+  if (size != 0) PreOrderFold(fun, acc, &(Root()));
+}
 
+template <typename Data>
+void BinaryTreeLnk<Data>::PreOrderFold(const FoldFunctor fun, void* acc, NodeLnk* node) const {
+    if(node != nullptr){
+        fun(node->Element(), acc);     
+            PreOrderFold(fun, acc, node->lc); 
+            PreOrderFold(fun, acc, node->rc);
+    }
+}
+
+template <typename Data>
+void BinaryTreeLnk<Data>::PostOrderFold(const FoldFunctor fun, void* acc) const {
+  if (size != 0) PostOrderFold(fun, acc, &(Root()));
+}
+
+template <typename Data>
+void BinaryTreeLnk<Data>::PostOrderFold(const FoldFunctor fun, void* acc, NodeLnk* node) const {
+    if(node != nullptr){
+      PostOrderFold(fun, acc, node->lc);
+      PostOrderFold(fun, acc, node->rc);
+      fun(node->Element(), acc);
+    }
+}
+
+template <typename Data>
+void BinaryTreeLnk<Data>::InOrderFold(const FoldFunctor fun, void* acc) const {
+  if (size != 0) InOrderFold(fun, acc, &(Root()));
+}
+
+template <typename Data>
+void BinaryTreeLnk<Data>::InOrderFold(const FoldFunctor fun, void* acc, NodeLnk* node) const {
+    if(node != nullptr){
+        InOrderFold(fun, acc, node->lc);
+        fun(node->Element(), acc);
+        InOrderFold(fun, acc, node->rc);
+    } 
+}
+
+template <typename Data>
+void BinaryTreeLnk<Data>::BreadthFold(const FoldFunctor fun, void* acc) const {
+  if (size != 0) BreadthFold(fun, acc, &(Root()));
+}
+
+template <typename Data>
+void BinaryTreeLnk<Data>::BreadthFold(const FoldFunctor fun, void* acc, NodeLnk* node) const {
+    if (node == nullptr) {
+        return;
+    }
+
+          std::cout<< "--------------HERE     -------------" << std::endl;
+    NodeLnk* levelStart = node;
+
+    while (levelStart != nullptr) {
+          std::cout<< "--------------HERE     2-------------" << std::endl;
+        NodeLnk* current = levelStart;
+
+        while (current != nullptr) {
+          std::cout<< "--------------HERE     3-------------" << std::endl;
+            fun(current->it, acc); // Applica la funzione di piegatura al nodo corrente
+
+            if (current->HasLeftChild()) {
+          std::cout<< "--------------HERE     4-------------" << std::endl;
+                current = current->lc;
+          std::cout<< "--------------HERE     4 E -------------" << std::endl;
+            } else {
+          std::cout<< "--------------HERE     5-------------" << std::endl;
+                current = current->rc;
+            }
+        }
+
+          std::cout<< "--------------HERE     6-------------" << std::endl;
+        if (levelStart->HasLeftChild()) {
+          std::cout<< "--------------HERE     7------------" << std::endl;
+            levelStart = levelStart->lc;
+          std::cout<< "--------------HERE     7E-------------" << std::endl;
+        } else {
+          std::cout<< "--------------HERE     8-------------" << std::endl;
+            levelStart = levelStart->rc;
+        }
+    }
+          std::cout<< "--------------FINE------------" << std::endl;
+}
+
+//----------------------------------------
+//---------Aggunto per valori inattesi----
+template <typename Data>
+void BinaryTreeLnk<Data>::Fold(const FoldFunctor fun , void* acc) const{
+  PreOrderFold(fun, acc);
+}
+
+template <typename Data>
+void BinaryTreeLnk<Data>::Map(MapFunctor fun) const{
+  PreOrderMap(fun);
+}
+
+template <typename Data>
+void BinaryTreeLnk<Data>::PreOrderMap(MapFunctor fun) const{
+  PreOrderMap(fun, &(Root()));
+}
+
+template <typename Data>
+void BinaryTreeLnk<Data>::PreOrderMap(MapFunctor fun, NodeLnk* node) const{
+  if(node != nullptr){
+    fun(node->Element());
+    PreOrderMap(fun, node->lc);
+    PreOrderMap(fun, node->rc);
+  }
+}
 /* ************************************************************************** */
 
 }

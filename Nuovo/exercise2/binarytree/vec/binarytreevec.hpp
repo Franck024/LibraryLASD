@@ -158,6 +158,8 @@ void InOrderFold(const FoldFunctor, void*) const override;
 void InOrderFold(const FoldFunctor, void*, NodeVec*) const ;
 
 //--------------------------------------------------
+//--------per evitare risultato inatteso in esec ---
+inline void Fold(const FoldFunctor fun, void* acc) const override{PreOrderFold(fun,acc);}
 
 };
 

@@ -39,8 +39,8 @@ protected:
   public:
 
     Data it;
-    NodeLnk* rc; // nodo destro
-    NodeLnk* lc; // nodo sx
+    NodeLnk* rc = nullptr; // nodo destro
+    NodeLnk* lc = nullptr; // nodo sx
 
 //------ aggiunti io---------
     inline NodeLnk(){ rc = lc = nullptr; }
@@ -67,7 +67,6 @@ protected:
 NodeLnk* root = nullptr;
 
 void CopyNodes(NodeLnk*& , const NodeLnk* );
-NodeLnk& InsertAtRoot(const Data& , NodeLnk*& );
 
 public:
 
@@ -129,13 +128,30 @@ public:
 //-----per non rendere la classe astratta-----------
 
 using typename FoldableContainer<Data>::FoldFunctor;
-inline void PreOrderFold(const FoldFunctor, void*) const override{};
-inline void PostOrderFold(const FoldFunctor, void*) const override{};
-inline void InOrderFold(const FoldFunctor, void*) const override{};
-inline void BreadthFold(const FoldFunctor, void*) const override{};
+void PreOrderFold(const FoldFunctor, void*) const override;
+void PreOrderFold(const FoldFunctor, void*, NodeLnk*) const ;
+
+void PostOrderFold(const FoldFunctor, void*) const override;
+void PostOrderFold(const FoldFunctor, void*, NodeLnk*) const ;
+
+void InOrderFold(const FoldFunctor, void*) const override;
+void InOrderFold(const FoldFunctor, void*, NodeLnk*) const ;
+
+void BreadthFold(const FoldFunctor, void*) const override;
+void BreadthFold(const FoldFunctor, void*, NodeLnk*) const ;
 
 //--------------------------------------------------
+void funzioneCostruzione(const Data& , NodeLnk*& );
+void funzioneCostruzione(Data&& , NodeLnk*& );
 
+//--------per evitare risultato inatteso in esec ---
+void Fold(const FoldFunctor, void*) const override;
+
+using typename MappableContainer<Data>::MapFunctor;
+void Map(MapFunctor) const override;
+
+void PreOrderMap(MapFunctor) const override;
+void PreOrderMap(MapFunctor, NodeLnk*) const ;
 };
 
 /* ************************************************************************** */
