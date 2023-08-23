@@ -48,15 +48,14 @@ void BinaryTreeLnk<Data>::funzioneCostruzione( Data&& value, NodeLnk*& node) {
 }
 
 template <typename Data>
-void BinaryTreeLnk<Data>::CopyNodes(NodeLnk*& destNode, const NodeLnk* sourceNode) {
-    if (sourceNode->HasLeftChild()) {
-        destNode->lc = new NodeLnk(sourceNode->LeftChild().Element());
-        CopyNodes(destNode->lc, &sourceNode->LeftChild());
+typename BinaryTreeLnk<Data>::NodeLnk* BinaryTreeLnk<Data>::CopyNodes(NodeLnk* sourceNode) {
+    NodeLnk* node = nullptr;
+    if(sourceNode != nullptr){
+      node = new NodeLnk(sourceNode->Element());
+      if(sourceNode->HasLeftChild()) node->lc = CopyNodes(sourceNode->lc);
+      if(sourceNode->HasRightChild()) node->rc = CopyNodes(sourceNode->rc);
     }
-    if (sourceNode->HasRightChild()) {
-        destNode->rc = new NodeLnk(sourceNode->RightChild().Element());
-        CopyNodes(destNode->rc, &sourceNode->RightChild());
-    }
+    return node;
 }
 
   // Specific constructors
@@ -85,13 +84,9 @@ void BinaryTreeLnk<Data>::CopyNodes(NodeLnk*& destNode, const NodeLnk* sourceNod
   // Copy constructor
   template <typename Data>
   BinaryTreeLnk<Data>::BinaryTreeLnk(const BinaryTreeLnk<Data>& bt){
-    if (bt.root == nullptr) {
-        root = nullptr;
-    } else {
-        // Recursively copy nodes starting from the root
-        root = new NodeLnk(bt.root->Element());
-        CopyNodes(root, bt.root);
-    }
+    size = bt.size;
+    if (bt.root == nullptr) root = nullptr; 
+    else root = CopyNodes(bt.root);
   }
 
   // Move constructor
@@ -114,13 +109,9 @@ void BinaryTreeLnk<Data>::CopyNodes(NodeLnk*& destNode, const NodeLnk* sourceNod
   // Copy assignment
   template <typename Data>
   BinaryTreeLnk<Data>& BinaryTreeLnk<Data>::operator=(const BinaryTreeLnk<Data>& bt){
-    if (bt.root == nullptr) {
-        root = nullptr;
-    } else {
-        // Recursively copy nodes starting from the root
-        root = new NodeLnk(bt.root->Element());
-        CopyNodes(root, bt.root);
-    }
+    size = bt.size;
+    if (bt.root == nullptr) root = nullptr; 
+    else root = CopyNodes(bt.root);
     return *this;
   }
 
@@ -227,39 +218,19 @@ void BinaryTreeLnk<Data>::BreadthFold(const FoldFunctor fun, void* acc, NodeLnk*
     if (node == nullptr) {
         return;
     }
-
-          std::cout<< "--------------HERE     -------------" << std::endl;
     NodeLnk* levelStart = node;
 
     while (levelStart != nullptr) {
-          std::cout<< "--------------HERE     2-------------" << std::endl;
         NodeLnk* current = levelStart;
 
         while (current != nullptr) {
-          std::cout<< "--------------HERE     3-------------" << std::endl;
             fun(current->it, acc); // Applica la funzione di piegatura al nodo corrente
-
-            if (current->HasLeftChild()) {
-          std::cout<< "--------------HERE     4-------------" << std::endl;
-                current = current->lc;
-          std::cout<< "--------------HERE     4 E -------------" << std::endl;
-            } else {
-          std::cout<< "--------------HERE     5-------------" << std::endl;
-                current = current->rc;
-            }
+            if (current->HasLeftChild()) current = current->lc;
+              else current = current->rc;
         }
-
-          std::cout<< "--------------HERE     6-------------" << std::endl;
-        if (levelStart->HasLeftChild()) {
-          std::cout<< "--------------HERE     7------------" << std::endl;
-            levelStart = levelStart->lc;
-          std::cout<< "--------------HERE     7E-------------" << std::endl;
-        } else {
-          std::cout<< "--------------HERE     8-------------" << std::endl;
-            levelStart = levelStart->rc;
-        }
+        if (levelStart->HasLeftChild()) levelStart = levelStart->lc;
+          else levelStart = levelStart->rc;
     }
-          std::cout<< "--------------FINE------------" << std::endl;
 }
 
 //----------------------------------------

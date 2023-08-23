@@ -83,9 +83,12 @@ namespace lasd {
   // Copy constructor
   template <typename Data>
   BinaryTreeVec<Data>::BinaryTreeVec(const BinaryTreeVec<Data>& bt){
-    BinaryTreeVec<Data>* tmp = new BinaryTreeVec<Data>(bt);
-    std::swap(*tmp, *this);
-    delete tmp;
+    size = bt.size;
+    treevec = new Vector<NodeVec*>(size);
+    for(uint i = 0; i < size; i++){
+      NodeVec* node = new NodeVec(bt.treevec->operator[](i)->Element(), i, treevec);
+      treevec->operator[](i) = node;
+    }
   }
 
   // Move constructor
@@ -101,6 +104,8 @@ namespace lasd {
   template <typename Data>
   BinaryTreeVec<Data>::~BinaryTreeVec(){
     Clear();
+    delete treevec;
+    treevec = nullptr;
   }
 
   /* ************************************************************************ */
@@ -108,9 +113,12 @@ namespace lasd {
   // Copy assignment
   template <typename Data>
   BinaryTreeVec<Data>& BinaryTreeVec<Data>::operator=(const BinaryTreeVec<Data>& bt){
-    BinaryTreeVec<Data>* tmp = new BinaryTreeVec<Data>(bt);
-    std::swap(*tmp, *this);
-    delete tmp;
+    size = bt.size;
+    treevec = new Vector<NodeVec*>(size);
+    for(uint i = 0; i < size; i++){
+      NodeVec* node = new NodeVec(bt.treevec->operator[](i)->Element(), i, treevec);
+      treevec->operator[](i) = node;
+    }
     return *this;
   }
 
@@ -158,8 +166,10 @@ namespace lasd {
   // Specific member function (inherited from ClearableContainer)
   template <typename Data>
   void BinaryTreeVec<Data>::Clear(){
+    for( uint i = 0 ; i < size; i++){
+      delete (*treevec)[i];
+    }
     treevec->Clear();
-    treevec = nullptr;
     size = 0;
   }
 

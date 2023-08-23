@@ -66,7 +66,7 @@ protected:
 
 NodeLnk* root = nullptr;
 
-void CopyNodes(NodeLnk*& , const NodeLnk* );
+NodeLnk* CopyNodes(NodeLnk* );
 
 public:
 
