@@ -43,7 +43,7 @@ protected:
 
 
 //------ aggiunti io---------
-    inline NodeVec(){ element = nullptr; indexNode = 0; }
+    inline NodeVec()= default;
     NodeVec(Data&, ulong, Vector<NodeVec*>*);
     virtual ~NodeVec() = default;
 
@@ -87,7 +87,7 @@ public:
   /* ************************************************************************ */
 
   // Destructor
-  ~BinaryTreeVec() ;
+  virtual ~BinaryTreeVec() ;
 
   /* ************************************************************************ */
 

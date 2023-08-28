@@ -57,7 +57,7 @@ public:
   /* ************************************************************************ */
 
   // Destructor
-  ~BST() = default;
+  virtual ~BST() = default;
 
   /* ************************************************************************ */
 
@@ -147,9 +147,9 @@ protected:
   struct BST<Data>::NodeLnk*& FindPointerTo(const Data&, struct BST<Data>::NodeLnk*&) noexcept; // Both mutable & unmutable versions
 
   struct BST<Data>::NodeLnk* const& FindPointerToPredecessor(const Data&, struct BST<Data>::NodeLnk* const&) const noexcept; // Both mutable & unmutable versions
-  struct BST<Data>::NodeLnk*& FindPointerToPredecessor(const Data&, struct BST<Data>::NodeLnk*&) noexcept; // Both mutable & unmutable versions
+  struct BST<Data>::NodeLnk* FindPointerToPredecessor(const Data&, struct BST<Data>::NodeLnk*&) noexcept; // Both mutable & unmutable versions
   struct BST<Data>::NodeLnk* const& FindPointerToSuccessor(const Data&, struct BST<Data>::NodeLnk* const&) const noexcept; // Both mutable & unmutable versions
-  struct BST<Data>::NodeLnk*& FindPointerToSuccessor(const Data&, struct BST<Data>::NodeLnk*&) noexcept; // Both mutable & unmutable versions
+  struct BST<Data>::NodeLnk* FindPointerToSuccessor(const Data&, struct BST<Data>::NodeLnk*&) noexcept; // Both mutable & unmutable versions
 
 };
 

@@ -373,7 +373,7 @@ BTPreOrderIterator() = default; // aggiunto io
 
   // Specific member functions (inherited from ResettableIterator)
 
-  void Reset() noexcept; // (should not throw exceptions)
+  void Reset() noexcept override; // (should not throw exceptions)
 
 };
 
@@ -397,7 +397,7 @@ protected:
 public:
 
   // Specific constructors
-  BTPreOrderMutableIterator(const MutableBinaryTree<Data>&) ; // An iterator over a given mutable binary tree
+  BTPreOrderMutableIterator(MutableBinaryTree<Data>&) ; // An iterator over a given mutable binary tree
 
   /* ************************************************************************ */
 

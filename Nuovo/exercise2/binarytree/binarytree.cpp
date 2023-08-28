@@ -276,10 +276,10 @@ namespace lasd {
   // Specific constructors
   template <typename Data>
   BTPreOrderIterator<Data>::BTPreOrderIterator(const BinaryTree<Data>& bt){
-    // curr = &bt.Root();
+     curr = &bt.Root();
 
-    stk.Push(&bt.Root());
-    curr = stk.Top();
+  //   stk.Push(&bt.Root());
+    // curr = stk.Top();
   }
 
   /* ************************************************************************ */
@@ -287,21 +287,17 @@ namespace lasd {
   // Copy constructor
   template <typename Data>
   BTPreOrderIterator<Data>::BTPreOrderIterator(const BTPreOrderIterator& bt){
-    // curr = bt.curr;
-    // stk = bt.stk;
+    curr = bt.curr;
+    stk = bt.stk;
 
-    curr(bt.curr);
-    stk(bt.stk);
   }
 
   // Move constructor
   template <typename Data>
   BTPreOrderIterator<Data>::BTPreOrderIterator(BTPreOrderIterator&& bt) noexcept{
-    // std::swap(curr, bt.curr);
-    // stk = std::move(bt.stk);
 
-    curr(bt.curr);
-    stk(std::move(bt.stk));
+    curr = bt.curr;
+    stk = std::move(bt.stk);
   }
 
   /* ************************************************************************ */
@@ -317,11 +313,6 @@ namespace lasd {
   // Copy assignment
   template <typename Data>
   BTPreOrderIterator<Data>& BTPreOrderIterator<Data>::operator=(const BTPreOrderIterator& bt){
-    // BTPreOrderIterator<Data> *tmp = new BTPreOrderIterator<Data>(bt);
-    // std::swap(*tmp, *this);
-    // delete tmp;
-    // return *this;
-
     curr = bt.curr;
     stk = bt.stk;
     return *this;
@@ -330,11 +321,6 @@ namespace lasd {
   // Move assignment
   template <typename Data>
   BTPreOrderIterator<Data>& BTPreOrderIterator<Data>::operator=(BTPreOrderIterator&& bt) noexcept{
-    // BTPreOrderIterator<Data> *tmp = new BTPreOrderIterator<Data>(std::move(bt));
-    // std::swap(*tmp, *this);
-    // delete tmp;
-    // return *this;    
-
     curr = bt.curr;
     stk = std::move(bt.stk);
     return *this;
@@ -366,7 +352,8 @@ namespace lasd {
 
   template <typename Data>
   bool BTPreOrderIterator<Data>::Terminated() const noexcept{
-    return (curr == nullptr);
+    if(stk.Empty()) curr == nullptr;
+    return (curr == nullptr );
   }
 
   /* ************************************************************************ */
@@ -374,29 +361,62 @@ namespace lasd {
   // Specific member functions (inherited from ForwardIterator)
   template <typename Data>
   BTPreOrderIterator<Data>& BTPreOrderIterator<Data>::operator++(){
-    if(Terminated()) throw std::out_of_range("Fuori range");
-    if(curr->HasRightChild()) stk.Push(&(curr->RightChild()));
-    if(curr->HasLeftChild()) stk.Push(&(curr->LeftChild()));
-    if(stk.Empty()) curr = nullptr;
-    else curr = stk.TopNPop();
+    // if(!stk.Empty()){
+    //   curr = stk.Top();
+    //   stk.Pop();
+
+    //   if(curr->HasRightChild()) stk.Push(&(curr->RightChild()));
+    //   if(curr->HasLeftChild()) stk.Push(&(curr->LeftChild()));
+    // }else curr = nullptr;
+    // return *this;
+    //-------------------------------------------
+    if(curr != nullptr){
+      if(curr->HasRightChild()) stk.Push(&(curr->RightChild()));
+      if(curr->HasLeftChild()) stk.Push(&(curr->LeftChild()));
+      if(!stk.Empty()){
+        curr = stk.Top();
+        stk.Pop();  
+      }  else curr = nullptr;
+    }
     return *this;
-  }
+    //----------------------------------------------
+  //   if(curr->HasLeftChild()){
+  //     if(curr->HasRightChild()) stk.Push(&(curr->RightChild()));
+  //     curr = &(curr->LeftChild());
+  //     return *this;
+  //   }
+  //   if(curr->HasRightChild()){
+  //     curr = &(curr->RightChild());
+  //     return *this;
+  //   }
+  //   if(!stk.Empty()){
+  //     curr = stk.Top();
+  //     stk.Pop();
+  //     return *this;
+  //   }else{
+  //     curr = nullptr;
+  //     return *this;
+  //   }
+   }
 
   /* ************************************************************************ */
 
   // Specific member functions (inherited from ResettableIterator)
   template <typename Data>
   void BTPreOrderIterator<Data>::Reset()noexcept{
-    curr = nullptr;
+        curr = nullptr;
     stk.Clear();
   }
-//--------------------------------------------
+//--------------------------------------------sdaffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
 //--------------BTPreOrderMutableIterator---------
 
   // Specific constructors
   template <typename Data>
-  BTPreOrderMutableIterator<Data>::BTPreOrderMutableIterator(const MutableBinaryTree<Data>& bt) : BTPreOrderIterator<Data>(bt){
-    std::cout << "-----------------HERE-    -------------" << std::endl;}
+  BTPreOrderMutableIterator<Data>::BTPreOrderMutableIterator( MutableBinaryTree<Data>& bt) : BTPreOrderIterator<Data>(bt){
+    // if(curr != nullptr)
+    //   stk.Push(curr);
+   // curr = &bt.Root();
+    }
 
   /* ************************************************************************ */
 
@@ -419,7 +439,6 @@ namespace lasd {
   // Destructor
   template <typename Data>
   BTPreOrderMutableIterator<Data>::~BTPreOrderMutableIterator(){
-    delete curr;
     curr = nullptr;
     stk.Clear();
   }

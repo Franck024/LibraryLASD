@@ -54,8 +54,6 @@ namespace lasd {
   // Specific constructors
   template <typename Data>
   BinaryTreeVec<Data>::BinaryTreeVec(const MappableContainer<Data>& mp){  
-
-    if(mp.Size()){
       size = mp.Size();
       treevec = new Vector<NodeVec*>(size); 
       uint i = 0;
@@ -64,7 +62,7 @@ namespace lasd {
         treevec->operator[](i) = newNode;
         i++;
       });   
-    }
+    
   } 
 
   template <typename Data>
@@ -94,6 +92,7 @@ namespace lasd {
   // Move constructor
   template <typename Data>
   BinaryTreeVec<Data>::BinaryTreeVec(BinaryTreeVec<Data>&& bt) noexcept{
+    treevec = new Vector<NodeVec*>();
     std::swap(size, bt.size);
     std::swap(treevec, bt.treevec);
   }
