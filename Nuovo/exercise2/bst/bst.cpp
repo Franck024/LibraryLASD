@@ -227,6 +227,8 @@ namespace lasd {
     if(delNodePtr == nullptr) return false;
     Detach(delNodePtr);
     //delete delNode;
+    size--;
+    std::cout<< std::endl << " rem size=  " << size <<std::endl;
     return true;
   }  
 
@@ -271,14 +273,14 @@ namespace lasd {
   template <typename Data>
   struct BST<Data>::NodeLnk* BST<Data>::Detach(struct BST<Data>::NodeLnk*& node) noexcept {
     if(node == nullptr) return nullptr;
-
     if(node->lc == nullptr) return Skip2Right(node);
     else if(node->rc == nullptr) return Skip2Left(node);
       else{
-        struct BST<Data>::NodeLnk* detach = DetachMax(node->lc);
-        node->it = detach->it;
-        return detach;
-      }return nullptr;
+        struct BST<Data>::NodeLnk* detNode = DetachMax(node->lc);
+        detNode->lc = node->lc;
+        detNode->rc = node->rc;
+        return detNode;
+      }
   } 
 
   template <typename Data>
@@ -296,11 +298,6 @@ namespace lasd {
   template <typename Data>
   struct BST<Data>::NodeLnk* BST<Data>::DetachMax(struct BST<Data>::NodeLnk*& node) noexcept {
     if(node == nullptr) return nullptr;
-    // struct BST<Data>::NodeLnk* maxNode = FindPointerToMax(node);
-    // if(maxNode->rc == nullptr) root = maxNode->lc;
-    // else maxNode->rc = Skip2Left(maxNode->rc);
-    // size--;
-    // return maxNode;
     if(node->rc == nullptr){
       struct BST<Data>::NodeLnk* maxNode = node;
       node = node->lc;
@@ -314,8 +311,7 @@ namespace lasd {
   struct BST<Data>::NodeLnk* BST<Data>::Skip2Left(struct BST<Data>::NodeLnk*& node) noexcept {
     if(node == nullptr) return nullptr;
     struct BST<Data>::NodeLnk* skipLeft = node->lc;
-    delete node;   
-    node = nullptr; 
+    node->lc = nullptr;
     return skipLeft;
   } 
 
@@ -323,8 +319,7 @@ namespace lasd {
   struct BST<Data>::NodeLnk* BST<Data>::Skip2Right(struct BST<Data>::NodeLnk*& node) noexcept {  
     if(node == nullptr) return nullptr;
     struct BST<Data>::NodeLnk* skipRight = node->rc;
-    delete node;
-    node = nullptr;
+    node->rc = nullptr;
     return skipRight;
   } 
 
@@ -394,13 +389,17 @@ namespace lasd {
 
   template <typename Data>
   struct BST<Data>::NodeLnk* BST<Data>::FindPointerToPredecessor(const Data& dato, struct BST<Data>::NodeLnk*& node) noexcept {
+    std::cout<< std::endl << " F size=  " << size <<std::endl;
     struct BST<Data>::NodeLnk* pre = nullptr;
     while(node != nullptr){
+    std::cout<< std::endl << " Fw size=  " << size <<std::endl;
         if(node->it < dato){
+    std::cout<< std::endl << " Ff size=  " << size <<std::endl;
           pre = node;
           node = node->rc;
         }else node = node->lc;
       }
+    std::cout<< std::endl << "Fn size=  " << size <<std::endl;
     return pre;
   } 
 
