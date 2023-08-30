@@ -137,6 +137,7 @@ namespace lasd {
     if(preNode == nullptr) throw std::out_of_range("Nessun predecessore trovato");
     Data preValue = preNode->it;
     Detach(preNode);
+    size--;
     return preValue;
   }  
 
@@ -147,6 +148,7 @@ namespace lasd {
     struct BST<Data>::NodeLnk* preNode = FindPointerToPredecessor(value, root);
     if(preNode == nullptr) return;
     Detach(preNode);
+    size--;
   }  
 
   template <typename Data>
@@ -166,33 +168,35 @@ namespace lasd {
     if(succNode == nullptr) throw std::out_of_range("Nessun successore trovato");
     Data succValue = succNode->it;
     Detach(succNode);
+    size--;
     return succValue;
   } 
 
   template <typename Data>
   void BST<Data>::RemoveSuccessor(const Data& value)  {
-    // if(root == nullptr) throw std::length_error("Vuoto");
-    // struct BST<Data>::NodeLnk* succNode = FindPointerToSuccessor(value, root);
-    // if(succNode == nullptr) return;
-    // Detach(succNode);
-    //---------------------------------
     if(root == nullptr) throw std::length_error("Vuoto");
-    struct BST<Data>::NodeLnk* node = FindPointerTo(value, root);
-    if (node == nullptr) throw std::invalid_argument("Nodo non trovato");
     struct BST<Data>::NodeLnk* succNode = FindPointerToSuccessor(value, root);
-    if(succNode == nullptr) throw std::out_of_range("Successore non trovato");
-    if(succNode->rc != nullptr){
-      struct BST<Data>::NodeLnk* succR = succNode->rc;
-      succNode->it = succR->it;
-      succNode->lc = succR->lc;
-      succNode->rc = succR->rc;
-      delete succR;
-    }else{
-      if(succNode == node->lc) node->lc = nullptr;
-      else node->rc = nullptr;
-      delete succNode;
-    }
+    if(succNode == nullptr) return;
+    Detach(succNode);
     size--;
+    //---------------------------------
+    // if(root == nullptr) throw std::length_error("Vuoto");
+    // struct BST<Data>::NodeLnk* node = FindPointerTo(value, root);
+    // if (node == nullptr) throw std::invalid_argument("Nodo non trovato");
+    // struct BST<Data>::NodeLnk* succNode = FindPointerToSuccessor(value, root);
+    // if(succNode == nullptr) throw std::out_of_range("Successore non trovato");
+    // if(succNode->rc != nullptr){
+    //   struct BST<Data>::NodeLnk* succR = succNode->rc;
+    //   succNode->it = succR->it;
+    //   succNode->lc = succR->lc;
+    //   succNode->rc = succR->rc;
+    //   delete succR;
+    // }else{
+    //   if(succNode == node->lc) node->lc = nullptr;
+    //   else node->rc = nullptr;
+    //   delete succNode;
+    // }
+    // size--;
   } 
 
   /* ************************************************************************ */
@@ -225,10 +229,9 @@ namespace lasd {
     if(root == nullptr) throw std::length_error("Albero vuoto");
     struct BST<Data>::NodeLnk*& delNodePtr = FindPointerTo(dato, root);
     if(delNodePtr == nullptr) return false;
-    Detach(delNodePtr);
-    //delete delNode;
+    struct BST<Data>::NodeLnk* delNode = Detach(delNodePtr);
+    delete delNode;
     size--;
-    std::cout<< std::endl << " rem size=  " << size <<std::endl;
     return true;
   }  
 
@@ -277,8 +280,7 @@ namespace lasd {
     else if(node->rc == nullptr) return Skip2Left(node);
       else{
         struct BST<Data>::NodeLnk* detNode = DetachMax(node->lc);
-        detNode->lc = node->lc;
-        detNode->rc = node->rc;
+            std::swap(node->it, detNode->it);
         return detNode;
       }
   } 
@@ -309,17 +311,21 @@ namespace lasd {
 
   template <typename Data>
   struct BST<Data>::NodeLnk* BST<Data>::Skip2Left(struct BST<Data>::NodeLnk*& node) noexcept {
-    if(node == nullptr) return nullptr;
-    struct BST<Data>::NodeLnk* skipLeft = node->lc;
-    node->lc = nullptr;
+    struct BST<Data>::NodeLnk* skipLeft = nullptr;
+    if(node!=nullptr){
+        std::swap(skipLeft,node->lc);
+        std::swap(skipLeft,node);
+    }
     return skipLeft;
   } 
 
   template <typename Data>
   struct BST<Data>::NodeLnk* BST<Data>::Skip2Right(struct BST<Data>::NodeLnk*& node) noexcept {  
-    if(node == nullptr) return nullptr;
-    struct BST<Data>::NodeLnk* skipRight = node->rc;
-    node->rc = nullptr;
+    struct BST<Data>::NodeLnk* skipRight = nullptr;
+    if(node!=nullptr){
+        std::swap(skipRight,node->rc);
+        std::swap(skipRight,node);
+    }
     return skipRight;
   } 
 
@@ -378,28 +384,46 @@ namespace lasd {
   template <typename Data>
   struct BST<Data>::NodeLnk* const& BST<Data>::FindPointerToPredecessor(const Data& dato, struct BST<Data>::NodeLnk* const& node) const noexcept {
     struct BST<Data>::NodeLnk* pre = nullptr;
-    while(node != nullptr){
-        if(node->it <dato){
-          pre = node;
-          node = node->rc;
-        }else node = node->lc;
+    struct BST<Data>::NodeLnk* curr = node;
+    while(curr != nullptr){
+      if(curr->it == dato){
+        if(curr->lc != nullptr){
+          pre = curr->lc;
+          while(pre->rc != nullptr){
+            pre = pre->rc;
+          }
+        }
+        break;
       }
+      else if(curr->it > dato) curr = curr->lc;
+        else{
+          pre = curr;
+          curr = curr->rc;
+        }
+    }
     return pre;
   } 
 
   template <typename Data>
   struct BST<Data>::NodeLnk* BST<Data>::FindPointerToPredecessor(const Data& dato, struct BST<Data>::NodeLnk*& node) noexcept {
-    std::cout<< std::endl << " F size=  " << size <<std::endl;
     struct BST<Data>::NodeLnk* pre = nullptr;
-    while(node != nullptr){
-    std::cout<< std::endl << " Fw size=  " << size <<std::endl;
-        if(node->it < dato){
-    std::cout<< std::endl << " Ff size=  " << size <<std::endl;
-          pre = node;
-          node = node->rc;
-        }else node = node->lc;
+    struct BST<Data>::NodeLnk* curr = node;
+    while(curr != nullptr){
+      if(curr->it == dato){
+        if(curr->lc != nullptr){
+          pre = curr->lc;
+          while(pre->rc != nullptr){
+            pre = pre->rc;
+          }
+        }
+        break;
       }
-    std::cout<< std::endl << "Fn size=  " << size <<std::endl;
+      else if(curr->it > dato) curr = curr->lc;
+        else{
+          pre = curr;
+          curr = curr->rc;
+        }
+    }
     return pre;
   } 
 
@@ -418,12 +442,22 @@ namespace lasd {
   template <typename Data>
   struct BST<Data>::NodeLnk* BST<Data>::FindPointerToSuccessor(const Data& dato, struct BST<Data>::NodeLnk*& node) noexcept {
     struct BST<Data>::NodeLnk* succ = nullptr;
-    while(node != nullptr){
-        if(node->it > dato){
-          succ = node;
-          node = node->lc;
-        }else node = node->rc;
-      }
+    struct BST<Data>::NodeLnk* curr = node;
+
+    while (curr != nullptr) {
+        if (curr->it == dato) {
+            if (curr->rc != nullptr) {
+                succ = curr->rc;
+                while (succ->lc != nullptr) {
+                    succ = succ->lc;
+                }
+            }
+            break;  
+        } else if (dato < curr->it) {
+            succ = curr;
+            curr = curr->lc;
+        } else curr = curr->rc;
+    }
     return succ;
   }  
 
