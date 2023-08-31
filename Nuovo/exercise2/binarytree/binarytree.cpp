@@ -137,7 +137,7 @@ namespace lasd {
   void BinaryTree<Data>::InOrderMap( MapFunctor fun, Node* node)const{
     if(node != nullptr){
     if(node->HasLeftChild())
-        InOrderMap(fun, &(node->LeftChild()));
+      InOrderMap(fun, &(node->LeftChild()));
 
     fun(node->Element());
 
@@ -277,6 +277,7 @@ namespace lasd {
   template <typename Data>
   BTPreOrderIterator<Data>::BTPreOrderIterator(const BinaryTree<Data>& bt){
      curr = &bt.Root();
+     init = curr;
 
   //   stk.Push(&bt.Root());
     // curr = stk.Top();
@@ -289,7 +290,7 @@ namespace lasd {
   BTPreOrderIterator<Data>::BTPreOrderIterator(const BTPreOrderIterator& bt){
     curr = bt.curr;
     stk = bt.stk;
-
+init = curr;
   }
 
   // Move constructor
@@ -298,6 +299,7 @@ namespace lasd {
 
     curr = bt.curr;
     stk = std::move(bt.stk);
+    init = curr;
   }
 
   /* ************************************************************************ */
@@ -305,7 +307,8 @@ namespace lasd {
   // Destructor
   template <typename Data>
   BTPreOrderIterator<Data>::~BTPreOrderIterator(){
-    Reset();
+    stk.Clear();
+    curr = nullptr;
   }
 
   /* ************************************************************************ */
@@ -352,7 +355,6 @@ namespace lasd {
 
   template <typename Data>
   bool BTPreOrderIterator<Data>::Terminated() const noexcept{
-    if(stk.Empty()) curr == nullptr;
     return (curr == nullptr );
   }
 
@@ -404,10 +406,10 @@ namespace lasd {
   // Specific member functions (inherited from ResettableIterator)
   template <typename Data>
   void BTPreOrderIterator<Data>::Reset()noexcept{
-        curr = nullptr;
+    curr = init;
     stk.Clear();
   }
-//--------------------------------------------sdaffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+//--------------------------------------------
 //--------------BTPreOrderMutableIterator---------
 
   // Specific constructors
@@ -439,8 +441,8 @@ namespace lasd {
   // Destructor
   template <typename Data>
   BTPreOrderMutableIterator<Data>::~BTPreOrderMutableIterator(){
-    curr = nullptr;
     stk.Clear();
+    curr = nullptr;
   }
 
   /* ************************************************************************ */
@@ -493,6 +495,7 @@ namespace lasd {
   BTPostOrderIterator<Data>::BTPostOrderIterator(const BinaryTree<Data>& bt){
     curr = &bt.Root();
     last = curr;
+    init = curr;
   }
 
   /* ************************************************************************ */
@@ -503,6 +506,7 @@ namespace lasd {
     curr = bt.curr;
     stk = bt.stk;
     last = bt.last;
+    init = curr;
   }
 
   // Move constructor
@@ -511,6 +515,7 @@ namespace lasd {
     std::swap(curr, bt.curr);
     std::swap(last, bt.last);
     stk = std::move(bt.stk);
+    init = curr;
   }
 
   /* ************************************************************************ */
@@ -518,7 +523,9 @@ namespace lasd {
   // Destructor
   template <typename Data>
   BTPostOrderIterator<Data>::~BTPostOrderIterator(){
-    Reset();
+    stk.Clear();
+    curr = nullptr;
+    last = nullptr;
   }
 
   /* ************************************************************************ */
@@ -605,8 +612,8 @@ namespace lasd {
   template <typename Data>
   void BTPostOrderIterator<Data>::Reset() noexcept{
     stk.Clear();
-    curr = nullptr;
-    last = nullptr;
+    curr = init;
+ //   last = nullptr;
   }
 
 //---------------------------------------------
@@ -642,8 +649,6 @@ namespace lasd {
   template <typename Data>
   BTPostOrderMutableIterator<Data>::~BTPostOrderMutableIterator() {
     stk.Clear();
-    delete curr;
-    delete last;
     curr = nullptr;
     last = nullptr;
   }
@@ -699,6 +704,7 @@ namespace lasd {
   template <typename Data>
   BTInOrderIterator<Data>::BTInOrderIterator(const BinaryTree<Data>& bt){
     curr = &bt.Root();
+    init = curr;
     while(curr->HasLeftChild()){
       stk.Push(curr);
       curr = &(curr->LeftChild());
@@ -712,6 +718,7 @@ namespace lasd {
   BTInOrderIterator<Data>::BTInOrderIterator(const BTInOrderIterator<Data>& bt){
     curr = &bt.Root();
     stk = bt.stk;
+    init = curr;
   }
 
   // Move constructor
@@ -719,6 +726,7 @@ namespace lasd {
   BTInOrderIterator<Data>::BTInOrderIterator(BTInOrderIterator<Data>&& bt) noexcept{
     std::swap(curr, bt.curr);
     stk = std::move(bt.stk);
+    init = curr;
   }
 
   /* ************************************************************************ */
@@ -726,7 +734,8 @@ namespace lasd {
   // Destructor
   template <typename Data>
   BTInOrderIterator<Data>::~BTInOrderIterator(){
-    Reset();
+    stk.Clear();
+    curr = nullptr;
   }
 
   /* ************************************************************************ */
@@ -802,7 +811,7 @@ namespace lasd {
   template <typename Data>
   void BTInOrderIterator<Data>::Reset() noexcept{
     stk.Clear();
-    curr = nullptr;
+    curr = init;
   }
 
 //---------------------------------------------
@@ -835,7 +844,6 @@ namespace lasd {
   // Destructor
   template <typename Data>
   BTInOrderMutableIterator<Data>::~BTInOrderMutableIterator(){
-    delete curr;
     curr = nullptr;
     stk.Clear();
   }
@@ -888,6 +896,7 @@ namespace lasd {
   template <typename Data>
   BTBreadthIterator<Data>::BTBreadthIterator(const BinaryTree<Data>& bt){
     curr = &bt.Root();
+    init = curr;
   }
 
   /* ************************************************************************ */
@@ -897,6 +906,7 @@ namespace lasd {
   BTBreadthIterator<Data>::BTBreadthIterator(const BTBreadthIterator<Data>& bt){
     curr = bt.curr;
     que = bt.que;
+    init = curr;
   }
 
   // Move constructor
@@ -904,6 +914,7 @@ namespace lasd {
   BTBreadthIterator<Data>::BTBreadthIterator(BTBreadthIterator<Data>&& bt) noexcept{
     std::swap(curr, bt.curr);
     que = std::move(bt.que);
+    init = curr;
   }
 
   /* ************************************************************************ */
@@ -911,7 +922,8 @@ namespace lasd {
   // Destructor
   template <typename Data>
   BTBreadthIterator<Data>::~BTBreadthIterator(){
-    Reset();
+    que.Clear();
+    curr = nullptr;
   }
 
   /* ************************************************************************ */
@@ -983,7 +995,7 @@ namespace lasd {
   // Specific member functions (inherited from ResettableIterator)
   template <typename Data>
   void BTBreadthIterator<Data>::Reset() noexcept{
-    curr = nullptr;
+    curr = init;
     que.Clear();
   }
 
@@ -1017,9 +1029,8 @@ namespace lasd {
   // Destructor
   template <typename Data>
   BTBreadthMutableIterator<Data>::~BTBreadthMutableIterator(){
-    delete curr;
-    curr= nullptr;
     que.Clear();
+    curr = nullptr;
   }
 
   /* ************************************************************************ */

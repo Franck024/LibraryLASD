@@ -174,9 +174,12 @@ void BinaryTreeLnk<Data>::PreOrderFold(const FoldFunctor fun, void* acc) const{
 template <typename Data>
 void BinaryTreeLnk<Data>::PreOrderFold(const FoldFunctor fun, void* acc, NodeLnk* node) const {
     if(node != nullptr){
-        fun(node->Element(), acc);     
-            PreOrderFold(fun, acc, node->lc); 
-            PreOrderFold(fun, acc, node->rc);
+        // fun(node->Element(), acc);     
+        //     PreOrderFold(fun, acc, node->lc); 
+        //     PreOrderFold(fun, acc, node->rc);
+        fun(node->Element(), acc);
+        if(node->HasLeftChild())  PreOrderFold(fun, acc, &(node->LeftChild()));
+        if(node->HasRightChild())  PreOrderFold(fun, acc, &(node->RightChild()));
     }
 }
 
@@ -218,18 +221,14 @@ void BinaryTreeLnk<Data>::BreadthFold(const FoldFunctor fun, void* acc, NodeLnk*
     if (node == nullptr) {
         return;
     }
-    NodeLnk* levelStart = node;
-
-    while (levelStart != nullptr) {
-        NodeLnk* current = levelStart;
-
-        while (current != nullptr) {
-            fun(current->it, acc); // Applica la funzione di piegatura al nodo corrente
-            if (current->HasLeftChild()) current = current->lc;
-              else current = current->rc;
-        }
-        if (levelStart->HasLeftChild()) levelStart = levelStart->lc;
-          else levelStart = levelStart->rc;
+    QueueLst<NodeLnk*> que;
+    que.Enqueue(node);
+    while(!(que.Empty())){
+      struct BinaryTreeLnk<Data>::NodeLnk* tmp = que.Head();
+      que.Dequeue();
+      fun(tmp->Element(), acc);
+      if(tmp->HasLeftChild()) que.Enqueue(&(tmp->LeftChild()));
+      if(tmp->HasRightChild()) que.Enqueue(&(tmp->RightChild()));
     }
 }
 

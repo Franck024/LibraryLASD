@@ -321,6 +321,7 @@ protected:
 
   struct BinaryTree<Data>::Node* curr = nullptr;
   StackLst<struct BinaryTree<Data>::Node*> stk;
+  struct BinaryTree<Data>::Node* init = nullptr;
 
 public:
 BTPreOrderIterator() = default; // aggiunto io
@@ -451,6 +452,7 @@ protected:
   struct BinaryTree<Data>::Node* curr = nullptr;
   struct BinaryTree<Data>::Node* last = nullptr;
   StackLst<struct BinaryTree<Data>::Node*> stk;
+  struct BinaryTree<Data>::Node* init = nullptr;
 
 public:
 BTPostOrderIterator() = default; // aggiunto io
@@ -581,6 +583,7 @@ protected:
 
   struct BinaryTree<Data>::Node* curr = nullptr;
   StackLst<struct BinaryTree<Data>::Node*> stk;
+  struct BinaryTree<Data>::Node* init = nullptr;
 
 public:
 BTInOrderIterator() = default; // aggiunto io
@@ -711,6 +714,7 @@ protected:
 
   struct BinaryTree<Data>::Node* curr = nullptr;
   QueueLst<struct BinaryTree<Data>::Node*> que;
+  struct BinaryTree<Data>::Node* init = nullptr;
 
 public:
 BTBreadthIterator() = default; // aggiunto io

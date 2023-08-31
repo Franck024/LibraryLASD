@@ -100,7 +100,7 @@ void stestBSTInt(uint& testnum, uint& testerr) {
 
     PredecessorNRemove(loctestnum, loctesterr, bst, true, 7, 6);
     SuccessorNRemove(loctestnum, loctesterr, bst, true, 0, 1);
-
+MapInOrder(loctestnum, loctesterr, (const lasd::BST<int>) bst, true, &MapPrint<int>);
     FoldPreOrder(loctestnum, loctesterr, bst, true, &FoldAdd<int>, 0, 6);
     FoldInOrder(loctestnum, loctesterr, bst, true, &FoldAdd<int>, 0, 6);
     FoldPostOrder(loctestnum, loctesterr, bst, true, &FoldAdd<int>, 0, 6);

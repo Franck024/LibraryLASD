@@ -57,8 +57,8 @@ protected:
     NodeLnk& RightChild() const override;  
     NodeLnk& RightChild() override;
 
-    inline bool HasLeftChild() const noexcept override{ return (lc == nullptr); };
-    inline bool HasRightChild() const noexcept override{ return (rc == nullptr); };
+    inline bool HasLeftChild() const noexcept override{ return !(lc == nullptr); };
+    inline bool HasRightChild() const noexcept override{ return !(rc == nullptr); };
 
 //-----------------------------
   
