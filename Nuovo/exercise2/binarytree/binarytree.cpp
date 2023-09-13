@@ -490,10 +490,26 @@ init = curr;
 //---------------------------------------------
 //--------------BTPostOrderIterator------------
 
+//Function inizializzazione
+template <typename Data>
+void BTPostOrderIterator<Data>::inizializzazione() {
+    while (curr->HasLeftChild()) {
+        stk.Push(curr);
+        curr = &(curr->LeftChild());
+    }
+
+    if(curr->HasRightChild()) {
+        stk.Push(curr);
+        curr = &(curr->RightChild());
+        inizializzazione();
+    }
+}
+
   // Specific constructors
   template <typename Data>
   BTPostOrderIterator<Data>::BTPostOrderIterator(const BinaryTree<Data>& bt){
     curr = &bt.Root();
+    inizializzazione();
     last = curr;
     init = curr;
   }
@@ -536,15 +552,17 @@ init = curr;
     curr = bt.curr;
     stk = bt.stk;
     last = bt.last;
+    init = curr;
     return *this;    
   }
 
   // Move assignment
   template <typename Data>
   BTPostOrderIterator<Data>& BTPostOrderIterator<Data>::operator=(BTPostOrderIterator&& bt) noexcept{
-    BTPostOrderIterator<Data> *tmp = new BTPostOrderIterator<Data>(bt);
-    std::swap(*tmp, *this);
-    delete tmp;
+    std::swap(curr, bt.curr);
+    std::swap(last, bt.last);
+    stk = std::move(bt.stk);
+    init = curr;
     return *this;   
   }
 
@@ -582,25 +600,21 @@ init = curr;
   // Specific member functions (inherited from ForwardIterator)
   template <typename Data>
   BTPostOrderIterator<Data>& BTPostOrderIterator<Data>::operator++(){
-    if (!stk.Empty()) {
-        // Continua ad estrarre nodi dallo stack finché non si trova un nodo valido
-        while (curr != nullptr || !stk.Empty()) {
-            if (curr != nullptr) {
-                stk.Push(curr);
-                curr = &(curr->LeftChild());
-            } else {
-                struct BinaryTree<Data>::Node* temp = stk.Top();
-                if (&(temp->RightChild()) != nullptr && &(temp->RightChild()) != last) {
-                    curr = &(temp->RightChild());
-                } else {
-                    curr = nullptr;
-                    last = temp;
-                    stk.Pop();
-                }
-            }
+      if(Terminated())
+        throw std::out_of_range("Iterator PostOrder terminated.");
+
+    if(stk.Empty()){
+        curr = nullptr;
+        last = nullptr;
+    }else{
+        curr = stk.TopNPop();
+        if(curr->HasRightChild() && !(&(curr->RightChild())==last)){
+            stk.Push(curr);
+            curr = &(curr->RightChild());
+            inizializzazione();
         }
     }
-
+    last = curr;
     return *this;
   }
 
@@ -613,7 +627,7 @@ init = curr;
   void BTPostOrderIterator<Data>::Reset() noexcept{
     stk.Clear();
     curr = init;
- //   last = nullptr;
+    last = init;
   }
 
 //---------------------------------------------
@@ -621,18 +635,15 @@ init = curr;
 
   // Specific constructors
   template <typename Data>
-  BTPostOrderMutableIterator<Data>::BTPostOrderMutableIterator(const MutableBinaryTree<Data>& bt) : BTPostOrderIterator<Data>(bt){
-    curr = nullptr;
+  BTPostOrderMutableIterator<Data>::BTPostOrderMutableIterator( MutableBinaryTree<Data>& bt) : BTPostOrderIterator<Data>(bt){
   }
 
   /* ************************************************************************ */
 
   // Copy constructor
   template <typename Data>
-  BTPostOrderMutableIterator<Data>::BTPostOrderMutableIterator(const BTPostOrderMutableIterator& bt) {
-    curr = bt.curr;
-    stk = bt.stk;
-    last = bt.last;
+  BTPostOrderMutableIterator<Data>::BTPostOrderMutableIterator(const BTPostOrderMutableIterator& bt) : BTPostOrderIterator<Data>(bt){
+
   }
 
   // Move constructor
@@ -640,6 +651,7 @@ init = curr;
   BTPostOrderMutableIterator<Data>::BTPostOrderMutableIterator(BTPostOrderMutableIterator&& bt) noexcept{
     std::swap(curr, bt.curr);
     std::swap(last, bt.last);
+    init = curr;
     stk = std::move(bt.stk);    
   }
 
@@ -661,6 +673,7 @@ init = curr;
     curr = bt.curr;
     stk = bt.stk;
     last = bt.last;
+    init = curr;
     return *this;  
   }
 
@@ -819,7 +832,7 @@ init = curr;
 
   // Specific constructors
   template <typename Data>
-  BTInOrderMutableIterator<Data>::BTInOrderMutableIterator(const MutableBinaryTree<Data>& bt) : BTInOrderIterator<Data>(bt){
+  BTInOrderMutableIterator<Data>::BTInOrderMutableIterator( MutableBinaryTree<Data>& bt) : BTInOrderIterator<Data>(bt){
     curr = nullptr;
   }
 

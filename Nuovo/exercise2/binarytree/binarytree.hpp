@@ -445,7 +445,7 @@ class BTPostOrderIterator : virtual public ResettableIterator<Data>,
 
 private:
 
-  // ...
+  void inizializzazione();
 
 protected:
 
@@ -526,11 +526,12 @@ protected:
   struct MutableBinaryTree<Data>::MutableNode* curr = nullptr;
   struct MutableBinaryTree<Data>::MutableNode* last = nullptr;
   StackLst<struct MutableBinaryTree<Data>::MutableNode*> stk;
+  struct BinaryTree<Data>::Node* init = nullptr;
 
 public:
 
   // Specific constructors
-  BTPostOrderMutableIterator(const MutableBinaryTree<Data>&) ; // An iterator over a given mutable binary tree
+  BTPostOrderMutableIterator( MutableBinaryTree<Data>&) ; // An iterator over a given mutable binary tree
 
   /* ************************************************************************ */
 
@@ -661,7 +662,7 @@ protected:
 public:
 
   // Specific constructors
-  BTInOrderMutableIterator(const MutableBinaryTree<Data>&) ; // An iterator over a given mutable binary tree
+  BTInOrderMutableIterator( MutableBinaryTree<Data>&) ; // An iterator over a given mutable binary tree
 
   /* ************************************************************************ */
 
