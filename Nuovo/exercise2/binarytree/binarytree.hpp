@@ -658,6 +658,7 @@ protected:
 
   struct MutableBinaryTree<Data>::MutableNode* curr = nullptr;
   StackLst<struct MutableBinaryTree<Data>::MutableNode*> stk;
+  struct BinaryTree<Data>::Node* init = nullptr;
 
 public:
 
