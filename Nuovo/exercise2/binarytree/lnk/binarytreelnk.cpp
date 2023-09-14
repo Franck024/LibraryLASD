@@ -36,15 +36,17 @@ namespace lasd {
 template <typename Data>
 void BinaryTreeLnk<Data>::funzioneCostruzione(const Data& value, NodeLnk*& node) {
   if(node == nullptr) node = new NodeLnk(value);
-  else if(value < node ->Element()) funzioneCostruzione(value, node->lc);
-  else funzioneCostruzione(value, node->rc);
+  else if(!(node->HasLeftChild())) funzioneCostruzione(value, node->lc);
+  else if(!(node->HasRightChild())) funzioneCostruzione(value, node->rc);
+  else funzioneCostruzione(value, node->lc);
 }
 
 template <typename Data>
 void BinaryTreeLnk<Data>::funzioneCostruzione( Data&& value, NodeLnk*& node) {
   if(node == nullptr) node = new NodeLnk(std::move(value));
-  else if(std::move(value) < node ->Element()) funzioneCostruzione(std::move(value), node->lc);
-  else funzioneCostruzione(std::move(value), node->rc);
+  else if(!(node->HasLeftChild())) funzioneCostruzione(std::move(value), node->lc);
+  else if(!(node->HasRightChild())) funzioneCostruzione(std::move(value), node->rc);
+  else funzioneCostruzione(std::move(value), node->lc);
 }
 
 template <typename Data>
@@ -63,8 +65,13 @@ typename BinaryTreeLnk<Data>::NodeLnk* BinaryTreeLnk<Data>::CopyNodes(NodeLnk* s
   BinaryTreeLnk<Data>::BinaryTreeLnk(const MappableContainer<Data>& map){
     size = map.Size();
     root = nullptr;
+    bool firstItem = true;
+
     map.Map([&](const Data& item){
-      funzioneCostruzione(item, root);
+      if(firstItem){
+        root = new NodeLnk(item);
+        firstItem = false;
+      }else funzioneCostruzione(item, root);
     });
   }
 
@@ -73,8 +80,13 @@ typename BinaryTreeLnk<Data>::NodeLnk* BinaryTreeLnk<Data>::CopyNodes(NodeLnk* s
   BinaryTreeLnk<Data>::BinaryTreeLnk(MutableMappableContainer<Data>&& map){
     size = map.Size();
     root = nullptr;
+    bool firstItem = true;
+
     map.Map([&](const Data& item){
-      funzioneCostruzione(std::move(item), root);
+      if(firstItem){
+        root = new NodeLnk(std::move(item));
+        firstItem = false;
+      }else funzioneCostruzione(std::move(item), root);
     });
   }
 
