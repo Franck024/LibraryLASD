@@ -67,8 +67,8 @@ namespace lasd {
 
   template <typename Data>
   BinaryTreeVec<Data>::BinaryTreeVec(MutableMappableContainer<Data>&& mp) noexcept{
-    treevec = new Vector<NodeVec*>;
     size = mp.Size();
+    treevec = new Vector<NodeVec*>(size);
     if (size > 0) {
         for (ulong i = 0; i < size; ++i) {
             (*treevec)[i] = new NodeVec(std::move(mp[i]), i, treevec);
@@ -92,9 +92,12 @@ namespace lasd {
   // Move constructor
   template <typename Data>
   BinaryTreeVec<Data>::BinaryTreeVec(BinaryTreeVec<Data>&& bt) noexcept{
-    treevec = new Vector<NodeVec*>();
-    std::swap(size, bt.size);
-    std::swap(treevec, bt.treevec);
+    treevec = bt.treevec; // Assegna il vettore di bt all'oggetto corrente
+    size = bt.size;
+    
+    // Imposta bt.treevec a nullptr in modo che non deallochi la memoria duplicata
+    bt.treevec = nullptr;
+    bt.size = 0;
   }
 
   /* ************************************************************************ */
