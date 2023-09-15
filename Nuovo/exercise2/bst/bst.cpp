@@ -133,11 +133,8 @@ namespace lasd {
   Data BST<Data>::PredecessorNRemove(const Data& value)  {
     if(root == nullptr)
         throw std::length_error("Vuoto");
-    struct BST<Data>::NodeLnk* preNode = FindPointerToPredecessor(value, root);
-    if(preNode == nullptr) throw std::out_of_range("Nessun predecessore trovato");
-    Data preValue = preNode->it;
-    Detach(preNode);
-    size--;
+    Data preValue = Predecessor(value);
+    RemovePredecessor(value);
     return preValue;
   }  
 
@@ -145,10 +142,7 @@ namespace lasd {
   void BST<Data>::RemovePredecessor(const Data& value)  {
     if(root == nullptr)
         throw std::length_error("Vuoto");
-    struct BST<Data>::NodeLnk* preNode = FindPointerToPredecessor(value, root);
-    if(preNode == nullptr) return;
-    Detach(preNode);
-    size--;
+    Remove(Predecessor(value));
   }  
 
   template <typename Data>
@@ -164,39 +158,15 @@ namespace lasd {
   Data BST<Data>::SuccessorNRemove(const Data& value)  {
     if(root == nullptr)
         throw std::length_error("Vuoto");
-    struct BST<Data>::NodeLnk* succNode = FindPointerToSuccessor(value, root);
-    if(succNode == nullptr) throw std::out_of_range("Nessun successore trovato");
-    Data succValue = succNode->it;
-    Detach(succNode);
-    size--;
+    Data succValue = Successor(value);
+    RemoveSuccessor(value);
     return succValue;
   } 
 
   template <typename Data>
   void BST<Data>::RemoveSuccessor(const Data& value)  {
     if(root == nullptr) throw std::length_error("Vuoto");
-    struct BST<Data>::NodeLnk* succNode = FindPointerToSuccessor(value, root);
-    if(succNode == nullptr) return;
-    Detach(succNode);
-    size--;
-    //---------------------------------
-    // if(root == nullptr) throw std::length_error("Vuoto");
-    // struct BST<Data>::NodeLnk* node = FindPointerTo(value, root);
-    // if (node == nullptr) throw std::invalid_argument("Nodo non trovato");
-    // struct BST<Data>::NodeLnk* succNode = FindPointerToSuccessor(value, root);
-    // if(succNode == nullptr) throw std::out_of_range("Successore non trovato");
-    // if(succNode->rc != nullptr){
-    //   struct BST<Data>::NodeLnk* succR = succNode->rc;
-    //   succNode->it = succR->it;
-    //   succNode->lc = succR->lc;
-    //   succNode->rc = succR->rc;
-    //   delete succR;
-    // }else{
-    //   if(succNode == node->lc) node->lc = nullptr;
-    //   else node->rc = nullptr;
-    //   delete succNode;
-    // }
-    // size--;
+    Remove(Successor(value));
   } 
 
   /* ************************************************************************ */
