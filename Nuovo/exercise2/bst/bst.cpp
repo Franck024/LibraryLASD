@@ -52,18 +52,19 @@ namespace lasd {
   // Comparison operators
   template <typename Data>
   bool BST<Data>::operator==(const BST<Data>& bt) const noexcept {
-    if(size==bt.size){
-        BTInOrderIterator<Data> iterThis(*this);
-        BTInOrderIterator<Data> iterOther(bt);
-        while (!iterThis.Terminated() && !iterOther.Terminated()){
-            if(*iterThis != *iterOther)
-                return false;
-            ++iterThis;
-            ++iterOther;
-        }
-        if(iterThis.Terminated() && iterOther.Terminated()) return true;
+    if(size != bt.size) return false;
+    if(size == 0) return true;
+
+    BTInOrderIterator<Data> iterThis(*this);
+    BTInOrderIterator<Data> iterOther(bt);
+    while (!iterThis.Terminated() && !iterOther.Terminated()){
+        if(*iterThis != *iterOther)
+            return false;
+        ++iterThis;
+        ++iterOther;
     }
-    return false;
+    return true;
+    
   } 
 
   template <typename Data>
