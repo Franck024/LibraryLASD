@@ -127,6 +127,7 @@ namespace lasd {
             PostOrderMap(fun, &(node->LeftChild()));
         if(node->HasRightChild())
             PostOrderMap(fun, &(node->RightChild()));
+        fun(node->Element());
     }
   }
 
