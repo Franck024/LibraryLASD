@@ -5,7 +5,7 @@ namespace lasd {
 
   // Specific constructors
   template<typename Data>
-  HashTableOpnAdr(ulong dim){
+  HashTableOpnAdr<Data>::HashTableOpnAdr(ulong dim){
     size = dim;
     table = new Vector<Data>(size);
     count = 0;
@@ -148,10 +148,9 @@ namespace lasd {
     if(count >= size * 0.75) Resize(size*2);
     ulong index = HashKey(value) % size;
 
-    while(table[hash] != nullptr){ //gestione collisione con sondaggio lineare
-      index = (index + 1) % size;
-    }
-
+    if(table[index] != nullptr) //gestione collisione con sondaggio lineare
+      index = FindEmpty(index);
+    
     table[index] = value;
     count++;
 
@@ -159,14 +158,13 @@ namespace lasd {
   } 
   
   template<typename Data>
-  bool HashTableOpnAdr<Data>::Insert(Data&&) noexcept {
+  bool HashTableOpnAdr<Data>::Insert(Data&& value) noexcept {
     if(count >= size * 0.75) Resize(size*2);
     ulong index = HashKey(value) % size;
 
-    while(!table[hash].Empty()){ //gestione collisione con sondaggio lineare
-      index = (index + 1) % size;
-    }
-
+    if(table[index] != nullptr) //gestione collisione con sondaggio lineare
+      index = FindEmpty(index);
+    
     table[index] = std::move(value);
     count++;
     
@@ -193,14 +191,7 @@ namespace lasd {
   // Specific member functions (inherited from TestableContainer)
   template<typename Data>
   bool HashTableOpnAdr<Data>::Exists(const Data& value) const noexcept {
-    ulong index = HashKey(value) % size;
-    if(table[index] != nullptr){
-      while(table[index] != value){
-        index = (index + 1) % size;
-      }
-      return true;
-    }
-    return false;
+    return table.Find(value) != nullptr;
 
   }
 
@@ -219,6 +210,7 @@ namespace lasd {
   template<typename Data>
   void HashTableOpnAdr<Data>::Clear() {
     size = 0;
+    count = 0;
     table.Clear();
   } 
 
@@ -226,32 +218,15 @@ namespace lasd {
   // Auxiliary member functions
   template<typename Data>
   ulong HashTableOpnAdr<Data>::HashKey(const Data& key) const{
-    // Utilizza un algoritmo di hashing generico per tipi primitivi
-    ulong hash = 0;
-
-    // Converte l'oggetto Data in un array di byte
-    const unsigned char* dataBytes = reinterpret_cast<const unsigned char*>(&key);
-    ulong dataSize = sizeof(Data);
-
-    // Calcola la chiave hash combinando i byte dell'oggetto
-    for (ulong i = 0; i < dataSize; ++i) {
-        hash = hash * 31 + static_cast<ulong>(dataBytes[i]);
-    }
-
-    return hash % size;
+    Hashable<Data> hash;
+    return hash(key);
   }
   
   template<typename Data>
-  Data& HashTableOpnAdr<Data>::Find(const Data& key){
-    ulong hash = HashKey(key);
-    for(ulong i = 0; i <size; i++){
-        if(table[hash] == key){
-            return table[hash];
-        }
-        ++hash;
-        hash %= size;
-    }
-    throw std::out_of_range("Elemento non trovato!");
+  Data& HashTableOpnAdr<Data>::Find(ulong key){
+    if(table[key] != nullptr)
+      return table[key];
+    throw std::length_error("Elemento non trovato");
   }
   
   template<typename Data>
