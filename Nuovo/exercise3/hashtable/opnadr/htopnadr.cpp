@@ -78,7 +78,7 @@ namespace lasd {
 
   // Move constructor
   template<typename Data>
-  HashTableOpnAdr<Data>::HashTableOpnAdr(HashTableOpnAdr&& ht) const noexcept{
+  HashTableOpnAdr<Data>::HashTableOpnAdr(HashTableOpnAdr&& ht)  noexcept{
     std::swap(size, ht.size);
     table = new Vector<Data>(size);
     table = std::move(ht.table);
@@ -128,7 +128,7 @@ namespace lasd {
   // Comparison HashKeys
   template<typename Data>
   bool HashTableOpnAdr<Data>::operator==(const HashTableOpnAdr& ht) const noexcept{
-    if(size != ht.size || count != ht.count) return false;
+    if(count != ht.count) return false;
     for(ulong i = 0; i < size; i++){
         if(table[i] != ht.table[i]) return false;
     }
@@ -209,7 +209,6 @@ namespace lasd {
   // Specific member functions (inherited from ClearableContainer)
   template<typename Data>
   void HashTableOpnAdr<Data>::Clear() {
-    size = 0;
     count = 0;
     table.Clear();
   } 

@@ -16,7 +16,6 @@ namespace lasd {
 template <typename Data>
 class HashTableOpnAdr : virtual public HashTable<Data>{
                         // Must extend HashTable<Data>
-//---------dovrei impl Hashable
 private:
 
   Vector<Data> table;
@@ -60,7 +59,7 @@ public:
   HashTableOpnAdr& operator=(const HashTableOpnAdr&) ;
 
   // Move assignment
-  HashTableOpnAdr& operator=(HashTableOpnAdr&&) const noexcept;
+  HashTableOpnAdr& operator=(HashTableOpnAdr&&) noexcept;
 
   /* ************************************************************************ */
 
