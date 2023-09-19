@@ -181,7 +181,7 @@ namespace lasd {
       while(table[index] != value){
         index = (index + 1) % size;
       }
-      table[index] = nullptr;
+      RemoveAux(index);
       count--;
       return true;
     }
@@ -255,25 +255,26 @@ namespace lasd {
   }
   
   template<typename Data>
-  bool HashTableOpnAdr<Data>::FindEmpty(const Data& key) const{
-    ulong hash = HashKey(key);
-    for(ulong i = 0; i < size; i++){
-        if(table[hash] == nullptr) return true;
+  ulong HashTableOpnAdr<Data>::FindEmpty(ulong key) const{
+    ulong index = key;
+    while(table[index] != nullptr){
+      index = (index + 1) % size;
     }
-    return false;
+    return index;
   }
   
   template<typename Data>
-  void HashTableOpnAdr<Data>::RemoveAux(const Data& key){
-    ulong hash = HashKey(key);
-    for(ulong i = 0; i < size; i++){
-        if(table[i] == key){
-            return hash;
-        }
-        ++hash;
-        hash %= size;
+  void HashTableOpnAdr<Data>::RemoveAux( index key){
+    table[key] = nullptr;
+
+    //gestire le collisioni
+    key = (key + 1) % size;
+    while(table[key] != nullptr){
+      Data temp = table[key];
+      table[key] = nullptr;
+      Insert(temp);
+      key = (key + 1) % size;
     }
-    return size;
   }
 
 

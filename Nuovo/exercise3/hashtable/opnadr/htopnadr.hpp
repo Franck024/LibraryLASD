@@ -99,9 +99,9 @@ public:
   // Auxiliary member functions
 
   ulong HashKey(ulong, const Data& ) const;
-  Data& Find(const Data& );
-  bool FindEmpty(const Data& ) const;
-  void RemoveAux(const Data& );
+  Data& Find(ulong );
+  ulong FindEmpty(ulong ) const;
+  void RemoveAux( index );
 
 };
 
