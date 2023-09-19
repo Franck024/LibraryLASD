@@ -24,7 +24,7 @@ private:
 protected:
 
   using HashTable<Data>::size;
-
+using HashTable<Data>::count;
   // ...
 
 public:
@@ -98,7 +98,7 @@ public:
 
   // Auxiliary member functions
 
-  ulong HashKey(const Data& ) const;
+  ulong HashKey(ulong, const Data& ) const;
   Data& Find(const Data& );
   bool FindEmpty(const Data& ) const;
   void RemoveAux(const Data& );

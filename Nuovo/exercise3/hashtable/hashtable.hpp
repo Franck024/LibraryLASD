@@ -20,9 +20,17 @@ template <typename Data>
 class Hashable {
 
 public:
+  ulong operator()(const Data& key) const noexcept{ // (concrete function should not throw exceptions)
+    ulong hash = 0;
+    const char* keyBytes = reinterpret_cast<const char*>(&key);
+    ulong keySize = (ulong) sizeof(key);
 
-  ulong operator()(const Data&) const noexcept; // (concrete function should not throw exceptions)
+    for (ulong i = 0; i < keySize; ++i) {
+      hash = (hash * 31) + static_cast<ulong>(keyBytes[i]);
+    }
 
+    return hash;
+  }
 };
 
 /* ************************************************************************** */
@@ -42,7 +50,7 @@ protected:
   using DictionaryContainer<Data>::size;
 
   // ...
-
+  ulong count = 0; //aggiunto da me
 public:
 
   // Destructor
