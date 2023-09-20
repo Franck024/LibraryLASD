@@ -20,7 +20,7 @@ class HashTableClsAdr : virtual public HashTable<Data>{
 
 private:
 
-  Vector<List<Data>> table;
+ // Vector<List<Data>> table;
 
 protected:
 

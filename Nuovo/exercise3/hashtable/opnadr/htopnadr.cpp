@@ -147,9 +147,9 @@ namespace lasd {
   bool HashTableOpnAdr<Data>::Insert(const Data& value) {
     if(count >= size * 0.75) Resize(size*2);
     ulong index = HashKey(value) % size;
-
+    Data cellaVuota;
     
-    if(table[index] != nullptr) //gestione collisione con sondaggio lineare
+    if(table[index] != cellaVuota) //gestione collisione con sondaggio lineare
       index = FindEmpty(index);
     
     table[index] = value;
@@ -162,8 +162,9 @@ namespace lasd {
   bool HashTableOpnAdr<Data>::Insert(Data&& value) noexcept {
     if(count >= size * 0.75) Resize(size*2);
     ulong index = HashKey(value) % size;
-
-    if(table[index] != nullptr) //gestione collisione con sondaggio lineare
+    Data cellaVuota;
+    
+    if(table[index] != cellaVuota) //gestione collisione con sondaggio lineare
       index = FindEmpty(index);
     
     table[index] = std::move(value);
@@ -175,8 +176,9 @@ namespace lasd {
   template<typename Data>
   bool HashTableOpnAdr<Data>::Remove(const Data& value) {
     ulong index = HashKey(value) % size;
+    Data cellaVuota;
     
-    if(table[index] != nullptr){
+    if(table[index] != cellaVuota){ //gestione collisione con sondaggio lineare
       while(table[index] != value){
         index = (index + 1) % size;
       }
@@ -192,8 +194,13 @@ namespace lasd {
   // Specific member functions (inherited from TestableContainer)
   template<typename Data>
   bool HashTableOpnAdr<Data>::Exists(const Data& value) const noexcept {
-    return table.Find(value) != nullptr;
-
+    ulong index = this->HashKey(value) % size;
+    try{
+      Find(index);
+      return true;
+    }catch(...){
+      return false;
+    }
   }
 
   /* ************************************************************************ */
@@ -223,8 +230,9 @@ namespace lasd {
   }
   
   template<typename Data>
-  Data& HashTableOpnAdr<Data>::Find(ulong key){
-    if(table[key] != nullptr)
+  const Data& HashTableOpnAdr<Data>::Find(ulong key) const {
+    Data cellaVuota;
+    if(table[key] != cellaVuota)
       return table[key];
     throw std::length_error("Elemento non trovato");
   }
@@ -232,7 +240,9 @@ namespace lasd {
   template<typename Data>
   ulong HashTableOpnAdr<Data>::FindEmpty(ulong key) const{
     ulong index = key;
-    while(table[index] != nullptr){
+    Data cellaVuota;
+
+    while(table[index] != cellaVuota){
       index = (index + 1) % size;
     }
     return index;
@@ -240,13 +250,15 @@ namespace lasd {
   
   template<typename Data>
   void HashTableOpnAdr<Data>::RemoveAux( ulong key){
-    table[key] = nullptr;
+    Data cellaVuota;
+    table[key] = cellaVuota;
 
     //gestire le collisioni
     key = (key + 1) % size;
-    while(table[key] != nullptr){
+    
+    while(table[key] != cellaVuota){
       Data temp = table[key];
-      table[key] = nullptr;
+      table[key] = cellaVuota;
       Insert(temp);
       key = (key + 1) % size;
     }
