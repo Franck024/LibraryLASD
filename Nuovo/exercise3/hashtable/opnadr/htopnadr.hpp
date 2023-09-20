@@ -5,7 +5,7 @@
 /* ************************************************************************** */
 
 #include "../hashtable.hpp"
- #include "../vector.hpp"
+#include "../../vector/vector.hpp"
 
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ public:
   HashTableOpnAdr(const HashTableOpnAdr&) ;
 
   // Move constructor
-  HashTableOpnAdr(HashTableOpnAdr&&) const noexcept;
+  HashTableOpnAdr(HashTableOpnAdr&&) noexcept;
 
   /* ************************************************************************ */
 
@@ -56,10 +56,10 @@ public:
   /* ************************************************************************ */
 
   // Copy assignment
-  HashTableOpnAdr& operator=(const HashTableOpnAdr&) ;
+  HashTableOpnAdr<Data>& operator=(const HashTableOpnAdr&) ;
 
   // Move assignment
-  HashTableOpnAdr& operator=(HashTableOpnAdr&&) noexcept;
+  HashTableOpnAdr<Data>& operator=(HashTableOpnAdr&&) noexcept;
 
   /* ************************************************************************ */
 
@@ -97,11 +97,20 @@ public:
 
   // Auxiliary member functions
 
-  ulong HashKey(ulong, const Data& ) const;
+  ulong HashKey(const Data& ) const;
   Data& Find(ulong );
   ulong FindEmpty(ulong ) const;
-  void RemoveAux( index );
+  void RemoveAux( ulong );
 
+  
+  // per non rendere la classe astratta
+    inline bool InsertAll( const MappableContainer<Data>& container) { return false;};
+    inline bool InsertAll(MappableContainer<Data>&& container) noexcept { return false;};
+    inline bool RemoveAll(const MappableContainer<Data>& container) { return false;};
+    inline bool RemoveAll(MappableContainer<Data>&& container) noexcept { return false;};
+    inline bool InsertSome(const MappableContainer<Data>& container) { return false;};
+    inline bool InsertSome(MappableContainer<Data>&& container) noexcept { return false;};
+    inline bool RemoveSome(const MappableContainer<Data>& container) { return false;};
 };
 
 /* ************************************************************************** */

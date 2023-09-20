@@ -7,7 +7,7 @@ namespace lasd {
   template<typename Data>
   HashTableClsAdr<Data>::HashTableClsAdr(ulong dim){
     size = dim;
-    table = new Vector<List<Data>>(size);
+    table =  Vector<List<Data>>(size);
     count = 0;
   } 
   
@@ -15,9 +15,9 @@ namespace lasd {
   HashTableClsAdr<Data>::HashTableClsAdr(const MappableContainer<Data>& map) {
     size = map.Size()*2;
     count = 0;
-    table = new Vector<List<Data>>(size);
+    table =  Vector<List<Data>>(size);
     ulong i = 0;
-    map.Map([&](Data& item) {
+    map.Map([&](const Data& item) {
         Insert(item);
         i++;
     });
@@ -27,11 +27,11 @@ namespace lasd {
   HashTableClsAdr<Data>::HashTableClsAdr(ulong dim, const MappableContainer<Data>& map) {
     size = dim;
     count = 0;
-    table = new Vector<List<Data>>(size);
+    table =  Vector<List<Data>>(size);
     ulong i = 0;
-    map.Map([&](Data& item) {
+    map.Map([&]( const Data& item) {
         Insert(item);
-        i++;           
+        i++;            
     });
   }  
   
@@ -39,7 +39,7 @@ namespace lasd {
   HashTableClsAdr<Data>::HashTableClsAdr(MutableMappableContainer<Data>&& map) {
     size = map.Size() * 2;
     count = 0;
-    table = new Vector<List<Data>>(size);
+    table =  Vector<List<Data>>(size);
     ulong i = 0;
     map.Map([&](Data&& item) {
         Insert(std::move(item));
@@ -51,7 +51,7 @@ namespace lasd {
   HashTableClsAdr<Data>::HashTableClsAdr(ulong dim, MutableMappableContainer<Data>&& map) {
     size = dim;
     count = 0;
-    table = new Vector<List<Data>>(size);
+    table =  Vector<List<Data>>(size);
     ulong i = 0;
     map.Map([&](Data&& item) {
       Insert(std::move(item));
@@ -66,7 +66,7 @@ namespace lasd {
   HashTableClsAdr<Data>::HashTableClsAdr(const HashTableClsAdr& ht) {
     size = ht.size;
     count = ht.count;
-    table = new Vector<List<Data>>(size);
+    table =  Vector<List<Data>>(size);
     for(ulong i = 0; i < size; i++){
       table[i] = ht.table[i];
     }
@@ -77,7 +77,7 @@ namespace lasd {
   HashTableClsAdr<Data>::HashTableClsAdr(HashTableClsAdr&& ht) noexcept{
     size = ht.size;
     count = ht.count;
-    table = new Vector<List<Data>>(size);
+    table =  Vector<List<Data>>(size);
     for(ulong i = 0; i < size; i++){
       table[i] = std::move(ht.table[i]);
     }
@@ -90,17 +90,17 @@ namespace lasd {
   HashTableClsAdr<Data>::~HashTableClsAdr() {
     size = 0;
     count = 0;
-    delete[] table;
+    table.~Vector();
   } 
 
   /* ************************************************************************ */
 
   // Copy assignment
   template<typename Data>
-  HashTableClsAdr& HashTableClsAdr<Data>::operator=(const HashTableClsAdr&) {
+  HashTableClsAdr<Data>& HashTableClsAdr<Data>::operator=(const HashTableClsAdr& ht) {
     size = ht.size;
     count = ht.count;
-    table = new Vector<List<Data>>(size);
+    table =  Vector<List<Data>>(size);
     for(ulong i = 0; i < size; i++){
       table[i] = ht.table[i];
     }
@@ -109,10 +109,10 @@ namespace lasd {
 
   // Move assignment
   template<typename Data>
-  HashTableClsAdr& HashTableClsAdr<Data>::operator=(HashTableClsAdr&& ht) noexcept{
+  HashTableClsAdr<Data>& HashTableClsAdr<Data>::operator=(HashTableClsAdr&& ht) noexcept{
     size = ht.size;
     count = ht.count;
-    table = new Vector<List<Data>>(size);
+    table =  Vector<List<Data>>(size);
     for(ulong i = 0; i < size; i++){
       table[i] = std::move(ht.table[i]);
     }
@@ -128,6 +128,7 @@ namespace lasd {
     for(ulong i = 0; i < size; i++){
       if(table[i] != ht.table[i]) return false;
     }
+    return true;
   } 
   
   template<typename Data>
@@ -141,7 +142,7 @@ namespace lasd {
   template<typename Data>
   bool HashTableClsAdr<Data>::Insert(const Data& value) {
     if(count >= size) Resize(size*2);
-    ulong index = HashKey(value) % size;
+    ulong index = this->HashKey(value) % size;
     table[index].InsertAtBack(value);
     count++;
     return true;

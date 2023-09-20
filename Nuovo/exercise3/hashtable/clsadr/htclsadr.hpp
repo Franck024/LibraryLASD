@@ -5,8 +5,8 @@
 /* ************************************************************************** */
 
 #include "../hashtable.hpp"
-#include "../vector.hpp"
-#include "../list.hpp"
+#include "../../vector/vector.hpp"
+#include "../../list/list.hpp"
 
 /* ************************************************************************** */
 
@@ -59,10 +59,10 @@ public:
   /* ************************************************************************ */
 
   // Copy assignment
-  HashTableClsAdr& operator=(const HashTableClsAdr&) ;
+  HashTableClsAdr<Data>& operator=(const HashTableClsAdr&) ;
 
   // Move assignment
-  HashTableClsAdr& operator=(HashTableClsAdr&&) noexcept;
+  HashTableClsAdr<Data>& operator=(HashTableClsAdr&&) noexcept;
 
   /* ************************************************************************ */
 
@@ -95,6 +95,16 @@ public:
   // Specific member functions (inherited from ClearableContainer)
 
   void Clear() override; // Override Container member
+
+
+  // per non rendere la classe astratta
+    inline bool InsertAll( const MappableContainer<Data>& container) { return false;};
+    inline bool InsertAll(MappableContainer<Data>&& container) noexcept { return false;};
+    inline bool RemoveAll(const MappableContainer<Data>& container) { return false;};
+    inline bool RemoveAll(MappableContainer<Data>&& container) noexcept { return false;};
+    inline bool InsertSome(const MappableContainer<Data>& container) { return false;};
+    inline bool InsertSome(MappableContainer<Data>&& container) noexcept { return false;};
+    inline bool RemoveSome(const MappableContainer<Data>& container) { return false;};
 
 };
 

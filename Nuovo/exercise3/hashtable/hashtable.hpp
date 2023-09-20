@@ -74,7 +74,7 @@ protected:
 
   // Auxiliary member functions
 
-  ulong HashKey(const Data&) const = 0;
+  inline ulong HashKey(const Data& key) const{Hashable<Data> hash; return hash(key);};
 
 };
 
