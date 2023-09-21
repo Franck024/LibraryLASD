@@ -16,10 +16,8 @@ namespace lasd {
     size = map.Size()*2;
     count = 0;
     table =  Vector<Data>(size);
-    ulong i = 0;
     map.Map([&](const Data& item) {
         Insert(item);
-        i++;
     });
 
   } 
@@ -29,11 +27,8 @@ namespace lasd {
     size = dim;
     count = 0;
     table =  Vector<Data>(size);
-    ulong i = 0;
     map.Map([&](const Data& item) {
         Insert(item);
-        i++;           
-        
     });
   } 
   
@@ -42,10 +37,8 @@ namespace lasd {
     size = map.Size() * 2;
     count = 0;
     table =  Vector<Data>(size);
-    ulong i = 0;
     map.Map([&](Data&& item) {
         Insert(std::move(item));
-        i++;
     });
  
   } 
@@ -55,10 +48,8 @@ namespace lasd {
     size = dim;
     count = 0;
     table =  Vector<Data>(size);
-    ulong i = 0;
     map.Map([&](Data&& item) {
       Insert(std::move(item));
-      i++; 
     });
   }
 
@@ -149,12 +140,12 @@ namespace lasd {
     ulong index = HashKey(value) % size;
     Data cellaVuota;
     
+  //  std::cout<< std::endl << "-------------HERE  5-----------------" << std::endl;
     if(table[index] != cellaVuota) //gestione collisione con sondaggio lineare
       index = FindEmpty(index);
     
     table[index] = value;
     count++;
-
     return true;
   } 
   
@@ -180,7 +171,7 @@ namespace lasd {
     
     if(table[index] != cellaVuota){ //gestione collisione con sondaggio lineare
       while(table[index] != value){
-        index = (index + 1) % size;
+        index = index + 1;
       }
       RemoveAux(index);
       count--;
@@ -243,7 +234,7 @@ namespace lasd {
     Data cellaVuota;
 
     while(table[index] != cellaVuota){
-      index = (index + 1) % size;
+      index = index + 1;
     }
     return index;
   }
