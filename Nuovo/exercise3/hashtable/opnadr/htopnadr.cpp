@@ -7,15 +7,21 @@ namespace lasd {
   template<typename Data>
   HashTableOpnAdr<Data>::HashTableOpnAdr(ulong dim){
     size = dim;
-    table =  Vector<Data>(size);
+    table =  Vector<Data*>(size);
     count = 0;
+    for(ulong i = 0; i < size; i++){
+      table[i] = nullptr;
+    }
   }
 
   template<typename Data>
   HashTableOpnAdr<Data>::HashTableOpnAdr(const MappableContainer<Data>& map) {
     size = map.Size()*2;
     count = 0;
-    table =  Vector<Data>(size);
+    table =  Vector<Data*>(size);
+    for(ulong i = 0; i < size; i++){
+      table[i] = nullptr;
+    }
     map.Map([&](const Data& item) {
         Insert(item);
     });
@@ -26,7 +32,10 @@ namespace lasd {
   HashTableOpnAdr<Data>::HashTableOpnAdr(ulong dim, const MappableContainer<Data>& map) {
     size = dim;
     count = 0;
-    table =  Vector<Data>(size);
+    table =  Vector<Data*>(size);
+    for(ulong i = 0; i < size; i++){
+      table[i] = nullptr;
+    }
     map.Map([&](const Data& item) {
         Insert(item);
     });
@@ -36,7 +45,10 @@ namespace lasd {
   HashTableOpnAdr<Data>::HashTableOpnAdr(MutableMappableContainer<Data>&& map) {
     size = map.Size() * 2;
     count = 0;
-    table =  Vector<Data>(size);
+    table =  Vector<Data*>(size);
+    for(ulong i = 0; i < size; i++){
+      table[i] = nullptr;
+    }
     map.Map([&](Data&& item) {
         Insert(std::move(item));
     });
@@ -47,7 +59,10 @@ namespace lasd {
   HashTableOpnAdr<Data>::HashTableOpnAdr(ulong dim, MutableMappableContainer<Data>&& map) {
     size = dim;
     count = 0;
-    table =  Vector<Data>(size);
+    table =  Vector<Data*>(size);
+    for(ulong i = 0; i < size; i++){
+      table[i] = nullptr;
+    }
     map.Map([&](Data&& item) {
       Insert(std::move(item));
     });
@@ -60,10 +75,11 @@ namespace lasd {
   HashTableOpnAdr<Data>::HashTableOpnAdr(const HashTableOpnAdr& ht) {
     size = ht.Size();
     count = 0;
-    table =  Vector<Data>(size);
-    for(ulong i = 0; i <size; i++){
+    table =  Vector<Data*>(size);
+    for(ulong i = 0; i < size; i++){
         table[i] = ht.table[i];
-        count++;
+        if(table[i] != nullptr)
+          count++;
     }
   }
 
@@ -71,7 +87,6 @@ namespace lasd {
   template<typename Data>
   HashTableOpnAdr<Data>::HashTableOpnAdr(HashTableOpnAdr&& ht)  noexcept{
     std::swap(size, ht.size);
-    table =  Vector<Data>(size);
     table = std::move(ht.table);
     std::swap(count, ht.count);
   }
@@ -136,29 +151,40 @@ namespace lasd {
   // Specific member functions (inherited from DictionaryContainer)
   template<typename Data>
   bool HashTableOpnAdr<Data>::Insert(const Data& value) {
-    if(count >= size * 0.75) Resize(size*2);
+    if(count >= size * 0.75){
+      ulong tmp = size;
+      Resize(size*2);
+      for( ulong i = tmp; i < size; i++){
+        table[i] = nullptr;
+      }
+    } 
+
     ulong index = HashKey(value) % size;
-    Data cellaVuota;
     
-  //  std::cout<< std::endl << "-------------HERE  5-----------------" << std::endl;
-    if(table[index] != cellaVuota) //gestione collisione con sondaggio lineare
+    if(table[index] != nullptr) //gestione collisione con sondaggio lineare
       index = FindEmpty(index);
     
-    table[index] = value;
+    table[index] = new Data(value);
     count++;
     return true;
   } 
   
   template<typename Data>
   bool HashTableOpnAdr<Data>::Insert(Data&& value) noexcept {
-    if(count >= size * 0.75) Resize(size*2);
+    if(count >= size * 0.75){
+      ulong tmp = size;
+      Resize(size*2);
+      for( ulong i = tmp; i < size; i++){
+        table[i] = nullptr;
+      }
+    } 
+
     ulong index = HashKey(value) % size;
-    Data cellaVuota;
     
-    if(table[index] != cellaVuota) //gestione collisione con sondaggio lineare
+    if(table[index] != nullptr) //gestione collisione con sondaggio lineare
       index = FindEmpty(index);
     
-    table[index] = std::move(value);
+    table[index] = new Data(std::move(value));
     count++;
     
     return true;
@@ -167,11 +193,10 @@ namespace lasd {
   template<typename Data>
   bool HashTableOpnAdr<Data>::Remove(const Data& value) {
     ulong index = HashKey(value) % size;
-    Data cellaVuota;
     
-    if(table[index] != cellaVuota){ //gestione collisione con sondaggio lineare
-      while(table[index] != value){
-        index = index + 1;
+    if(table[index] != nullptr){ //gestione collisione con sondaggio lineare
+      while(*table[index] != value){
+        index = (index + 1) % size;
       }
       RemoveAux(index);
       count--;
@@ -222,36 +247,40 @@ namespace lasd {
   
   template<typename Data>
   const Data& HashTableOpnAdr<Data>::Find(ulong key) const {
-    Data cellaVuota;
-    if(table[key] != cellaVuota)
-      return table[key];
+    if(table[key] != nullptr)
+      return *table[key];
     throw std::length_error("Elemento non trovato");
   }
   
   template<typename Data>
   ulong HashTableOpnAdr<Data>::FindEmpty(ulong key) const{
     ulong index = key;
-    Data cellaVuota;
 
-    while(table[index] != cellaVuota){
-      index = index + 1;
+    while(table[index] != nullptr){
+      index = (index + 1) % size;
     }
+    if(index == key)
+      throw std::length_error("Non ci sono spazi vuoti");
     return index;
   }
   
   template<typename Data>
   void HashTableOpnAdr<Data>::RemoveAux( ulong key){
-    Data cellaVuota;
-    table[key] = cellaVuota;
+    if(table[key] != nullptr){
+      delete table[key];
+      table[key] = nullptr;
 
-    //gestire le collisioni
-    key = (key + 1) % size;
-    
-    while(table[key] != cellaVuota){
-      Data temp = table[key];
-      table[key] = cellaVuota;
-      Insert(temp);
+      //gestire le collisioni
       key = (key + 1) % size;
+      
+      while(table[key] != nullptr){
+        Data* temp = table[key];
+        table[key] = nullptr;
+        count--;
+        Insert(*temp);
+        delete temp;
+        key = (key + 1) % size;
+      }      
     }
   }
 

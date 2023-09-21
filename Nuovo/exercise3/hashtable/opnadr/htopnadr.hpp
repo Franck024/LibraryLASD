@@ -18,7 +18,7 @@ class HashTableOpnAdr : virtual public HashTable<Data>{
                         // Must extend HashTable<Data>
 private:
 
-  Vector<Data> table;
+  Vector<Data*> table;
 
 protected:
 
