@@ -22,14 +22,19 @@ class Hashable {
 public:
   ulong operator()(const Data& key) const noexcept{ // (concrete function should not throw exceptions)
     ulong hash = 0;
-    const char* keyBytes = reinterpret_cast<const char*>(&key);
-    ulong keySize =  sizeof(Data);
 
-    for (ulong i = 0; i < keySize; ++i) {
-      hash = (hash * 31) + static_cast<ulong>(keyBytes[i]);
+    // Converti l'oggetto in un array di byte
+    const  char* keyBytes = reinterpret_cast<const  char*>(&key);
+
+    for (ulong i = 0; i < sizeof(Data); ++i) {
+      // Moltiplica il valore corrente dell'hash per un numero primo
+      hash = (hash * 31);
+
+      // Aggiungi il valore corrente del byte all'hash
+      hash += static_cast<ulong>(keyBytes[i]);
     }
 
-    return hash ;
+    return hash;
   }
 };
 

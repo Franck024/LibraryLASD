@@ -156,9 +156,6 @@ namespace lasd {
     if(count >= size * 0.75){
       ulong tmp = size;
       Resize(size*2);
-      for( ulong i = tmp; i < size; i++){
-        table[i] = nullptr;
-      }
     } 
 
     ulong index = HashKey(value) % size;
@@ -178,9 +175,6 @@ namespace lasd {
     if(count >= size * 0.75){
       ulong tmp = size;
       Resize(size*2);
-      for( ulong i = tmp; i < size; i++){
-        table[i] = nullptr;
-      }
     } 
 
     ulong index = HashKey(value) % size;
@@ -217,6 +211,7 @@ namespace lasd {
   template<typename Data>
   bool HashTableOpnAdr<Data>::Exists(const Data& value) const noexcept {
     ulong index = this->HashKey(value) % size;
+    if(table[index] == nullptr) return false;
     while(table[index] != nullptr){
       if(*table[index] == value)
         return true;
@@ -230,8 +225,28 @@ namespace lasd {
   // Specific member functions (inherited from ResizableContainer)
   template<typename Data>
   void HashTableOpnAdr<Data>::Resize(const ulong dim) {
-    size = dim;
     table.Resize(dim);
+    for(ulong i = size; i < dim; i++){
+      table[i] = nullptr;
+    }
+    size = dim;
+
+    ulong tmp_count = count;
+    ulong index = 0;
+
+    Vector<Data*> tmp(count);
+    for(ulong i = 0; i < size; i++){
+      if(table[i] != nullptr){
+        tmp[index] = table[i];
+        index++;
+        table[i] = nullptr;
+      }
+    }
+    for(ulong i = 0; i < index; i++){
+      Insert(*tmp[i]);
+    }
+    tmp.Clear();
+    count = tmp_count;
   } 
 
   /* ************************************************************************ */
@@ -265,8 +280,6 @@ namespace lasd {
     while(table[index] != nullptr){
       index = (index + 1) % size;
     }
-    if(index == key)
-      throw std::length_error("Non ci sono spazi vuoti");
     return index;
   }
   
