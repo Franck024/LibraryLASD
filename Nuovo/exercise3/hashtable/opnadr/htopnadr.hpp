@@ -23,7 +23,7 @@ private:
 protected:
 
   using HashTable<Data>::size;
-using HashTable<Data>::count;
+using HashTable<Data>::dimensione;
   // ...
 
 public:
@@ -112,8 +112,6 @@ public:
     inline bool InsertSome(MappableContainer<Data>&& container) noexcept { return false;};
     inline bool RemoveSome(const MappableContainer<Data>& container) { return false;};
 
-    // per gestire bene la funzione
-    inline ulong Size() const noexcept override { return count; };
 };
 
 /* ************************************************************************** */

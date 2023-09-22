@@ -55,7 +55,7 @@ protected:
   using DictionaryContainer<Data>::size;
 
   // ...
-  ulong count = 0; //aggiunto da me
+  ulong dimensione = 0; //aggiunto da me
 public:
 
   // Destructor
