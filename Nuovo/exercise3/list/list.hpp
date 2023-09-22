@@ -26,11 +26,11 @@ private:
 
 // per non rendere la classe astratta-----------------------------------------------------
   inline bool InsertAll(const MappableContainer<Data>& x){return false;} // Copy of the value; From MappableContainer; True if all are inserted
-  inline bool InsertAll(MappableContainer<Data>&& x) noexcept{return false;} // Move of the value; From MutableMappableContainer; True if all are inserted
+  inline bool InsertAll(MutableMappableContainer<Data>&& x) noexcept{return false;} // Move of the value; From MutableMappableContainer; True if all are inserted
   inline bool RemoveAll(const MappableContainer<Data>& x) {return false;} // From MappableContainer; True if all are removed
 
   inline bool InsertSome(const MappableContainer<Data>& x)  {return false;} // Copy of the value; From MappableContainer; True if some is inserted
-  inline bool InsertSome(MappableContainer<Data>&& x) noexcept {return false;} // Move of the value; From MutableMappableContainer; True if some is inserted
+  inline bool InsertSome(MutableMappableContainer<Data>&& x) noexcept {return false;} // Move of the value; From MutableMappableContainer; True if some is inserted
   inline bool RemoveSome(const MappableContainer<Data>& x){return false;} // From MappableContainer; True if some is removed
 ///----------------------------------------------------------------------------------------
 

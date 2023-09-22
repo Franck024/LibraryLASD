@@ -104,13 +104,14 @@ public:
 
   
   // per non rendere la classe astratta
-    inline bool InsertAll( const MappableContainer<Data>& container) { return false;};
-    inline bool InsertAll(MappableContainer<Data>&& container) noexcept { return false;};
-    inline bool RemoveAll(const MappableContainer<Data>& container) { return false;};
-    inline bool RemoveAll(MappableContainer<Data>&& container) noexcept { return false;};
+    bool InsertAll( const MappableContainer<Data>& ) override ;
+    bool InsertAll(MutableMappableContainer<Data>&& ) noexcept override;
+    bool RemoveAll(const MappableContainer<Data>& ) override;
     inline bool InsertSome(const MappableContainer<Data>& container) { return false;};
-    inline bool InsertSome(MappableContainer<Data>&& container) noexcept { return false;};
+    inline bool InsertSome(MutableMappableContainer<Data>&& container) noexcept { return false;};
     inline bool RemoveSome(const MappableContainer<Data>& container) { return false;};
+
+
 
 };
 

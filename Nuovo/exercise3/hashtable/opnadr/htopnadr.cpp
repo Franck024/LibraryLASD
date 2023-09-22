@@ -73,7 +73,7 @@ namespace lasd {
   // Copy constructor
   template<typename Data>
   HashTableOpnAdr<Data>::HashTableOpnAdr(const HashTableOpnAdr& ht) {
-    dimensione = ht.Size();
+    dimensione = ht.dimensione;
     size = 0;
     table =  Vector<Data*>(dimensione);
     for(ulong i = 0; i < dimensione; i++){
@@ -106,13 +106,19 @@ namespace lasd {
   // Copy assignment
   template<typename Data>
   HashTableOpnAdr<Data>& HashTableOpnAdr<Data>::operator=(const HashTableOpnAdr& ht) {
+    std::cout << "--------HERE 3 ---------- " << std::endl;
     if(this != &ht){
-        dimensione = ht.dimensione;
-        table.Resize(dimensione);
-        for(ulong i = 0; i < dimensione; i++){
-            table[i] = ht.table[i];
-            size++;
-        }
+      Clear();
+      size = ht.size;
+      dimensione = ht.dimensione;
+    //  table.Resize(dimensione);
+    table = ht.table;
+      for(ulong i = 0; i < dimensione; i++){
+        if(table[i] != nullptr)
+          table[i] = new Data(*ht.table[i]);
+        else table[i] = nullptr;  
+      }
+      
     }
     return *this;
   }
@@ -121,10 +127,10 @@ namespace lasd {
   template<typename Data>
   HashTableOpnAdr<Data>& HashTableOpnAdr<Data>::operator=(HashTableOpnAdr&& ht) noexcept{
     if(this != &ht){
-        dimensione = ht.dimensione;
-        table = std::move(ht.table);
-        ht.dimensione = 0;
-        size = ht.size;
+        std::swap(dimensione, ht.dimensione);
+        std::swap(table, ht.table);
+        std::swap(size, ht.size);
+
     }
     return *this;
   }
@@ -136,7 +142,9 @@ namespace lasd {
   bool HashTableOpnAdr<Data>::operator==(const HashTableOpnAdr& ht) const noexcept{
     if(size != ht.size) return false;
     for(ulong i = 0; i < dimensione; i++){
-        if(table[i] != ht.table[i]) return false;
+      if(table[i] != nullptr){
+        if(!ht.Exists(*table[i])) return false;
+      }
     }
     return true;
   }
@@ -297,17 +305,54 @@ namespace lasd {
       //gestire le collisioni
       key = (key + 1) % dimensione;
       
-      while(table[key] != nullptr){
-        Data* temp = table[key];
-        table[key] = nullptr;
-        size--;
-        Insert(*temp);
-        delete temp;
-        key = (key + 1) % dimensione;
-      }      
+    ulong index = 0;
+    Vector<Data*> tmp(size);
+    while(table[key] != nullptr){
+      tmp[index] = table[key];
+      table[key] = nullptr;
+      size--;
+      index++;
+      key = (key + 1) % dimensione;
+    }
+    for(ulong i = 0; i < index; i++){
+      Insert(*tmp[i]);
+    }
+    tmp.Clear();
+      // while(table[key] != nullptr){
+      //   Data* temp = table[key];
+      //   table[key] = nullptr;
+      //   size--;
+      //   Insert(*temp);
+      //   delete temp;
+      //   key = (key + 1) % dimensione;
+      // }      
     }
   }
 
+  // per non rendere la classe astratta
+  template <typename Data>
+  bool HashTableOpnAdr<Data>::InsertAll( const MappableContainer<Data>& map){
+    map.Map([&](const Data& item) {
+        Insert(item);
+    });
+    return true;
+  }
+
+  template <typename Data>
+  bool HashTableOpnAdr<Data>::InsertAll(MutableMappableContainer<Data>&& map) noexcept{
+    map.Map([&](Data& item) {
+        Insert(std::move(item));
+    });
+    return true;
+  }
+
+  template <typename Data>
+  bool HashTableOpnAdr<Data>::RemoveAll(const MappableContainer<Data>& map ){
+    map.Map([&](const Data& item) {
+        Remove(item);
+    });
+    return true;
+  }
 
 /* ************************************************************************** */
 
