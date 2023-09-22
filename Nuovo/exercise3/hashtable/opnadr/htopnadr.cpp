@@ -151,6 +151,8 @@ namespace lasd {
   // Specific member functions (inherited from DictionaryContainer)
   template<typename Data>
   bool HashTableOpnAdr<Data>::Insert(const Data& value) {
+    if(Exists(value)) return false;
+
     if(count >= size * 0.75){
       ulong tmp = size;
       Resize(size*2);
@@ -171,6 +173,8 @@ namespace lasd {
   
   template<typename Data>
   bool HashTableOpnAdr<Data>::Insert(Data&& value) noexcept {
+    if(Exists(value)) return false;
+
     if(count >= size * 0.75){
       ulong tmp = size;
       Resize(size*2);
@@ -192,6 +196,8 @@ namespace lasd {
   
   template<typename Data>
   bool HashTableOpnAdr<Data>::Remove(const Data& value) {
+    if(!Exists(value)) return false;
+
     ulong index = HashKey(value) % size;
     
     if(table[index] != nullptr){ //gestione collisione con sondaggio lineare
@@ -211,12 +217,12 @@ namespace lasd {
   template<typename Data>
   bool HashTableOpnAdr<Data>::Exists(const Data& value) const noexcept {
     ulong index = this->HashKey(value) % size;
-    try{
-      Find(index);
-      return true;
-    }catch(...){
-      return false;
+    while(table[index] != nullptr){
+      if(*table[index] == value)
+        return true;
+      index = (index + 1) % size;
     }
+    return false;
   }
 
   /* ************************************************************************ */
@@ -247,9 +253,9 @@ namespace lasd {
   
   template<typename Data>
   const Data& HashTableOpnAdr<Data>::Find(ulong key) const {
-    if(table[key] != nullptr)
-      return *table[key];
-    throw std::length_error("Elemento non trovato");
+      if(table[key] != nullptr)
+        return *table[key];
+      throw std::length_error("Elemento non trovato");
   }
   
   template<typename Data>

@@ -98,7 +98,7 @@ public:
   // Auxiliary member functions
 
   ulong HashKey(const Data& ) const;
-  const Data& Find(ulong ) const;
+  const Data& Find(ulong) const;
   ulong FindEmpty(ulong ) const;
   void RemoveAux( ulong );
 
@@ -111,6 +111,9 @@ public:
     inline bool InsertSome(const MappableContainer<Data>& container) { return false;};
     inline bool InsertSome(MappableContainer<Data>&& container) noexcept { return false;};
     inline bool RemoveSome(const MappableContainer<Data>& container) { return false;};
+
+    // per gestire bene la funzione
+    inline ulong Size() const noexcept override { return count; };
 };
 
 /* ************************************************************************** */

@@ -23,13 +23,13 @@ public:
   ulong operator()(const Data& key) const noexcept{ // (concrete function should not throw exceptions)
     ulong hash = 0;
     const char* keyBytes = reinterpret_cast<const char*>(&key);
-    ulong keySize = (ulong) sizeof(key);
+    ulong keySize =  sizeof(Data);
 
     for (ulong i = 0; i < keySize; ++i) {
       hash = (hash * 31) + static_cast<ulong>(keyBytes[i]);
     }
 
-    return hash;
+    return hash ;
   }
 };
 
