@@ -71,11 +71,16 @@ namespace lasd {
   // Copy constructor
   template<typename Data>
   HashTableClsAdr<Data>::HashTableClsAdr(const HashTableClsAdr& ht) {
-    Clear();
-    if(dimensione != ht.dimensione) Resize(ht.dimensione);
+    dimensione = ht.dimensione;
+    size = 0;
+    table =  Vector<BST<Data>*>(dimensione);
+    for(ulong i = 0; i < dimensione; i++){
+      table[i] = nullptr;
+    }
     for(ulong i = 0; i < dimensione; i++){
       if(ht.table[i] != nullptr){
         table[i] = new BST<Data>(*ht.table[i]);
+        size += table[i]->Size();
       }
     }
   } 
@@ -109,6 +114,7 @@ namespace lasd {
     for(ulong i = 0; i < dimensione; i++){
       if(ht.table[i] != nullptr){
         table[i] = new BST<Data>(*ht.table[i]);
+        size += table[i]->Size();
       }
     }
     return *this;
@@ -210,15 +216,6 @@ namespace lasd {
   // Specific member functions (inherited from ResizableContainer)
   template<typename Data>
   void HashTableClsAdr<Data>::Resize(const ulong dim) {
-    // HashTableClsAdr<Data> newTable(dim);
-    // for(ulong i = 0; i < dimensione; i++){
-    //   if(table[i] != nullptr){
-    //     table[i]->Map([&](const Data& item){
-    //       newTable.Insert(item);
-    //     });
-    //   }
-    // }
-    // *this = std::move(newTable);
     Vector<Data*> tmp(size);
     ulong index = 0;
     for(ulong i = 0; i < dimensione; i++){
