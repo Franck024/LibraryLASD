@@ -77,9 +77,13 @@ namespace lasd {
     size = 0;
     table =  Vector<Data*>(dimensione);
     for(ulong i = 0; i < dimensione; i++){
-        table[i] = ht.table[i];
-        if(table[i] != nullptr)
-          size++;
+        table[i] = nullptr;
+    }
+    for(ulong i = 0; i < ht.dimensione; i++){
+      if(ht.table[i] != nullptr){
+        table[i] = new Data(*(ht.table[i]));
+        size++;
+      }
     }
   }
 
@@ -87,7 +91,7 @@ namespace lasd {
   template<typename Data>
   HashTableOpnAdr<Data>::HashTableOpnAdr(HashTableOpnAdr&& ht)  noexcept{
     std::swap(dimensione, ht.dimensione);
-    table = std::move(ht.table);
+    std::swap(table, ht.table);
     std::swap(size, ht.size);
   }
 
@@ -154,20 +158,16 @@ namespace lasd {
   template<typename Data>
   bool HashTableOpnAdr<Data>::Insert(const Data& value) {
     if(Exists(value)) return false;
-
-    if(size >= dimensione * 0.75){
-      Resize(dimensione*2);
-    } 
+    if(size >= dimensione * 0.75) Resize(dimensione*2);
 
     ulong index = HashKey(value) % dimensione;
-    
-    if(table[index] != nullptr){       //gestione collisione con sondaggio lineare
+
+    if(table[index] == nullptr)
+      table[index] = new Data(value);
+    else{
       index = FindEmpty(index);
-      delete table[index];
-    } 
-      
-    
-    table[index] = new Data(value);
+      table[index] = new Data(value);
+    }
     size++;
     return true;
   } 
@@ -175,21 +175,17 @@ namespace lasd {
   template<typename Data>
   bool HashTableOpnAdr<Data>::Insert(Data&& value) noexcept {
     if(Exists(value)) return false;
-
-    if(size >= dimensione * 0.75){
-      Resize(dimensione*2);
-    } 
+    if(size >= dimensione * 0.75) Resize(dimensione*2);
 
     ulong index = HashKey(value) % dimensione;
-    
-    if(table[index] != nullptr){       //gestione collisione con sondaggio lineare
+
+    if(table[index] == nullptr)
+      table[index] = new Data(std::move(value));
+    else{
       index = FindEmpty(index);
-      delete table[index];
-    } 
-    
-    table[index] = new Data(std::move(value));
+      table[index] = new Data(std::move(value));
+    }
     size++;
-    
     return true;
   } 
   
@@ -198,16 +194,13 @@ namespace lasd {
     if(!Exists(value)) return false;
 
     ulong index = HashKey(value) % dimensione;
-    
-    if(table[index] != nullptr){ //gestione collisione con sondaggio lineare
-      while(*table[index] != value){
-        index = (index + 1) % dimensione;
-      }
-      RemoveAux(index);
-      size--;
-      return true;
+  
+    while(*table[index] != value){
+      index = (index + 1) % dimensione;
     }
-    return false;
+    RemoveAux(index);
+    size--;
+    return true;
   }
 
   /* ************************************************************************ */
@@ -232,13 +225,15 @@ namespace lasd {
   void HashTableOpnAdr<Data>::Resize(const ulong dim) {
     Vector<Data*> tmp(size);
     ulong index = 0;
+
     for(ulong i = 0; i < dimensione; i++){
       if(table[i] != nullptr){
-        tmp[index] = table[i];
-        table[i] = nullptr;
+        tmp[index] = new Data(*table[i]);
         index++;
       }
     }
+    Clear();
+
     table.Resize(dim);
     for(ulong i = dimensione; i < dim; i++){
       table[i] = nullptr;
@@ -247,6 +242,7 @@ namespace lasd {
     size = 0;
     for(ulong i = 0; i < tmp.Size(); i++){
         Insert(*tmp[i]);
+        delete tmp[i];
     }
   } 
 
@@ -257,7 +253,7 @@ namespace lasd {
   void HashTableOpnAdr<Data>::Clear() {
     for(ulong i = 0; i < dimensione; i++){
       if(table[i] != nullptr){
-       // delete table[i];
+        delete table[i];
         table[i] = nullptr;
       }
     }
@@ -301,7 +297,8 @@ namespace lasd {
     ulong index = 0;
     Vector<Data*> tmp(size);
     while(table[key] != nullptr){
-      tmp[index] = table[key];
+      tmp[index] = new Data(*table[key]);
+      delete table[key];
       table[key] = nullptr;
       size--;
       index++;
@@ -309,17 +306,9 @@ namespace lasd {
     }
     for(ulong i = 0; i < index; i++){
       Insert(*tmp[i]);
+      delete tmp[i];
     }
-    tmp.Clear();
-      // while(table[key] != nullptr){
-      //   Data* temp = table[key];
-      //   table[key] = nullptr;
-      //   size--;
-      //   Insert(*temp);
-      //   delete temp;
-      //   key = (key + 1) % dimensione;
-      // }      
-    }
+   }
   }
 
   // per non rendere la classe astratta
