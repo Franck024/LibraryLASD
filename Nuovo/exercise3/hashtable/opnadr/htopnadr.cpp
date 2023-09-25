@@ -227,28 +227,24 @@ namespace lasd {
   // Specific member functions (inherited from ResizableContainer)
   template<typename Data>
   void HashTableOpnAdr<Data>::Resize(const ulong dim) {
+    Vector<Data*> tmp(size);
+    ulong index = 0;
+    for(ulong i = 0; i < dimensione; i++){
+      if(table[i] != nullptr){
+        tmp[index] = table[i];
+        table[i] = nullptr;
+        index++;
+      }
+    }
     table.Resize(dim);
     for(ulong i = dimensione; i < dim; i++){
       table[i] = nullptr;
     }
     dimensione = dim;
-
-    ulong tmp_count = size;
-    ulong index = 0;
-
-    Vector<Data*> tmp(size);
-    for(ulong i = 0; i < dimensione; i++){
-      if(table[i] != nullptr){
-        tmp[index] = table[i];
-        index++;
-        table[i] = nullptr;
-      }
+    size = 0;
+    for(ulong i = 0; i < tmp.Size(); i++){
+        Insert(*tmp[i]);
     }
-    for(ulong i = 0; i < index; i++){
-      Insert(*tmp[i]);
-    }
-    tmp.Clear();
-    size = tmp_count;
   } 
 
   /* ************************************************************************ */
@@ -348,6 +344,47 @@ namespace lasd {
     return true;
   }
 
+  template <typename Data>
+  bool HashTableOpnAdr<Data>::InsertSome(const MappableContainer<Data>& map, ulong numElem){
+    if(numElem == 0)return true;
+    if(numElem > map.Size()) return false;
+    ulong insertCount = 0;
+    map.Map([&](const Data& item) {
+        if(insertCount < numElem){
+          Insert(item);
+          insertCount++;
+        }
+    });
+    return true;
+  }
+
+  template <typename Data>
+  bool HashTableOpnAdr<Data>::InsertSome(MutableMappableContainer<Data>&& map, ulong numElem) noexcept{
+    if(numElem == 0)return true;
+    if(numElem > map.Size()) return false;
+    ulong insertCount = 0;
+    map.Map([&](Data& item) {
+        if(insertCount < numElem){
+          Insert(std::move(item));
+          insertCount++;
+        }
+    });
+    return true;
+  }
+
+  template <typename Data>
+  bool HashTableOpnAdr<Data>::RemoveSome(const MappableContainer<Data>& map, ulong numElem){
+    if(numElem == 0)return true;
+    if(numElem > map.Size()) return false;
+    ulong removeCount = 0;
+    map.Map([&](const Data& item) {
+        if(removeCount < numElem){
+          Remove(item);
+          removeCount++;
+        }
+    });
+    return true;
+  }
 /* ************************************************************************** */
 
 }

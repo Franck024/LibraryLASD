@@ -119,9 +119,9 @@ public:
 inline bool InsertAll(const MappableContainer<Data>&) override{return false;};
 inline bool InsertAll(MutableMappableContainer<Data>&&) noexcept override{return false;};
 inline bool RemoveAll(const MappableContainer<Data>&) override{return false;};
-inline bool InsertSome(const MappableContainer<Data>&) override{return false;};
-inline bool InsertSome(MutableMappableContainer<Data>&&) noexcept override{return false;};
-inline bool RemoveSome(const MappableContainer<Data>&) override{return false;};
+inline bool InsertSome(const MappableContainer<Data>&, ulong) override{return false;};
+inline bool InsertSome(MutableMappableContainer<Data>&&, ulong) noexcept override{return false;};
+inline bool RemoveSome(const MappableContainer<Data>&, ulong) override{return false;};
 
 
 protected:
