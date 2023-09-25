@@ -96,9 +96,8 @@ namespace lasd {
   // Destructor
   template<typename Data>
   HashTableOpnAdr<Data>::~HashTableOpnAdr() {
+    Clear();
     dimensione = 0;
-    size = 0;
-    table.~Vector();
   }
 
   /* ************************************************************************ */
@@ -106,19 +105,14 @@ namespace lasd {
   // Copy assignment
   template<typename Data>
   HashTableOpnAdr<Data>& HashTableOpnAdr<Data>::operator=(const HashTableOpnAdr& ht) {
-    std::cout << "--------HERE 3 ---------- " << std::endl;
-    if(this != &ht){
-      Clear();
-      size = ht.size;
-      dimensione = ht.dimensione;
-    //  table.Resize(dimensione);
-    table = ht.table;
-      for(ulong i = 0; i < dimensione; i++){
-        if(table[i] != nullptr)
-          table[i] = new Data(*ht.table[i]);
-        else table[i] = nullptr;  
+    Clear();
+    if(dimensione != ht.dimensione)
+      Resize(ht.dimensione);
+    for(ulong i = 0; i < ht.dimensione; i++){
+      if(ht.table[i] != nullptr){
+        table[i] = new Data(*(ht.table[i]));
+        size++;
       }
-      
     }
     return *this;
   }
@@ -218,7 +212,7 @@ namespace lasd {
   // Specific member functions (inherited from TestableContainer)
   template<typename Data>
   bool HashTableOpnAdr<Data>::Exists(const Data& value) const noexcept {
-    ulong index = this->HashKey(value) % dimensione;
+    ulong index = HashKey(value) % dimensione;
     if(table[index] == nullptr) return false;
     while(table[index] != nullptr){
       if(*table[index] == value)
@@ -262,13 +256,13 @@ namespace lasd {
   // Specific member functions (inherited from ClearableContainer)
   template<typename Data>
   void HashTableOpnAdr<Data>::Clear() {
-    size = 0;
     for(ulong i = 0; i < dimensione; i++){
       if(table[i] != nullptr){
-        delete table[i];
+       // delete table[i];
         table[i] = nullptr;
       }
     }
+    size = 0;
   } 
 
 
