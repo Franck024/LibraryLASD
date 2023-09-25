@@ -7,6 +7,7 @@
 #include "../hashtable.hpp"
 #include "../../vector/vector.hpp"
 #include "../../list/list.hpp"
+#include "../../bst/bst.hpp"
 
 /* ************************************************************************** */
 
@@ -20,12 +21,12 @@ class HashTableClsAdr : virtual public HashTable<Data>{
 
 private:
 
- // Vector<List<Data>> table;
+  Vector<BST<Data>*> table;
 
 protected:
 
   using HashTable<Data>::size;
-  using HashTable<Data>::count;
+  using HashTable<Data>::dimensione;
 
   // ...
 
@@ -98,14 +99,15 @@ public:
 
 
   // per non rendere la classe astratta
-    inline bool InsertAll( const MappableContainer<Data>& container) { return false;};
-    inline bool InsertAll(MappableContainer<Data>&& container) noexcept { return false;};
-    inline bool RemoveAll(const MappableContainer<Data>& container) { return false;};
-    inline bool RemoveAll(MappableContainer<Data>&& container) noexcept { return false;};
-    inline bool InsertSome(const MappableContainer<Data>& container) { return false;};
-    inline bool InsertSome(MappableContainer<Data>&& container) noexcept { return false;};
-    inline bool RemoveSome(const MappableContainer<Data>& container) { return false;};
+    bool InsertAll( const MappableContainer<Data>& ) override ;
+    bool InsertAll(MutableMappableContainer<Data>&& ) noexcept override;
+    bool RemoveAll(const MappableContainer<Data>& ) override;
+    bool InsertSome(const MappableContainer<Data>& , ulong) override;
+    bool InsertSome(MutableMappableContainer<Data>&& , ulong) noexcept override;
+    bool RemoveSome(const MappableContainer<Data>& , ulong) override;
 
+  // Auxiliary member functions aggiunto da me per supporto
+  inline ulong HashKey(const Data& key) const{Hashable<Data> hash; return hash(key);}
 };
 
 /* ************************************************************************** */

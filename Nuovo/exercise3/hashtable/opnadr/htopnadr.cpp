@@ -156,14 +156,16 @@ namespace lasd {
     if(Exists(value)) return false;
 
     if(size >= dimensione * 0.75){
-      ulong tmp = dimensione;
       Resize(dimensione*2);
     } 
 
     ulong index = HashKey(value) % dimensione;
     
-    if(table[index] != nullptr) //gestione collisione con sondaggio lineare
+    if(table[index] != nullptr){       //gestione collisione con sondaggio lineare
       index = FindEmpty(index);
+      delete table[index];
+    } 
+      
     
     table[index] = new Data(value);
     size++;
@@ -175,14 +177,15 @@ namespace lasd {
     if(Exists(value)) return false;
 
     if(size >= dimensione * 0.75){
-      ulong tmp = dimensione;
       Resize(dimensione*2);
     } 
 
     ulong index = HashKey(value) % dimensione;
     
-    if(table[index] != nullptr) //gestione collisione con sondaggio lineare
+    if(table[index] != nullptr){       //gestione collisione con sondaggio lineare
       index = FindEmpty(index);
+      delete table[index];
+    } 
     
     table[index] = new Data(std::move(value));
     size++;
