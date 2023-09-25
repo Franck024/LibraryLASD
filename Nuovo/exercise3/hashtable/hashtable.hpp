@@ -5,6 +5,7 @@
 /* ************************************************************************** */
 
 #include <random>
+#include <functional>
 
 /* ************************************************************************** */
 
@@ -21,20 +22,20 @@ class Hashable {
 
 public:
   ulong operator()(const Data& key) const noexcept{ // (concrete function should not throw exceptions)
-    ulong hash = 0;
+    // ulong hash = 0;
 
-    // Converti l'oggetto in un array di byte
-    const  char* keyBytes = reinterpret_cast<const  char*>(&key);
+    // // Converti l'oggetto in un array di byte
+    // const  char* keyBytes = reinterpret_cast<const  char*>(&key);
 
-    for (ulong i = 0; i < sizeof(Data); ++i) {
-      // Moltiplica il valore corrente dell'hash per un numero primo
-      hash = (hash * 31);
+    // for (ulong i = 0; i < sizeof(Data); ++i) {
+    //   // Moltiplica il valore corrente dell'hash per un numero primo
+    //   hash = (hash * 31);
 
-      // Aggiungi il valore corrente del byte all'hash
-      hash += static_cast<ulong>(keyBytes[i]);
-    }
-
-    return hash;
+    //   // Aggiungi il valore corrente del byte all'hash
+    //   hash += static_cast<ulong>(keyBytes[i]);
+    // }
+std::hash<Data> hash;
+    return hash(key);
   }
 };
 
