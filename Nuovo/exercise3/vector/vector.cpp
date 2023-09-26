@@ -80,19 +80,6 @@ namespace lasd {
   template<typename Data>
   bool Vector<Data>::operator==(const Vector<Data>& vec) const noexcept{
     if(size != vec.size) return false;
-
-//-----------
-    // std::cout << " \n vec1: " ;
-    // for(uint i = 0; i < size; i++){
-    //   std::cout << " " << elem[i] ;
-    // }
-
-    // std::cout << " \n vec2: " ;
-    //     for(uint i = 0; i < size; i++){
-    //   std::cout << " " << vec.elem[i] ;
-    // }
-    // std::cout << " \n" ;
-//--------------
     for(uint i = 0; i < size; i++){
         if(elem[i] != vec.elem[i]) return false;
     }
