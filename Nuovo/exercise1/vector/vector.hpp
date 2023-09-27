@@ -99,11 +99,7 @@ public:
 
   void Sort() override; // Override SortableLinearContainer member
 
-protected:
-
-  // Auxiliary functions, if necessary!
-
-  //per non rendere la classe astratta vado ad implementare tutti i metodi virtual
+    //per non rendere la classe astratta vado ad implementare tutti i metodi virtual
   using typename FoldableContainer<Data>::FoldFunctor;
   inline void Fold(const FoldFunctor, void*)const override ; // Override FoldableContainer member
   /* ************************************************************************ */
@@ -115,13 +111,13 @@ protected:
   /* ************************************************************************ */
   // Specific member function (inherited from MappableContainer)
   using typename MappableContainer<Data>::MapFunctor;
-  inline void Map(const MapFunctor) override ; // Override MappableContainer member
+  inline void Map( MapFunctor)const override ; // Override MappableContainer member
   /* ************************************************************************ */
   // Specific member function (inherited from PreOrderMappableContainer)
-  inline void PreOrderMap(const MapFunctor) override ; // Override PreOrderMappableContainer member
+  inline void PreOrderMap( MapFunctor)const override ; // Override PreOrderMappableContainer member
   /* ************************************************************************ */
   // Specific member function (inherited from PostOrderMappableContainer)
-  inline void PostOrderMap(const MapFunctor) override ; // Override PostOrderMappableContainer member
+  inline void PostOrderMap( MapFunctor)const override ; // Override PostOrderMappableContainer member
   /* ************************************************************************ */
   // Specific member function (inherited from MutableMappableContainer)
   using typename MutableMappableContainer<Data>::MutableMapFunctor;
@@ -132,6 +128,12 @@ protected:
   /* ************************************************************************ */
   // Specific member function (inherited from MutablePostOrderMappableContainer)
   inline void PostOrderMap(MutableMapFunctor) override ; // Override MutablePostOrderMappableContainer member
+
+protected:
+
+  // Auxiliary functions, if necessary!
+
+
   
 };
 

@@ -60,9 +60,11 @@ List<Data>::List( MappableContainer<Data>& map){
 template <typename Data>
 List<Data>::List(MutableMappableContainer<Data>&& map) {
     size = 0;
+
     map.Map([&](Data& item){
-        InsertAtBack(item);
+        InsertAtBack(std::move(item));
     });
+
 }
 
 // Copy constructor
@@ -194,11 +196,11 @@ void List<Data>::InsertAtBack(const Data& val) noexcept{
 
 template <typename Data>
 void List<Data>::InsertAtBack(Data&& val) noexcept{
-    Node* newNode = new Node(val);
+    Node* newNode = new Node(std::move(val));
     if(head == nullptr)
-        head = std::move(newNode);
+        head = newNode;
     else{
-        tail->next = std::move(newNode);
+        tail->next = newNode;
         }
     size++;
     tail = newNode;    
@@ -360,7 +362,7 @@ void List<Data>::PostOrderFold(const FoldFunctor fun, void* acc, Node* nodo) con
 
 // Specific member function (inherited from MappableContainer)
 template <typename Data>
-void List<Data>::Map(const MapFunctor mapFun){
+void List<Data>::Map( MapFunctor mapFun)const{
     Node* tmp = head;
     while(tmp != nullptr){
         mapFun(tmp->valore);
@@ -372,7 +374,7 @@ void List<Data>::Map(const MapFunctor mapFun){
 
 // Specific member function (inherited from PreOrderMappableContainer)
 template <typename Data>
-void List<Data>::PreOrderMap(const MapFunctor mapFun){
+void List<Data>::PreOrderMap( MapFunctor mapFun)const{
     PreOrderMap(mapFun, head);
 }
 
@@ -380,13 +382,13 @@ void List<Data>::PreOrderMap(const MapFunctor mapFun){
 
 // Specific member function (inherited from PostOrderMappableContainer)
 template <typename Data>
-void List<Data>::PostOrderMap(const MapFunctor mapFun){
+void List<Data>::PostOrderMap( MapFunctor mapFun)const{
     PostOrderMap(mapFun, head);
 }
 
 // Auxiliary member functions (for PreOrderMappableContainer & PostOrderMappableContainer)
 template <typename Data>
-void List<Data>::PreOrderMap(const MapFunctor mapFun, Node* nodo){
+void List<Data>::PreOrderMap( MapFunctor mapFun, Node* nodo)const{
     Node* tmp = nodo;
     while( tmp != nullptr){
         mapFun(tmp->valore);
@@ -396,7 +398,7 @@ void List<Data>::PreOrderMap(const MapFunctor mapFun, Node* nodo){
 }
 
 template <typename Data>
-void List<Data>::PostOrderMap(const MapFunctor mapFun, Node* nodo){
+void List<Data>::PostOrderMap( MapFunctor mapFun, Node* nodo)const{
     if (nodo == nullptr) return;
     PostOrderMap(mapFun, nodo->next);
     mapFun(nodo->valore);
@@ -445,5 +447,70 @@ void List<Data>::PostOrderMap(MutableMapFunctor mutFun, Node* nodo){
     mutFun(nodo->valore);
 }
 /* ************************************************************************** */
+  // per non rendere la classe astratta
+  template <typename Data>
+  bool List<Data>::InsertAll( const MappableContainer<Data>& map){
+    map.Map([&](const Data& item) {
+        Insert(item);
+    });
+    return true;
+  }
 
+  template <typename Data>
+  bool List<Data>::InsertAll(MutableMappableContainer<Data>&& map) noexcept{
+    map.Map([&](Data& item) {
+        Insert(std::move(item));
+    });
+    return true;
+  }
+
+  template <typename Data>
+  bool List<Data>::RemoveAll(const MappableContainer<Data>& map ){
+    map.Map([&](const Data& item) {
+        Remove(item);
+    });
+    return true;
+  }
+
+  template <typename Data>
+  bool List<Data>::InsertSome(const MappableContainer<Data>& map, ulong numElem){
+    if(numElem == 0)return true;
+    if(numElem > map.Size()) return false;
+    ulong insertCount = 0;
+    map.Map([&](const Data& item) {
+        if(insertCount < numElem){
+          Insert(item);
+          insertCount++;
+        }
+    });
+    return true;
+  }
+
+  template <typename Data>
+  bool List<Data>::InsertSome(MutableMappableContainer<Data>&& map, ulong numElem) noexcept{
+    if(numElem == 0)return true;
+    if(numElem > map.Size()) return false;
+    ulong insertCount = 0;
+    map.Map([&](Data& item) {
+        if(insertCount < numElem){
+          Insert(std::move(item));
+          insertCount++;
+        }
+    });
+    return true;
+  }
+
+  template <typename Data>
+  bool List<Data>::RemoveSome(const MappableContainer<Data>& map, ulong numElem){
+    if(numElem == 0)return true;
+    if(numElem > map.Size()) return false;
+    ulong removeCount = 0;
+    map.Map([&](const Data& item) {
+        if(removeCount < numElem){
+          Remove(item);
+          removeCount++;
+        }
+    });
+    return true;
+  }
 }

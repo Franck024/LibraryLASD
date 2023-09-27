@@ -80,19 +80,6 @@ namespace lasd {
   template<typename Data>
   bool Vector<Data>::operator==(const Vector<Data>& vec) const noexcept{
     if(size != vec.size) return false;
-
-//-----------
-    // std::cout << " \n vec1: " ;
-    // for(uint i = 0; i < size; i++){
-    //   std::cout << " " << elem[i] ;
-    // }
-
-    // std::cout << " \n vec2: " ;
-    //     for(uint i = 0; i < size; i++){
-    //   std::cout << " " << vec.elem[i] ;
-    // }
-    // std::cout << " \n" ;
-//--------------
     for(uint i = 0; i < size; i++){
         if(elem[i] != vec.elem[i]) return false;
     }
@@ -217,7 +204,7 @@ void Vector<Data>::PostOrderFold(const FoldFunctor function, void* parametro) co
 
 /* ************************************************************************** */
 template <typename Data>
-void Vector<Data>::Map(const MapFunctor fun) {
+void Vector<Data>::Map( MapFunctor fun)const {
     for(ulong i = 0; i < size; i++){
         fun(elem[i]);
     }
@@ -225,7 +212,7 @@ void Vector<Data>::Map(const MapFunctor fun) {
 
 //Vector MapPreOrder
 template<typename Data>
-void Vector<Data>::PreOrderMap(MapFunctor function) {
+void Vector<Data>::PreOrderMap(MapFunctor function) const {
 	for (ulong i = 0; i < size; i++) {
 		function(elem[i]);
 	}
@@ -233,7 +220,7 @@ void Vector<Data>::PreOrderMap(MapFunctor function) {
 
 //Vector MapPostOrder
 template<typename Data>
-void Vector<Data>::PostOrderMap(MapFunctor function) {
+void Vector<Data>::PostOrderMap(MapFunctor function) const{
 	ulong index = size;
 	while (index > 0) {
 		function(elem[--index]);

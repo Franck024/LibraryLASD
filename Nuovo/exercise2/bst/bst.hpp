@@ -57,7 +57,7 @@ public:
   /* ************************************************************************ */
 
   // Destructor
-  virtual ~BST() = default;
+  ~BST() ;
 
   /* ************************************************************************ */
 
@@ -116,12 +116,12 @@ public:
 
 //-----per non rendere la classe astratta-----------
 
-inline bool InsertAll(const MappableContainer<Data>&) override{return false;};
-inline bool InsertAll(MappableContainer<Data>&&) noexcept override{return false;};
-inline bool RemoveAll(const MappableContainer<Data>&) override{return false;};
-inline bool InsertSome(const MappableContainer<Data>&) override{return false;};
-inline bool InsertSome(MappableContainer<Data>&&) noexcept override{return false;};
-inline bool RemoveSome(const MappableContainer<Data>&) override{return false;};
+bool InsertAll(const MappableContainer<Data>&) override;
+bool InsertAll(MutableMappableContainer<Data>&&) noexcept override;
+bool RemoveAll(const MappableContainer<Data>&) override;
+bool InsertSome(const MappableContainer<Data>&, ulong) override;
+bool InsertSome(MutableMappableContainer<Data>&&, ulong) noexcept override;
+bool RemoveSome(const MappableContainer<Data>&, ulong) override;
 
 
 protected:

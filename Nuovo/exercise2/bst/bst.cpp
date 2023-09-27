@@ -31,6 +31,11 @@ namespace lasd {
   template <typename Data>
   BST<Data>::BST(BST<Data>&& bt) noexcept : BinaryTreeLnk<Data>(std::move(bt)) {} 
 
+  template <typename Data>
+  BST<Data>::~BST() {
+    Clear();
+  }
+
   /* ************************************************************************ */
 
   // Copy assignment
@@ -55,13 +60,20 @@ namespace lasd {
     if(size != bt.size) return false;
     if(size == 0) return true;
 
+    // BTInOrderIterator<Data> iterThis(*this);
+    // BTInOrderIterator<Data> iterOther(bt);
+    // while (!iterThis.Terminated() && !iterOther.Terminated()){
+    //     if(*iterThis != *iterOther)
+    //         return false;
+    //     ++iterThis;
+    //     ++iterOther;
+    // }
+    // return true;
+
     BTInOrderIterator<Data> iterThis(*this);
-    BTInOrderIterator<Data> iterOther(bt);
-    while (!iterThis.Terminated() && !iterOther.Terminated()){
-        if(*iterThis != *iterOther)
-            return false;
-        ++iterThis;
-        ++iterOther;
+    while(!iterThis.Terminated()){
+      if(bt.Exists(*iterThis) == false) return false;
+      ++iterThis;
     }
     return true;
     
@@ -93,10 +105,10 @@ namespace lasd {
   template <typename Data>
   void BST<Data>::RemoveMin()  {
     if(root == nullptr)
-        throw std::length_error("Albero vuoto aaaaaaaa");
+        throw std::length_error("Albero vuoto ");
     
-    DetachMin(root);
-  //  delete minNode;
+    Remove(Min());
+    
   }  
 
   template <typename Data>
@@ -119,7 +131,7 @@ namespace lasd {
   void BST<Data>::RemoveMax()  {
     if(root == nullptr)
         throw std::length_error("Albero vuoto");
-    DetachMax(root);
+    Remove(Max());
   } 
 
   template <typename Data>
@@ -433,5 +445,76 @@ namespace lasd {
   }  
 
 /* ************************************************************************** */
+
+  template <typename Data>
+  bool BST<Data>::InsertAll(const MappableContainer<Data>& map){
+    map.Map([&](const Data& item) {
+        Insert(item);
+    });
+    return true;
+  }
+
+  template <typename Data>
+  bool BST<Data>::InsertAll(MutableMappableContainer<Data>&& map) noexcept{
+    map.Map([&](Data& item) {
+        Insert(std::move(item));
+    });
+    return true;
+  }
+
+
+  template <typename Data>
+  bool BST<Data>::RemoveAll(const MappableContainer<Data>& map) {
+    map.Map([&](const Data& item) {
+        Remove(item);
+    });
+    return true;
+  }
+
+
+  template <typename Data>
+  bool BST<Data>::InsertSome(const MappableContainer<Data>& map, ulong numElem) {
+    if(numElem == 0)return true;
+    if(numElem > map.Size()) return false;
+    ulong insertCount = 0;
+    map.Map([&](const Data& item) {
+        if(insertCount < numElem){
+          Insert(item);
+          insertCount++;
+        }
+    });
+    return true;
+  }
+
+
+  template <typename Data>
+  bool BST<Data>::InsertSome(MutableMappableContainer<Data>&& map, ulong numElem) noexcept {
+    if(numElem == 0)return true;
+    if(numElem > map.Size()) return false;
+    ulong insertCount = 0;
+    map.Map([&](Data& item) {
+        if(insertCount < numElem){
+          Insert(std::move(item));
+          insertCount++;
+        }
+    });
+    return true;
+  }
+
+
+  template <typename Data>
+  bool BST<Data>::RemoveSome(const MappableContainer<Data>& map, ulong numElem) {
+    if(numElem == 0)return true;
+    if(numElem > map.Size()) return false;
+    ulong removeCount = 0;
+    map.Map([&](const Data& item) {
+        if(removeCount < numElem){
+          Remove(item);
+          removeCount++;
+        }
+    });
+    return true;
+  }
+
 
 }

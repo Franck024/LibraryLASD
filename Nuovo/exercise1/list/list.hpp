@@ -25,13 +25,13 @@ class List : virtual public ClearableContainer,
 private:
 
 // per non rendere la classe astratta-----------------------------------------------------
-  inline bool InsertAll(const MappableContainer<Data>& x){return false;} // Copy of the value; From MappableContainer; True if all are inserted
-  inline bool InsertAll(MappableContainer<Data>&& x) noexcept{return false;} // Move of the value; From MutableMappableContainer; True if all are inserted
-  inline bool RemoveAll(const MappableContainer<Data>& x) {return false;} // From MappableContainer; True if all are removed
+  bool InsertAll(const MappableContainer<Data>& ) override;// Copy of the value; From MappableContainer; True if all are inserted
+  bool InsertAll(MutableMappableContainer<Data>&& ) noexcept override;// Move of the value; From MutableMappableContainer; True if all are inserted
+  bool RemoveAll(const MappableContainer<Data>& ) override;// From MappableContainer; True if all are removed
 
-  inline bool InsertSome(const MappableContainer<Data>& x)  {return false;} // Copy of the value; From MappableContainer; True if some is inserted
-  inline bool InsertSome(MappableContainer<Data>&& x) noexcept {return false;} // Move of the value; From MutableMappableContainer; True if some is inserted
-  inline bool RemoveSome(const MappableContainer<Data>& x){return false;} // From MappableContainer; True if some is removed
+  bool InsertSome(const MappableContainer<Data>& , ulong ) override ;// Copy of the value; From MappableContainer; True if some is inserted
+  bool InsertSome(MutableMappableContainer<Data>&& , ulong ) noexcept override;// Move of the value; From MutableMappableContainer; True if some is inserted
+  bool RemoveSome(const MappableContainer<Data>& , ulong )override;// From MappableContainer; True if some is removed
 ///----------------------------------------------------------------------------------------
 
 protected:
@@ -183,19 +183,19 @@ public:
 
   using typename MappableContainer<Data>::MapFunctor;
 
-  void Map(const MapFunctor) override; // Override MappableContainer member
+  void Map( MapFunctor)const override; // Override MappableContainer member
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from PreOrderMappableContainer)
 
-  void PreOrderMap(const MapFunctor) override; // Override PreOrderMappableContainer member
+  void PreOrderMap( MapFunctor)const override; // Override PreOrderMappableContainer member
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from PostOrderMappableContainer)
 
-  void PostOrderMap(const MapFunctor)  override; // Override PostOrderMappableContainer member
+  void PostOrderMap( MapFunctor)const  override; // Override PostOrderMappableContainer member
 
   /* ************************************************************************ */
 
@@ -228,8 +228,8 @@ protected:
 
   // Auxiliary member functions (for PreOrderMappableContainer & PostOrderMappableContainer)
 
-  void PreOrderMap(const MapFunctor, Node*) ; // Accessory function executing from one point of the list onwards
-  void PostOrderMap(const MapFunctor, Node*) ; // Accessory function executing from one point of the list onward
+  void PreOrderMap( MapFunctor, Node*)const ; // Accessory function executing from one point of the list onwards
+  void PostOrderMap( MapFunctor, Node*)const ; // Accessory function executing from one point of the list onward
 
   /* ************************************************************************ */
 

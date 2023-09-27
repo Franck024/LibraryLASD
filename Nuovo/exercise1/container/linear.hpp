@@ -84,19 +84,19 @@ public:
 
   using typename MappableContainer<Data>::MapFunctor;
 
-  virtual void Map(const MapFunctor) override = 0; // Override MappableContainer member
+  virtual void Map( MapFunctor)const override = 0; // Override MappableContainer member
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from PreOrderMappableContainer)
 
-  virtual void PreOrderMap(const MapFunctor) override = 0; // Override PreOrderMappableContainer member
+  virtual void PreOrderMap( MapFunctor)const override = 0; // Override PreOrderMappableContainer member
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from PostOrderMappableContainer)
 
-  virtual void PostOrderMap(const MapFunctor) override = 0; // Override PostOrderMappableContainer member
+  virtual void PostOrderMap( MapFunctor)const override = 0; // Override PostOrderMappableContainer member
 
   /* ************************************************************************ */
 
@@ -104,19 +104,19 @@ public:
 
   using typename MutableMappableContainer<Data>::MutableMapFunctor;
 
-  virtual void Map(const MutableMapFunctor) override = 0; // Override MutableMappableContainer member
+  virtual void Map( MutableMapFunctor) override = 0; // Override MutableMappableContainer member
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from MutablePreOrderMappableContainer)
 
-  virtual void PreOrderMap(const MutableMapFunctor) override = 0; // Override MutablePreOrderMappableContainer member
+  virtual void PreOrderMap( MutableMapFunctor) override = 0; // Override MutablePreOrderMappableContainer member
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from MutablePostOrderMappableContainer)
 
-  virtual void PostOrderMap(const MutableMapFunctor) override = 0; // Override MutablePostOrderMappableContainer member
+  virtual void PostOrderMap( MutableMapFunctor) override = 0; // Override MutablePostOrderMappableContainer member
 
 };
 
