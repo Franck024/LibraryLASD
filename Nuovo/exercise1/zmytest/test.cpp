@@ -150,7 +150,7 @@ void testVector(){
     std::default_random_engine generator(std::random_device{}());
 
     for(int j = 0; j < 10; j++){
-        v1[j] = GenerateRandomString(10);
+        v1[j] = GenerateRandomString(3);
     }
     
 
@@ -158,19 +158,19 @@ void testVector(){
     v1.Map([](const std::string& x){cout << x << " ";});
 
     cout << endl <<"(" << i++ << ") Inserimento in front" << endl;
-    v1.Front() = GenerateRandomString(10);
+    v1.Front() = GenerateRandomString(3);
 
     cout <<"(" << i++ << ") Inserimento in back" << endl;
-    v1.Back() = GenerateRandomString(10);
+    v1.Back() = GenerateRandomString(3);
 
     cout <<"(" << i++ << ") Stampa del vettore:   ";
     v1.Map([](const std::string& x){cout << x << " ";});
 
     cout << endl <<"(" << i++ << ") Cambio valore in front" << endl;
-    v1.Front() = GenerateRandomString(10);
+    v1.Front() = GenerateRandomString(3);
 
     cout <<"(" << i++ << ") Cambio valore in back" << endl;
-    v1.Back() = GenerateRandomString(10);
+    v1.Back() = GenerateRandomString(3);
 
     cout <<"(" << i++ << ") Stampa Front:  ";
     cout << v1.Front() << endl;
@@ -205,7 +205,7 @@ void testVector(){
     v1.Resize(15);
     cout <<"(" << i++ << ") Inserimento nuovi 15 elementi" << endl;
     for(int j = 0; j < 15; j++){
-        v1[j] = GenerateRandomString(10);
+        v1[j] = GenerateRandomString(3);
     }
 
     cout <<"(" << i++ << ") Stampa del vettore:   ";
@@ -235,10 +235,10 @@ void testVector(){
     cout <<"(" << i++ << ") I due vettori sono uguali?   ";
     cout << (v2 == v5 ? "Si" : "No") << endl;
 
-    // cout <<"(" << i++ << ") Utilizzo operatore Fold:   ";
-    // int sum = 0;
-    // v3.Fold([](const std::string& x, void* y){*(std::string*)y += x;}, &sum);
-    // cout << sum << endl;
+    cout <<"(" << i++ << ") Utilizzo operatore Fold per concatenare:   ";
+    std::string conc = "";
+    v3.Fold([](const std::string& x, void* y){*(std::string*)y += x;}, &conc);
+    cout << conc << endl;
 
 }
 
