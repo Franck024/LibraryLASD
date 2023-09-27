@@ -24,15 +24,6 @@ class List : virtual public ClearableContainer,
 
 private:
 
-// per non rendere la classe astratta-----------------------------------------------------
-  bool InsertAll(const MappableContainer<Data>& ) override;// Copy of the value; From MappableContainer; True if all are inserted
-  bool InsertAll(MutableMappableContainer<Data>&& ) noexcept override;// Move of the value; From MutableMappableContainer; True if all are inserted
-  bool RemoveAll(const MappableContainer<Data>& ) override;// From MappableContainer; True if all are removed
-
-  bool InsertSome(const MappableContainer<Data>& , ulong ) override ;// Copy of the value; From MappableContainer; True if some is inserted
-  bool InsertSome(MutableMappableContainer<Data>&& , ulong ) noexcept override;// Move of the value; From MutableMappableContainer; True if some is inserted
-  bool RemoveSome(const MappableContainer<Data>& , ulong )override;// From MappableContainer; True if some is removed
-///----------------------------------------------------------------------------------------
 
 protected:
 
@@ -216,6 +207,16 @@ public:
   // Specific member function (inherited from MutablePostOrderMappableContainer)
 
   void PostOrderMap(MutableMapFunctor) override; // Override MutablePostOrderMappableContainer member
+
+  // per non rendere la classe astratta-----------------------------------------------------
+  bool InsertAll(const MappableContainer<Data>& ) override;// Copy of the value; From MappableContainer; True if all are inserted
+  bool InsertAll(MutableMappableContainer<Data>&& ) noexcept override;// Move of the value; From MutableMappableContainer; True if all are inserted
+  bool RemoveAll(const MappableContainer<Data>& ) override;// From MappableContainer; True if all are removed
+
+  bool InsertSome(const MappableContainer<Data>& , ulong ) override ;// Copy of the value; From MappableContainer; True if some is inserted
+  bool InsertSome(MutableMappableContainer<Data>&& , ulong ) noexcept override;// Move of the value; From MutableMappableContainer; True if some is inserted
+  bool RemoveSome(const MappableContainer<Data>& , ulong )override;// From MappableContainer; True if some is removed
+///----------------------------------------------------------------------------------------
 
 protected:
 
