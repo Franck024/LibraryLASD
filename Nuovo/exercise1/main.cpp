@@ -15,7 +15,7 @@ int main() {
 
   do {
       // Mostra il menu
-      std::cout <<std::endl << "Menu:" << std::endl;
+      std::cout <<std::endl << std::endl << "Menu:" << std::endl;
       std::cout << "1. Test del professore" << std::endl;
       std::cout << "2. Test dello studente" << std::endl;
       std::cout << "3. Chiudi il programma" << std::endl;
