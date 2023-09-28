@@ -92,12 +92,8 @@ namespace lasd {
   // Move constructor
   template <typename Data>
   BinaryTreeVec<Data>::BinaryTreeVec(BinaryTreeVec<Data>&& bt) noexcept{
-    treevec = bt.treevec; // Assegna il vettore di bt all'oggetto corrente
-    size = bt.size;
-    
-    // Imposta bt.treevec a nullptr in modo che non deallochi la memoria duplicata
-    bt.treevec = nullptr;
-    bt.size = 0;
+    std::swap(size, bt.size);
+    std::swap(treevec, bt.treevec);
   }
 
   /* ************************************************************************ */
