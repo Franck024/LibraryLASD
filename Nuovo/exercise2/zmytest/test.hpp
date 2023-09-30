@@ -29,6 +29,16 @@ std::string GenerateRandomString(std::size_t );
 template <typename Data>
 void testBinaryTreeVec(int, lasd::Vector<Data>&);
 
+// Binary Tree Lnk
+
+template <typename Data>
+void testBinaryTreeLnk(int, lasd::Vector<Data>&);
+
+// BST
+
+template <typename Data>
+void testBST(int, lasd::Vector<Data>&, lasd::List<Data>&);
+
 /* ************************************************************************** */
 
 #endif
