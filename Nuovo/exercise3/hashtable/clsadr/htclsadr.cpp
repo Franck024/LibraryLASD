@@ -137,6 +137,7 @@ namespace lasd {
   template<typename Data>
   bool HashTableClsAdr<Data>::operator==(const HashTableClsAdr& ht) const noexcept{
     if(size != ht.size) return false;
+    if(size == 0 && ht.size == 0) return true;
     for(ulong i = 0; i < dimensione; i++){
       if((table[i] != nullptr && ht.table[i] == nullptr) || (table[i] == nullptr && ht.table[i] != nullptr)) return false;
       if(table[i] != nullptr && ht.table[i] != nullptr){

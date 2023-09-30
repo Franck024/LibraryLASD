@@ -3,7 +3,8 @@
 #define CONTAINER_HPP
 
 /* ************************************************************************** */
-
+#include <stdexcept>
+#include <functional>  //per evitare problemi nel mio test (ulong)
 namespace lasd {
 
 /* ************************************************************************** */
